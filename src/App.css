@@ -1,0 +1,60 @@
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  padding: 48px 24px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.phase-badge {
+  margin: 0 0 24px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: var(--heading);
+  font-size: 3.75rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.subtitle {
+  margin: 20px 0 0;
+  color: var(--heading);
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.description {
+  max-width: 38rem;
+  margin: 18px 0 0;
+  color: var(--text);
+}
+
+footer {
+  margin-top: 56px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2.75rem;
+  }
+
+  .subtitle {
+    font-size: 1.12rem;
+  }
+}
