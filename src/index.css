@@ -1,112 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  color-scheme: dark;
-
-  --color-primary: #1d4ed8;
-  --color-primary-strong: #2563eb;
-  --color-primary-soft: #dbeafe;
-  --color-secondary: #7eb6ff;
-  --color-accent: #8b7cf6;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-
-  --color-neutral-50: #f8fafc;
-  --color-neutral-100: #eef2f7;
-  --color-neutral-200: #d8dee8;
-  --color-neutral-300: #b7c0cf;
-  --color-neutral-400: #8c98aa;
-  --color-neutral-500: #677386;
-  --color-neutral-600: #475569;
-  --color-neutral-700: #334155;
-  --color-neutral-800: #1e293b;
-  --color-neutral-900: #0f172a;
-  --color-neutral-950: #08111f;
-
-  --color-background: #08111f;
-  --color-background-raised: #0c1728;
-  --color-surface: #101c2f;
-  --color-surface-hover: #142238;
-  --color-surface-elevated: #16243a;
-  --color-border: #24324a;
-  --color-border-strong: #34455f;
-  --color-text: #d8dee8;
-  --color-text-strong: #f8fafc;
-  --color-text-muted: #9aa7ba;
-  --color-focus: #93c5fd;
-
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
-
-  --type-display: 3.5rem;
-  --type-heading-1: 3rem;
-  --type-heading-2: 2rem;
-  --type-heading-3: 1.375rem;
-  --type-heading-4: 1.125rem;
-  --type-body-large: 1.125rem;
-  --type-body: 1rem;
-  --type-small: 0.875rem;
-  --type-caption: 0.75rem;
-  --type-mono: 0.875rem;
-
-  --line-tight: 1.1;
-  --line-heading: 1.2;
-  --line-body: 1.6;
-
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
-
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.24);
-  --shadow-md: 0 10px 28px rgb(0 0 0 / 0.22);
-  --shadow-lg: 0 18px 48px rgb(0 0 0 / 0.28);
-  --shadow-xl: 0 28px 70px rgb(0 0 0 / 0.34);
-
-  --container-default: 1180px;
-  --container-narrow: 880px;
-  --container-wide: 1360px;
-  --container-padding: clamp(1rem, 4vw, 2.5rem);
-
-  --motion-fast: 150ms;
-  --motion-base: 200ms;
-  --motion-slow: 250ms;
-  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
-
-  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 400;
-  line-height: var(--line-body);
-  color: var(--color-text);
-  background: var(--color-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-[data-theme='light'] {
-  color-scheme: light;
-  --color-background: #f6f8fb;
-  --color-background-raised: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f1f5fb;
-  --color-surface-elevated: #ffffff;
-  --color-border: #d8dee8;
-  --color-border-strong: #b7c0cf;
-  --color-text: #334155;
-  --color-text-strong: #0f172a;
-  --color-text-muted: #677386;
 }
 
 * {
@@ -123,6 +23,16 @@ body {
   min-width: 320px;
   min-height: 100svh;
   margin: 0;
+  background: var(--color-background);
+}
+
+.theme-root {
+  min-height: 100svh;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: var(--line-body);
+  color: var(--color-text);
+  background: var(--color-background);
 }
 
 button,
@@ -224,11 +134,11 @@ code {
 }
 
 @media (max-width: 767px) {
-  :root {
-    --type-display: 2.5rem;
-    --type-heading-1: 2.25rem;
-    --type-heading-2: 1.625rem;
-    --type-heading-3: 1.25rem;
+  .theme-root {
+    --type-display: 2.5rem !important;
+    --type-heading-1: 2.25rem !important;
+    --type-heading-2: 1.625rem !important;
+    --type-heading-3: 1.25rem !important;
   }
 }
 

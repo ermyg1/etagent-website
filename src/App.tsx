@@ -13,16 +13,14 @@ import {
   Toggle,
 } from './components/FormControls'
 import { Icon } from './components/Icon'
-import { LayoutContainer } from './components/LayoutContainer'
-import { Navigation } from './components/Navigation'
+import { PageLayout, Section, Stack } from './components/layout'
 
 function App() {
   return (
-    <>
-      <Navigation />
-      <main className="foundation" aria-labelledby="foundation-title">
-        <LayoutContainer>
-          <section className="foundation__intro">
+    <PageLayout>
+      <div className="foundation" aria-labelledby="foundation-title">
+        <Section className="foundation__intro-section" spacing="compact">
+          <Stack className="foundation__intro" space="lg">
             <Badge variant="primary">W2 Brand Foundation</Badge>
             <h1 id="foundation-title" className="type-display">
               Design System Foundation
@@ -30,9 +28,11 @@ function App() {
             <p className="type-body-large">
               Reusable tokens and interface primitives for the E.T Agent website.
             </p>
-          </section>
+          </Stack>
+        </Section>
 
-          <section className="foundation__section" id="tokens">
+        <Section className="foundation__section" id="tokens">
+          <Stack space="xl">
             <div>
               <p className="type-caption">Tokens</p>
               <h2 className="type-heading-2">Theme primitives</h2>
@@ -55,9 +55,11 @@ function App() {
                 </div>
               ))}
             </div>
-          </section>
+          </Stack>
+        </Section>
 
-          <section className="foundation__section" id="components">
+        <Section className="foundation__section" id="components">
+          <Stack space="xl">
             <div>
               <p className="type-caption">Components</p>
               <h2 className="type-heading-2">Reusable interface elements</h2>
@@ -120,9 +122,11 @@ function App() {
                 </div>
               </Card>
             </div>
-          </section>
+          </Stack>
+        </Section>
 
-          <section className="foundation__section" id="accessibility">
+        <Section className="foundation__section" id="accessibility">
+          <Stack space="xl">
             <div>
               <p className="type-caption">Baseline</p>
               <h2 className="type-heading-2">Accessible by default</h2>
@@ -139,10 +143,10 @@ function App() {
                 <p>Transitions stay within 150ms to 250ms and respect user settings.</p>
               </Card>
             </div>
-          </section>
-        </LayoutContainer>
-      </main>
-    </>
+          </Stack>
+        </Section>
+      </div>
+    </PageLayout>
   )
 }
 
