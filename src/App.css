@@ -262,6 +262,60 @@
   color: var(--color-text-muted);
 }
 
+.enterprise-trust {
+  border-top: 1px solid var(--color-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface) 42%, transparent),
+      transparent 58%
+    );
+}
+
+.enterprise-trust__header {
+  max-width: 760px;
+  margin-bottom: var(--space-2xl);
+}
+
+.enterprise-trust__header .type-body-large {
+  max-width: 720px;
+  color: var(--color-text-muted);
+}
+
+.enterprise-trust__grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.enterprise-trust-card {
+  min-height: 100%;
+  padding: var(--space-lg);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-elevated) 86%, var(--color-primary) 14%),
+      var(--color-surface)
+    );
+}
+
+.enterprise-trust-card__icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-lg);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 34%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+}
+
+.enterprise-trust-card__title {
+  margin-bottom: var(--space-sm);
+}
+
+.enterprise-trust-card .type-body {
+  color: var(--color-text-muted);
+}
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -597,6 +651,10 @@
   .workflow-preview {
     max-width: 720px;
   }
+
+  .enterprise-trust__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
@@ -658,6 +716,14 @@
     grid-template-columns: 40px minmax(0, 1fr);
     min-height: 48px;
     padding-inline: var(--space-sm);
+  }
+
+  .enterprise-trust__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .enterprise-trust__grid {
+    grid-template-columns: 1fr;
   }
 
   .form-grid {
