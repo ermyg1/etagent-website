@@ -1,7 +1,9 @@
-# E.T Agent Landing Page Information Architecture
+# E.T Agent Homepage Information Architecture
 
-Status: W3A architecture specification  
-Scope: Homepage content model, section order, hierarchy and implementation blueprint.
+Status: W3A architecture specification; W3A.6 website scope revision  
+Scope: Homepage content model, section order, hierarchy and implementation blueprint for the official E.T Agent Website.
+
+Historical note: the original planning centred around a Landing Page. As the project matured, the scope expanded into the official E.T Agent Website. The Homepage is now one module within the wider website, and this document preserves the frozen W3A Homepage information architecture.
 
 ## 1. Page Structure
 
@@ -20,7 +22,7 @@ Canonical section order:
 11. Development Roadmap
 12. Final CTA
 
-This order is fixed for W3B unless JD changes architecture authority.
+This order is fixed for W3B Homepage Implementation unless JD changes architecture authority.
 
 ## 2. Heading Model
 
@@ -45,7 +47,7 @@ Use section captions for scannability, but captions are not heading replacements
 
 ## 3. Anchor Model
 
-Recommended section IDs for W3B:
+Recommended Homepage section IDs for W3B:
 
 | Section | ID |
 | --- | --- |
@@ -62,7 +64,7 @@ Recommended section IDs for W3B:
 | Development Roadmap | `roadmap` |
 | Final CTA | `contact` |
 
-Navigation changes are not authorized in W3A. These anchors are provided for W3B.
+Navigation changes are not authorized in W3A. These anchors are provided for W3B Homepage Implementation.
 
 ## 4. Content Model by Section
 
@@ -348,7 +350,7 @@ CTA copy:
 | Typography | Existing type utility classes |
 | Responsive padding and widths | Existing container tokens |
 
-No new reusable design-system component is required for W3B. A page-specific workflow visual is expected, but it should be composed from semantic HTML and existing theme tokens.
+No new reusable design-system component is required for W3B Homepage Implementation. A page-specific workflow visual is expected, but it should be composed from semantic HTML and existing theme tokens.
 
 ## 6. Content Density Rules
 
@@ -449,7 +451,7 @@ Mobile concept:
 
 Policy Engine and Human Approval must visually read as gates. Immutable Audit Log must visually read as the permanent record of the completed workflow.
 
-## 11. W3B Acceptance Checklist
+## 11. W3B Homepage Implementation Acceptance Checklist
 
 - All required sections are present in canonical order.
 - H1 and H2 hierarchy matches this document.

@@ -1,18 +1,60 @@
-# E.T Agent Landing Page Architecture
+# E.T Agent Website Architecture - Homepage Module
 
-Status: W3A architecture specification  
-Authority: Architecture frozen by JD; product direction frozen by E.T.; implementation authority delegated to Codex for W3B  
-Scope: Homepage architecture only. No implementation decisions remain open except copy finalization, icon selection and asset availability.
+Status: W3A architecture specification; W3A.6 website scope revision  
+Authority: W3A Homepage architecture frozen by JD; product direction frozen by E.T.; implementation authority delegated to Codex for W3B Homepage Implementation  
+Scope: Official E.T Agent Website architecture direction, with the Homepage defined as the first public website module. No Homepage implementation decisions remain open except copy finalization, icon selection and asset availability.
 
 ## 1. Architectural Intent
 
-The E.T Agent homepage must establish the product as governance-first enterprise AI: an AI platform where intelligence can recommend action, but authority remains controlled by policy and human approval.
+The E.T Agent Website must establish the product as governance-first enterprise AI: an AI platform where intelligence can recommend action, but authority remains controlled by policy and human approval.
+
+The Homepage is the first module of that website. Its job remains unchanged from W3A: establish the product category, communicate the governance model and create an architecture-led path to engagement.
 
 The page should feel like enterprise software infrastructure. It should be calm, precise and credible, closer to GitHub Enterprise, Stripe, Linear, Azure and Vercel than to a typical AI startup page.
 
 The existing Enterprise Design System is frozen and must be reused. Do not redesign tokens, navigation, typography, buttons, cards, forms, layout primitives or accessibility foundations.
 
-## 2. Existing System Dependencies
+## 2. Website Scope Evolution
+
+### Original objective
+
+The original planning centred around a Landing Page. That scope was historically correct for W1, W2, W2.1, W2.2 and W3A because the immediate task was to define the first public-facing page, its design foundation and its governance-first narrative.
+
+### Why scope expanded
+
+As the project matured, the repository became the official E.T Agent Website rather than a single-page artifact. The frozen Homepage architecture remains correct, but it now sits inside a wider website programme with future public, customer and product-support surfaces.
+
+### Current objective
+
+The current objective is to build the official E.T Agent Website in controlled phases. The Homepage remains the first implementation target and the primary public narrative module. W3B should therefore be treated as Homepage Implementation, not as a complete website build-out.
+
+### Relationship between Homepage and Website
+
+The Homepage is one module within the wider E.T Agent Website. It defines the first visitor journey, the governance-first positioning and the signature controlled execution workflow. Future website modules should extend this architecture without changing the frozen Homepage section order, messaging ladder, governance philosophy or workflow model.
+
+### Long-term website vision
+
+The official website is expected to grow beyond the Homepage over time. Future areas may include:
+
+- Platform.
+- Governance.
+- Architecture.
+- Documentation.
+- Resources.
+- Security.
+- Enterprise.
+- Login.
+- Waitlist.
+- Customer Portal.
+- Blog / Updates.
+
+These are future capabilities and do not imply current implementation, routing or content approval.
+
+### Future expansion philosophy
+
+Future website expansion should be modular, evidence-led and governance-aligned. New sections or pages should reuse the Enterprise Design System, preserve the calm infrastructure-grade visual language and avoid unverified product, compliance or customer claims. Website growth should not rewrite W1 through W3A history; it should build on those milestones.
+
+## 3. Existing System Dependencies
 
 Use these existing foundations:
 
@@ -24,9 +66,9 @@ Use these existing foundations:
 - Existing typography utility classes: `type-display`, `type-heading-*`, `type-body-large`, `type-body`, `type-caption`.
 - Existing theme tokens, dark theme, border system, restrained radius, subtle shadows and motion tokens.
 
-Implementation must not introduce a new design language. New page-specific layout classes are acceptable in W3B, but only to arrange landing page content using the existing system.
+Implementation must not introduce a new design language. New page-specific layout classes are acceptable in W3B, but only to arrange Homepage content using the existing system.
 
-## 3. Page-Level Principles
+## 4. Page-Level Principles
 
 ### Visual Language
 
@@ -61,9 +103,9 @@ Motion is supportive, never theatrical:
 - Workflow animation may highlight steps sequentially, but must pause or disable under `prefers-reduced-motion`.
 - No bouncing, spinning, parallax, particle effects or ambient animated backgrounds.
 
-## 4. Signature Visual System
+## 5. Signature Visual System
 
-The homepage signature element is the controlled execution workflow:
+The Homepage signature element is the controlled execution workflow:
 
 ```text
 Request
@@ -89,7 +131,7 @@ Recommended representation:
 - Mobile: vertical ordered timeline with clear numbered steps.
 - Accessibility: semantic ordered list in source order; decorative connectors hidden from assistive technology.
 
-## 5. Complete Section Architecture
+## 6. Complete Homepage Section Architecture
 
 ### 1. Hero
 
@@ -737,7 +779,7 @@ Future extensibility:
 
 - Can include lead capture form, calendar scheduling or enterprise contact routing.
 
-## 6. Page Wireframe
+## 7. Homepage Wireframe
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
@@ -772,9 +814,9 @@ Future extensibility:
 └──────────────────────────────────────────────────────────────┘
 ```
 
-## 7. Navigation Alignment
+## 8. Navigation Alignment
 
-Future W3B implementation should update navigation labels to page anchors only if approved for implementation. Recommended landing-page anchors:
+Future W3B Homepage Implementation should update navigation labels to page anchors only if approved for implementation. Recommended Homepage anchors:
 
 - `Problem`
 - `Workflow`
@@ -784,10 +826,10 @@ Future W3B implementation should update navigation labels to page anchors only i
 
 This document does not authorize modifying `Navigation.tsx` during W3A.
 
-## 8. W3B Implementation Guardrails
+## 9. W3B Homepage Implementation Guardrails
 
 - Preserve the existing design system.
-- Implement landing page sections using existing primitives first.
+- Implement Homepage sections using existing primitives first.
 - Add page-specific classes only where layout requires them.
 - Keep all content in semantic source order.
 - Use the workflow as the primary custom visual element.

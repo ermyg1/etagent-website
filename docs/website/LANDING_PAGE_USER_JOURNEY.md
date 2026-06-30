@@ -1,7 +1,9 @@
-# E.T Agent Landing Page User Journey
+# E.T Agent Homepage User Journey
 
-Status: W3A architecture specification  
-Scope: Homepage journey, decision path and section-to-intent mapping.
+Status: W3A architecture specification; W3A.6 website scope revision  
+Scope: Homepage journey, decision path and section-to-intent mapping for the official E.T Agent Website.
+
+Historical note: the original planning centred around a Landing Page. As the project matured, the scope expanded into the official E.T Agent Website. The Homepage is now one module within the wider website, and this document preserves the frozen W3A Homepage journey.
 
 ## 1. Primary Audience
 
