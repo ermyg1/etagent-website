@@ -1,5 +1,8 @@
 import './App.css'
 import {
+  Brain,
+  Building2,
+  CircleCheck,
   FileCheck,
   LockKeyhole,
   ShieldCheck,
@@ -48,6 +51,23 @@ const enterpriseTrustPrinciples = [
     icon: FileCheck,
     title: 'Audit Ready',
   },
+]
+
+const aiExcelsItems = [
+  'Understanding language',
+  'Analysing information',
+  'Generating content',
+  'Writing software',
+  'Assisting decision-making',
+]
+
+const enterpriseRequirementItems = [
+  'Human approval',
+  'Policy enforcement',
+  'Accountability',
+  'Auditability',
+  'Explainability',
+  'Controlled execution',
 ]
 
 function App() {
@@ -162,6 +182,85 @@ function App() {
             </Card>
           ))}
         </div>
+      </Section>
+
+      <Section
+        aria-labelledby="problem-title"
+        className="homepage-problem"
+        id="problem"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-problem__header" space="md">
+          <Badge variant="secondary">The challenge</Badge>
+          <h2 className="type-heading-2" id="problem-title">
+            Today's AI is intelligent. Enterprise execution is a different
+            challenge.
+          </h2>
+          <p className="type-body-large">
+            Modern AI systems can analyse information, generate content, write
+            software, and assist with complex decision-making. Enterprise
+            organisations, however, require governance, accountability, policy
+            enforcement, human oversight, and complete auditability before actions
+            are executed.
+          </p>
+        </Stack>
+
+        <div className="homepage-problem__comparison">
+          <Card
+            aria-labelledby="ai-excels-title"
+            className="homepage-problem-card"
+            variant="bordered"
+          >
+            <div className="homepage-problem-card__heading">
+              <Icon
+                className="homepage-problem-card__icon"
+                icon={Brain}
+                size="lg"
+              />
+              <h3 className="type-heading-3" id="ai-excels-title">
+                AI excels at
+              </h3>
+            </div>
+            <ul className="homepage-problem-card__list">
+              {aiExcelsItems.map((item) => (
+                <li className="homepage-problem-card__item" key={item}>
+                  <CircleCheck aria-hidden="true" focusable="false" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <Card
+            aria-labelledby="enterprise-requirements-title"
+            className="homepage-problem-card homepage-problem-card--enterprise"
+            variant="bordered"
+          >
+            <div className="homepage-problem-card__heading">
+              <Icon
+                className="homepage-problem-card__icon"
+                icon={Building2}
+                size="lg"
+              />
+              <h3 className="type-heading-3" id="enterprise-requirements-title">
+                Enterprises still require
+              </h3>
+            </div>
+            <ul className="homepage-problem-card__list">
+              {enterpriseRequirementItems.map((item) => (
+                <li className="homepage-problem-card__item" key={item}>
+                  <CircleCheck aria-hidden="true" focusable="false" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
+        <p className="homepage-problem__statement type-heading-3">
+          Intelligence alone doesn't create enterprise trust. Governance does.
+        </p>
       </Section>
     </PageLayout>
   )
