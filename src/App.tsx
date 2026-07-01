@@ -93,6 +93,29 @@ const governancePrinciples = [
   },
 ]
 
+const introducingPlatformPrinciples = [
+  {
+    body: 'AI analyses requests and prepares structured execution plans.',
+    icon: Brain,
+    title: 'Intelligent Planning',
+  },
+  {
+    body: 'Every proposed action is checked against organisational rules before execution.',
+    icon: ShieldCheck,
+    title: 'Policy Evaluation',
+  },
+  {
+    body: 'Material actions require explicit approval from authorised users.',
+    icon: UserCheck,
+    title: 'Human Approval',
+  },
+  {
+    body: 'Every approved action produces a permanent, reviewable audit artefact.',
+    icon: FileCheck,
+    title: 'Immutable Audit',
+  },
+]
+
 function App() {
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
@@ -341,6 +364,60 @@ function App() {
         <p className="homepage-governance__statement type-heading-3">
           "Without governance, AI becomes automation. With governance, AI becomes
           enterprise infrastructure."
+        </p>
+      </Section>
+
+      <Section
+        aria-labelledby="introducing-et-agent-title"
+        className="homepage-introducing"
+        id="introducing-et-agent"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-introducing__header" space="md">
+          <Badge variant="secondary">INTRODUCING E.T AGENT</Badge>
+          <h2 className="type-heading-2" id="introducing-et-agent-title">
+            A governance-first platform for enterprise AI execution.
+          </h2>
+          <p className="type-body-large">
+            E.T Agent enables organisations to use AI confidently by separating
+            intelligence from execution. AI can analyse information, propose
+            plans, and support decision-making, while policy, human approval, and
+            auditability remain in control of every material action.
+          </p>
+        </Stack>
+
+        <div className="homepage-introducing__grid">
+          {introducingPlatformPrinciples.map((principle) => (
+            <Card
+              aria-labelledby={`introducing-principle-${principle.title
+                .toLowerCase()
+                .replaceAll(' ', '-')}`}
+              className="homepage-introducing-card"
+              key={principle.title}
+              variant="bordered"
+            >
+              <Icon
+                className="homepage-introducing-card__icon"
+                icon={principle.icon}
+                size="lg"
+              />
+              <h3
+                className="homepage-introducing-card__title type-heading-4"
+                id={`introducing-principle-${principle.title
+                  .toLowerCase()
+                  .replaceAll(' ', '-')}`}
+              >
+                {principle.title}
+              </h3>
+              <p className="type-body">{principle.body}</p>
+            </Card>
+          ))}
+        </div>
+
+        <p className="homepage-introducing__statement type-heading-3">
+          "E.T Agent doesn't replace enterprise governance. It operationalises
+          it."
         </p>
       </Section>
     </PageLayout>

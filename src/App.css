@@ -503,6 +503,76 @@
     );
 }
 
+.homepage-introducing {
+  border-top: 1px solid var(--color-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-background-raised) 48%, transparent),
+      transparent 66%
+    );
+}
+
+.homepage-introducing__header {
+  max-width: 860px;
+  margin-bottom: var(--space-2xl);
+}
+
+.homepage-introducing__header .type-body-large {
+  max-width: 820px;
+  color: var(--color-text-muted);
+}
+
+.homepage-introducing__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.homepage-introducing-card {
+  min-height: 100%;
+  padding: var(--space-xl);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-elevated) 88%, var(--color-secondary) 12%),
+      var(--color-surface)
+    );
+}
+
+.homepage-introducing-card__icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-lg);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 34%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+}
+
+.homepage-introducing-card__title {
+  margin-bottom: var(--space-sm);
+}
+
+.homepage-introducing-card .type-body {
+  color: var(--color-text-muted);
+}
+
+.homepage-introducing__statement {
+  max-width: 900px;
+  margin: var(--space-2xl) auto 0;
+  padding: var(--space-xl);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 32%, var(--color-border));
+  border-radius: var(--radius-lg);
+  color: var(--color-text-strong);
+  text-align: center;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-elevated) 88%, var(--color-primary) 12%),
+      var(--color-surface)
+    );
+}
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -850,6 +920,10 @@
   .homepage-governance-card {
     grid-template-columns: 1fr;
   }
+
+  .homepage-introducing__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767px) {
@@ -958,6 +1032,24 @@
   }
 
   .homepage-governance__statement {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    text-align: left;
+  }
+
+  .homepage-introducing__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .homepage-introducing__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .homepage-introducing-card {
+    padding: var(--space-lg);
+  }
+
+  .homepage-introducing__statement {
     margin-top: var(--space-xl);
     padding: var(--space-lg);
     text-align: left;
