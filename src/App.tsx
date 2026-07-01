@@ -70,6 +70,29 @@ const enterpriseRequirementItems = [
   'Controlled execution',
 ]
 
+const governancePrinciples = [
+  {
+    body: 'AI analyses information and proposes actions.',
+    icon: Brain,
+    title: 'Intelligence informs',
+  },
+  {
+    body: 'Every recommendation is evaluated against organisational policy before execution.',
+    icon: ShieldCheck,
+    title: 'Policy decides',
+  },
+  {
+    body: 'Material actions require explicit human approval from an authorised person.',
+    icon: UserCheck,
+    title: 'Humans remain accountable',
+  },
+  {
+    body: 'Each approved action produces a complete audit record that can be reviewed later.',
+    icon: FileCheck,
+    title: 'Every decision is traceable',
+  },
+]
+
 function App() {
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
@@ -260,6 +283,64 @@ function App() {
 
         <p className="homepage-problem__statement type-heading-3">
           Intelligence alone doesn't create enterprise trust. Governance does.
+        </p>
+      </Section>
+
+      <Section
+        aria-labelledby="why-governance-matters-title"
+        className="homepage-governance"
+        id="why-governance-matters"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-governance__header" space="md">
+          <Badge variant="secondary">WHY GOVERNANCE MATTERS</Badge>
+          <h2 className="type-heading-2" id="why-governance-matters-title">
+            Enterprise AI isn't just about intelligence. It's about controlled
+            execution.
+          </h2>
+          <p className="type-body-large">
+            AI can generate recommendations in seconds. Enterprise organisations
+            must ensure those recommendations align with internal policy,
+            regulatory obligations, business risk, and human accountability before
+            any action is taken. Governance is what transforms intelligence into
+            trustworthy execution.
+          </p>
+        </Stack>
+
+        <div className="homepage-governance__grid">
+          {governancePrinciples.map((principle) => (
+            <Card
+              aria-labelledby={`governance-principle-${principle.title
+                .toLowerCase()
+                .replaceAll(' ', '-')}`}
+              className="homepage-governance-card"
+              key={principle.title}
+              variant="bordered"
+            >
+              <Icon
+                className="homepage-governance-card__icon"
+                icon={principle.icon}
+                size="lg"
+              />
+              <div>
+                <h3
+                  className="homepage-governance-card__title type-heading-4"
+                  id={`governance-principle-${principle.title
+                    .toLowerCase()
+                    .replaceAll(' ', '-')}`}
+                >
+                  {principle.title}
+                </h3>
+                <p className="type-body">{principle.body}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <p className="homepage-governance__statement type-heading-3">
+          "Without governance, AI becomes automation. With governance, AI becomes
+          enterprise infrastructure."
         </p>
       </Section>
     </PageLayout>
