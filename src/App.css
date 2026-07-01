@@ -594,8 +594,10 @@
 }
 
 .homepage-workflow__list {
+  --workflow-connector-gap: var(--space-xl);
+
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--workflow-connector-gap);
   max-width: 780px;
   margin-inline: auto;
   list-style: none;
@@ -605,15 +607,27 @@
   position: relative;
 }
 
-.homepage-workflow__item:not(:last-child)::after {
-  content: "↓";
+.homepage-workflow__item:not(:last-child)::before {
+  content: "";
   position: absolute;
   left: 50%;
-  top: calc(100% + var(--space-xs));
-  color: var(--color-text-muted);
-  font-size: var(--type-body);
-  line-height: 1;
+  top: calc(100% + 4px);
+  width: 1px;
+  height: calc(var(--workflow-connector-gap) - 14px);
+  background: color-mix(in srgb, var(--color-border) 72%, transparent);
   transform: translateX(-50%);
+}
+
+.homepage-workflow__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + var(--workflow-connector-gap) - 11px);
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid var(--color-text-muted);
+  border-bottom: 1px solid var(--color-text-muted);
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .homepage-workflow-card {
@@ -1172,11 +1186,16 @@
   }
 
   .homepage-workflow__list {
-    gap: var(--space-lg);
+    --workflow-connector-gap: var(--space-lg);
+  }
+
+  .homepage-workflow__item:not(:last-child)::before {
+    top: calc(100% + 3px);
+    height: calc(var(--workflow-connector-gap) - 12px);
   }
 
   .homepage-workflow__item:not(:last-child)::after {
-    top: calc(100% + var(--space-2xs));
+    top: calc(100% + var(--workflow-connector-gap) - 10px);
   }
 
   .homepage-workflow-card {
