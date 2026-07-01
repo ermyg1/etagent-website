@@ -177,6 +177,33 @@ const howItWorksSteps = [
   },
 ]
 
+const governanceComparisonRows = [
+  {
+    conventional: 'AI proposes and executes.',
+    etAgent: 'AI proposes. Humans authorise execution.',
+  },
+  {
+    conventional: 'Policy applied after deployment or minimally.',
+    etAgent: 'Policy evaluated before execution.',
+  },
+  {
+    conventional: 'Limited visibility into decisions.',
+    etAgent: 'Explainable governance workflow.',
+  },
+  {
+    conventional: 'Audit capability varies.',
+    etAgent: 'Immutable audit artefacts.',
+  },
+  {
+    conventional: 'Focus on automation.',
+    etAgent: 'Focus on accountable automation.',
+  },
+  {
+    conventional: 'Trust is assumed.',
+    etAgent: 'Trust is demonstrated.',
+  },
+]
+
 function App() {
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
@@ -546,6 +573,72 @@ function App() {
             Unlike autonomous AI agents, E.T Agent separates intelligence from
             execution. Every action is evaluated against policy, reviewed for
             impact, and requires explicit human approval before execution.
+          </p>
+        </Card>
+      </Section>
+
+      <Section
+        aria-labelledby="governance-by-design-title"
+        className="homepage-comparison"
+        id="comparison"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-comparison__header" space="md">
+          <Badge variant="secondary">COMPARISON</Badge>
+          <h2 className="type-heading-2" id="governance-by-design-title">
+            Governance by Design
+          </h2>
+          <p className="type-body-large">
+            Compare a conventional autonomous AI workflow with E.T Agent's
+            governance-first execution model.
+          </p>
+        </Stack>
+
+        <div className="homepage-comparison__columns" aria-hidden="true">
+          <p className="type-caption">Conventional AI</p>
+          <p className="type-caption">E.T Agent</p>
+        </div>
+
+        <div className="homepage-comparison__rows">
+          {governanceComparisonRows.map((row, index) => (
+            <Card
+              aria-label={`Governance comparison row ${index + 1}`}
+              className="homepage-comparison-row"
+              key={`${row.conventional}-${row.etAgent}`}
+              variant="bordered"
+            >
+              <div className="homepage-comparison-row__cell">
+                <p className="homepage-comparison-row__label type-caption">
+                  Conventional AI
+                </p>
+                <p className="type-body-large">{row.conventional}</p>
+              </div>
+              <div className="homepage-comparison-row__cell">
+                <p className="homepage-comparison-row__label type-caption">
+                  E.T Agent
+                </p>
+                <p className="type-body-large">{row.etAgent}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        <Card
+          aria-labelledby="governance-operating-model-title"
+          className="homepage-comparison__statement"
+          variant="bordered"
+        >
+          <h3
+            className="type-heading-3"
+            id="governance-operating-model-title"
+          >
+            Governance is not a feature.
+          </h3>
+          <p className="type-body-large">
+            Governance is the operating model. E.T Agent was designed so that
+            policy, human oversight, and auditability are integral to every
+            material action rather than added afterwards.
           </p>
         </Card>
       </Section>
