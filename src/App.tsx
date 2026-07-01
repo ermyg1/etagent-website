@@ -3,8 +3,16 @@ import {
   Brain,
   Building2,
   CircleCheck,
+  ClipboardCheck,
+  FileText,
   FileCheck,
+  Gauge,
+  History,
+  ListChecks,
   LockKeyhole,
+  MessageSquareText,
+  PlayCircle,
+  Route,
   ShieldCheck,
   SlidersHorizontal,
   UserCheck,
@@ -113,6 +121,59 @@ const introducingPlatformPrinciples = [
     body: 'Every approved action produces a permanent, reviewable audit artefact.',
     icon: FileCheck,
     title: 'Immutable Audit',
+  },
+]
+
+const howItWorksSteps = [
+  {
+    body: 'The user describes what they want to achieve.',
+    icon: MessageSquareText,
+    title: 'Intent',
+  },
+  {
+    body: 'The AI develops a proposed plan without taking action.',
+    icon: Route,
+    title: 'Planning',
+  },
+  {
+    body: 'The platform determines which approved capabilities would be required.',
+    icon: ListChecks,
+    title: 'Capability Analysis',
+  },
+  {
+    body: 'Governance policies determine whether the requested action is permitted.',
+    icon: ShieldCheck,
+    title: 'Policy Evaluation',
+  },
+  {
+    body: 'Potential impact and risk level are assessed before approval.',
+    icon: Gauge,
+    title: 'Risk Classification',
+  },
+  {
+    body: 'A clear explanation describes exactly what would happen if approved.',
+    icon: FileText,
+    title: 'Impact Summary',
+  },
+  {
+    body: 'Execution requires explicit human authorisation.',
+    icon: UserCheck,
+    title: 'Human Approval',
+  },
+  {
+    body: 'Approved actions execute in a controlled simulated environment.',
+    icon: PlayCircle,
+    title: 'Execution (Simulated)',
+  },
+  {
+    body: 'A permanent audit record is generated for transparency and review.',
+    icon: ClipboardCheck,
+    title: 'Audit Artefact',
+  },
+  {
+    body: 'Authorised users can review the complete workflow and replay decisions for audit, investigation, and continuous improvement.',
+    icon: History,
+    title: 'Review & Replay',
   },
 ]
 
@@ -419,6 +480,74 @@ function App() {
           "E.T Agent doesn't replace enterprise governance. It operationalises
           it."
         </p>
+      </Section>
+
+      <Section
+        aria-labelledby="how-et-agent-works-title"
+        className="homepage-workflow"
+        id="how-et-agent-works"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-workflow__header" space="md">
+          <Badge variant="secondary">HOW E.T AGENT WORKS</Badge>
+          <h2 className="type-heading-2" id="how-et-agent-works-title">
+            How E.T Agent Works
+          </h2>
+          <p className="type-body-large">
+            Every request follows a governed workflow before any action can be
+            taken. Intelligence proposes. Governance decides. Execution only
+            occurs after policy evaluation and explicit human approval.
+          </p>
+        </Stack>
+
+        <ol className="homepage-workflow__list">
+          {howItWorksSteps.map((step, index) => (
+            <li className="homepage-workflow__item" key={step.title}>
+              <Card
+                aria-labelledby={`workflow-step-${index + 1}`}
+                className="homepage-workflow-card"
+                variant="bordered"
+              >
+                <span className="homepage-workflow-card__number">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <Icon
+                  className="homepage-workflow-card__icon"
+                  icon={step.icon}
+                  size="lg"
+                />
+                <div>
+                  <h3
+                    className="homepage-workflow-card__title type-heading-4"
+                    id={`workflow-step-${index + 1}`}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="type-body">{step.body}</p>
+                </div>
+              </Card>
+            </li>
+          ))}
+        </ol>
+
+        <Card
+          aria-labelledby="governance-before-execution-title"
+          className="homepage-workflow__statement"
+          variant="bordered"
+        >
+          <h3
+            className="type-heading-3"
+            id="governance-before-execution-title"
+          >
+            Governance Before Execution
+          </h3>
+          <p className="type-body-large">
+            Unlike autonomous AI agents, E.T Agent separates intelligence from
+            execution. Every action is evaluated against policy, reviewed for
+            impact, and requires explicit human approval before execution.
+          </p>
+        </Card>
       </Section>
     </PageLayout>
   )
