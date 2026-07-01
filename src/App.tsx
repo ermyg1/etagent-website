@@ -199,8 +199,8 @@ const governanceComparisonRows = [
     etAgent: 'Focus on accountable automation.',
   },
   {
-    conventional: 'Trust is assumed.',
-    etAgent: 'Trust is demonstrated.',
+    conventional: 'Trust is difficult to verify.',
+    etAgent: 'Trust is continuously evidenced.',
   },
 ]
 
