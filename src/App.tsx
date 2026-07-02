@@ -27,6 +27,7 @@ import { Badge } from './components/Badge'
 import { Button } from './components/Button'
 import { Card } from './components/Card'
 import { Icon } from './components/Icon'
+import { StatusBadge } from './components/StatusBadge'
 import { PageLayout, Section, Stack } from './components/layout'
 
 const workflowPreview = [
@@ -397,8 +398,558 @@ const productArchitectureNodes = [
   { icon: Plug, title: 'Integrations' },
 ]
 
+const trustPrinciples = [
+  {
+    body: 'Accountable people remain responsible for approving material actions before execution.',
+    icon: UserCheck,
+    title: 'Human Authority',
+  },
+  {
+    body: 'Governance boundaries are evaluated before AI recommendations become operational plans.',
+    icon: ShieldCheck,
+    title: 'Governance First',
+  },
+  {
+    body: 'Missing context, unresolved policy or absent approval prevents execution by default.',
+    icon: LockKeyhole,
+    title: 'Fail Closed',
+  },
+  {
+    body: 'Requests, decisions, approvals and outcomes are structured so they can be reviewed.',
+    icon: ClipboardCheck,
+    title: 'Auditability',
+  },
+  {
+    body: 'AI recommendations include supporting context so reviewers can understand proposed impact.',
+    icon: FileText,
+    title: 'Transparency',
+  },
+  {
+    body: 'Execution paths are constrained by defined capabilities, policy checks and recorded outcomes.',
+    icon: Workflow,
+    title: 'Deterministic Execution',
+  },
+]
+
+const trustBuildSteps = [
+  'AI proposes',
+  'Policies evaluate',
+  'Risk classified',
+  'Impact explained',
+  'Human approves',
+  'Controlled execution',
+  'Audit evidence produced',
+]
+
+const securityOverview = [
+  {
+    body: 'User and organisation identity are treated as inputs to governance decisions and access boundaries.',
+    icon: Users,
+    title: 'Identity',
+  },
+  {
+    body: 'Policy checks are positioned before execution so proposed actions can be blocked or routed for review.',
+    icon: ShieldCheck,
+    title: 'Policy Enforcement',
+  },
+  {
+    body: 'Capabilities are scoped to defined roles and workflows rather than unrestricted AI authority.',
+    icon: LockKeyhole,
+    title: 'Least Privilege',
+  },
+  {
+    body: 'The platform separates intelligence, governance, execution and evidence responsibilities.',
+    icon: Network,
+    title: 'Secure Architecture',
+  },
+  {
+    body: 'Execution surfaces are designed to remain bounded by explicit capability and environment controls.',
+    icon: Building2,
+    title: 'Infrastructure Isolation',
+  },
+  {
+    body: 'Encryption-related controls are part of the future enterprise readiness roadmap and are not claimed as complete here.',
+    icon: FileCheck,
+    status: 'Planned',
+    title: 'Future Encryption Roadmap',
+  },
+] as const
+
+const governanceStack = [
+  'Intelligence',
+  'Policy Engine',
+  'Human Authority',
+  'Execution Layer',
+  'Verification',
+  'Immutable Audit Artefact',
+]
+
+const aiCanItems = ['Analyse', 'Recommend', 'Summarise', 'Plan', 'Evaluate']
+
+const aiCannotItems = [
+  'Override policy',
+  'Approve itself',
+  'Escalate privileges',
+  'Bypass governance',
+  'Hide execution',
+  'Trigger irreversible actions automatically',
+]
+
+const complianceAlignment = [
+  {
+    body: 'Governance, human accountability and evidence design are aligned with privacy-aware operational controls.',
+    status: 'In Progress',
+    title: 'GDPR',
+  },
+  {
+    body: 'Architecture boundaries and access-control patterns are designed with information security management expectations in mind.',
+    status: 'In Progress',
+    title: 'ISO 27001',
+  },
+  {
+    body: 'Audit evidence, change visibility and control ownership are being mapped to common trust service expectations.',
+    status: 'Planned',
+    title: 'SOC 2',
+  },
+  {
+    body: 'Policy evaluation, risk classification and governance traceability support control-oriented AI operations.',
+    status: 'In Progress',
+    title: 'NIST',
+  },
+  {
+    body: 'Healthcare-specific control alignment is a future roadmap item and does not imply current readiness or certification.',
+    status: 'Planned',
+    title: 'HIPAA (Future)',
+  },
+] as const
+
+const trustFaqs = [
+  {
+    answer:
+      'No. Material actions are designed to require policy evaluation and explicit human approval before controlled execution.',
+    question: 'Can AI execute actions automatically?',
+  },
+  {
+    answer:
+      'Human approval occurs after policy evaluation, risk classification and impact explanation, and before execution authority is released.',
+    question: 'Where does human approval occur?',
+  },
+  {
+    answer:
+      'Policies evaluate proposed actions before execution. When a proposed action does not satisfy policy, execution is blocked or routed according to governance rules.',
+    question: 'How are policies enforced?',
+  },
+  {
+    answer:
+      'The governance model is designed around organisation-defined policies, roles and approval boundaries so controls can reflect local operating requirements.',
+    question: 'Can organisations customise governance?',
+  },
+  {
+    answer:
+      'The audit model is designed to structure requests, policy decisions, approvals and execution outcomes as reviewable evidence. Export behaviour is part of the documentation roadmap.',
+    question: 'Can audit evidence be exported?',
+  },
+  {
+    answer:
+      'The architecture is designed with enterprise identity integration in mind. Specific identity-provider support should be confirmed during implementation planning.',
+    question: 'Can E.T Agent integrate with enterprise identity systems?',
+  },
+  {
+    answer:
+      'Execution does not proceed. The blocked decision is surfaced with enough context for review, remediation or policy adjustment by authorised people.',
+    question: 'What happens when policy blocks execution?',
+  },
+]
+
+const documentationHub = [
+  { status: 'In Progress', title: 'Architecture Overview' },
+  { status: 'Implemented', title: 'Governance Model' },
+  { status: 'In Progress', title: 'Security Overview' },
+  { status: 'Planned', title: 'Capability Model' },
+  { status: 'Planned', title: 'Audit Model' },
+  { status: 'Planned', title: 'Compliance Roadmap' },
+] as const
+
+const trustLocalNavigation = [
+  { href: '#trust-overview', label: 'Overview' },
+  { href: '#trust-principles', label: 'Principles' },
+  { href: '#security-overview', label: 'Security' },
+  { href: '#governance-model-trust', label: 'Governance' },
+  { href: '#ai-boundaries', label: 'AI Boundaries' },
+  { href: '#compliance-alignment', label: 'Compliance' },
+  { href: '#enterprise-faq', label: 'FAQs' },
+  { href: '#documentation-hub', label: 'Documentation' },
+]
+
 function createId(prefix: string, value: string) {
   return `${prefix}-${value.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}`
+}
+
+function TrustCentrePage() {
+  const focusSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.focus()
+  }
+
+  return (
+    <PageLayout>
+      <Section
+        aria-labelledby="trust-hero-title"
+        className="trust-hero"
+        id="trust-overview"
+        spacing="spacious"
+        tabIndex={-1}
+        width="wide"
+      >
+        <div className="trust-hero__grid">
+          <Stack className="trust-hero__content" space="lg">
+            <Badge variant="primary">TRUST CENTRE</Badge>
+            <Stack space="md">
+              <h1 className="type-display" id="trust-hero-title">
+                Enterprise AI Built for Trust
+              </h1>
+              <p className="type-body-large">
+                E.T Agent is engineered around governance, transparency and
+                human accountability, helping organisations adopt AI without
+                sacrificing control.
+              </p>
+            </Stack>
+            <div className="trust-hero__actions" aria-label="Trust Centre actions">
+              <Button onClick={() => focusSection('governance-model-trust')} size="lg">
+                View Governance
+              </Button>
+              <Button
+                onClick={() => focusSection('security-overview')}
+                size="lg"
+                variant="outline"
+              >
+                Explore Architecture
+              </Button>
+            </div>
+          </Stack>
+
+          <Card
+            aria-label="Subtle trust architecture illustration"
+            className="trust-architecture-card"
+            variant="bordered"
+          >
+            <Badge variant="secondary">Trust architecture</Badge>
+            <div className="trust-architecture-card__core">
+              <Icon icon={ShieldCheck} size="lg" />
+              <span>Governance Core</span>
+            </div>
+            <ol className="trust-architecture-card__flow">
+              <li>Policy</li>
+              <li>Approval</li>
+              <li>Audit</li>
+            </ol>
+          </Card>
+        </div>
+      </Section>
+
+      <nav aria-label="Trust Centre sections" className="trust-local-nav">
+        <div className="trust-local-nav__inner">
+          {trustLocalNavigation.map((item) => (
+            <a href={item.href} key={item.href}>
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      <Section
+        aria-labelledby="trust-principles-title"
+        className="trust-section trust-principles"
+        id="trust-principles"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Trust Principles</Badge>
+          <h2 className="type-heading-2" id="trust-principles-title">
+            Principles that make governed AI reviewable.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--three">
+          {trustPrinciples.map((principle) => (
+            <Card
+              aria-labelledby={createId('trust-principle', principle.title)}
+              className="product-info-card"
+              key={principle.title}
+              variant="bordered"
+            >
+              <Icon className="product-info-card__icon" icon={principle.icon} size="lg" />
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('trust-principle', principle.title)}
+              >
+                {principle.title}
+              </h3>
+              <p className="type-body">{principle.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="trust-built-title"
+        className="trust-section trust-built"
+        width="wide"
+      >
+        <Stack className="trust-section-header-centered" space="md">
+          <Badge variant="secondary">How Trust Is Built</Badge>
+          <h2 className="type-heading-2" id="trust-built-title">
+            Governance creates the path from recommendation to evidence.
+          </h2>
+        </Stack>
+        <ol className="trust-workflow">
+          {trustBuildSteps.map((step, index) => (
+            <li className="trust-workflow__item" key={step}>
+              <Card className="trust-workflow__card" variant="bordered">
+                <span className="trust-workflow__index">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="trust-workflow__label">{step}</span>
+              </Card>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section
+        aria-labelledby="security-overview-title"
+        className="trust-section trust-security"
+        id="security-overview"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Security Overview</Badge>
+          <h2 className="type-heading-2" id="security-overview-title">
+            Security responsibilities described without unsupported claims.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--three">
+          {securityOverview.map((item) => (
+            <Card
+              aria-labelledby={createId('security-overview', item.title)}
+              className="trust-doc-card"
+              key={item.title}
+              variant="bordered"
+            >
+              <div className="trust-doc-card__heading">
+                <Icon className="product-info-card__icon" icon={item.icon} size="lg" />
+                {'status' in item ? <StatusBadge state={item.status} /> : null}
+              </div>
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('security-overview', item.title)}
+              >
+                {item.title}
+              </h3>
+              <p className="type-body">{item.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="governance-model-trust-title"
+        className="trust-section trust-governance"
+        id="governance-model-trust"
+        tabIndex={-1}
+        width="wide"
+      >
+        <div className="trust-governance__grid">
+          <Stack className="trust-governance__content" space="md">
+            <Badge variant="secondary">Governance Model</Badge>
+            <h2 className="type-heading-2" id="governance-model-trust-title">
+              Authority is separated from intelligence.
+            </h2>
+            <p className="type-body-large">
+              E.T Agent treats governance as an operating model. AI can analyse
+              and recommend, but execution authority remains constrained by
+              policy, human approval, verification and evidence generation.
+            </p>
+            <p className="type-body">
+              This separation helps organisations evaluate proposed work before
+              capability is released, and preserves a structured record of the
+              decision path after approved execution.
+            </p>
+          </Stack>
+          <ol className="trust-stack" aria-label="Governance stack">
+            {governanceStack.map((item, index) => (
+              <li className="trust-stack__item" key={item}>
+                <span className="trust-stack__index">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="ai-boundaries-title"
+        className="trust-section trust-boundaries"
+        id="ai-boundaries"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="trust-section-header-centered" space="md">
+          <Badge variant="secondary">AI Boundaries</Badge>
+          <h2 className="type-heading-2" id="ai-boundaries-title">
+            Clear boundaries preserve accountable control.
+          </h2>
+        </Stack>
+        <div className="trust-boundaries__grid">
+          <Card className="trust-boundary-card trust-boundary-card--can" variant="bordered">
+            <h3 className="type-heading-3">AI CAN</h3>
+            <ul className="trust-check-list">
+              {aiCanItems.map((item) => (
+                <li key={item}>
+                  <CircleCheck aria-hidden="true" focusable="false" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card
+            className="trust-boundary-card trust-boundary-card--cannot"
+            variant="bordered"
+          >
+            <h3 className="type-heading-3">AI CANNOT</h3>
+            <ul className="trust-check-list">
+              {aiCannotItems.map((item) => (
+                <li key={item}>
+                  <LockKeyhole aria-hidden="true" focusable="false" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="compliance-alignment-title"
+        className="trust-section trust-compliance"
+        id="compliance-alignment"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Compliance Alignment</Badge>
+          <h2 className="type-heading-2" id="compliance-alignment-title">
+            Designed with Enterprise Control Frameworks in Mind
+          </h2>
+          <p className="type-body-large">
+            These references describe engineering alignment only. They do not
+            claim certification, attestation or regulatory approval.
+          </p>
+        </Stack>
+        <div className="trust-compliance__grid">
+          {complianceAlignment.map((item) => (
+            <Card
+              aria-labelledby={createId('compliance', item.title)}
+              className="trust-doc-card"
+              key={item.title}
+              variant="bordered"
+            >
+              <div className="trust-doc-card__status">
+                <StatusBadge state={item.status} />
+              </div>
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('compliance', item.title)}
+              >
+                {item.title}
+              </h3>
+              <p className="type-body">{item.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="enterprise-faq-title"
+        className="trust-section trust-faq"
+        id="enterprise-faq"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Enterprise FAQ</Badge>
+          <h2 className="type-heading-2" id="enterprise-faq-title">
+            Questions procurement and security teams usually ask first.
+          </h2>
+        </Stack>
+        <div className="trust-faq__list">
+          {trustFaqs.map((item) => (
+            <details className="trust-faq__item" key={item.question}>
+              <summary className="trust-faq__question">{item.question}</summary>
+              <p className="type-body">{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="documentation-hub-title"
+        className="trust-section trust-documentation"
+        id="documentation-hub"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Documentation Hub</Badge>
+          <h2 className="type-heading-2" id="documentation-hub-title">
+            Enterprise documentation areas.
+          </h2>
+        </Stack>
+        <div className="trust-documentation__grid">
+          {documentationHub.map((item) => (
+            <Card className="trust-doc-link" key={item.title} variant="bordered">
+              <div>
+                <Icon className="trust-doc-link__icon" icon={FileText} size="md" />
+                <h3 className="type-heading-4">{item.title}</h3>
+              </div>
+              <div className="trust-doc-link__meta">
+                <StatusBadge state={item.status} />
+                <span aria-hidden="true" className="trust-doc-link__arrow">
+                  →
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="trust-cta-title"
+        className="trust-cta"
+        spacing="compact"
+        width="wide"
+      >
+        <Card className="product-cta__card" variant="bordered">
+          <Stack className="product-cta__content" space="md">
+            <Badge variant="secondary">Next Steps</Badge>
+            <h2 className="type-heading-2" id="trust-cta-title">
+              Continue Your Enterprise Evaluation
+            </h2>
+          </Stack>
+          <div className="product-cta__actions" aria-label="Trust Centre next steps">
+            <Button onClick={() => window.location.assign('/product')} size="lg">
+              Product
+            </Button>
+            <Button size="lg" variant="outline">
+              Contact
+            </Button>
+          </div>
+        </Card>
+      </Section>
+    </PageLayout>
+  )
 }
 
 function ProductPage() {
@@ -442,7 +993,7 @@ function ProductPage() {
       >
         <div className="product-overview__grid">
           <Stack className="product-overview__header" space="md">
-            <p className="type-caption">Platform Overview</p>
+            <Badge variant="secondary">Platform Overview</Badge>
             <h2 className="type-heading-2" id="platform-overview-title">
               Multiple governed workspaces operating through a Governance Core.
             </h2>
@@ -485,7 +1036,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <p className="type-caption">Platform Principles</p>
+          <Badge variant="secondary">Platform Principles</Badge>
           <h2 className="type-heading-2" id="platform-principles-title">
             Principles that keep intelligence governed.
           </h2>
@@ -517,7 +1068,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <p className="type-caption">Platform Workspaces</p>
+          <Badge variant="secondary">Platform Workspaces</Badge>
           <h2 className="type-heading-2" id="platform-workspaces-title">
             Responsibilities organised across governed workspaces.
           </h2>
@@ -555,7 +1106,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <p className="type-caption">Execution Lifecycle</p>
+          <Badge variant="secondary">Execution Lifecycle</Badge>
           <h2 className="type-heading-2" id="execution-lifecycle-title">
             From request to audit artefact.
           </h2>
@@ -607,7 +1158,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header product-section-header--center" space="md">
-          <p className="type-caption">Built for Different Organisations</p>
+          <Badge variant="secondary">Built for Different Organisations</Badge>
           <h2 className="type-heading-2" id="organisations-title">
             Equal governance patterns for different scales of work.
           </h2>
@@ -643,7 +1194,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <p className="type-caption">Platform Evolution</p>
+          <Badge variant="secondary">Platform Evolution</Badge>
           <h2 className="type-heading-2" id="platform-evolution-title">
             Website maturity, not a product roadmap.
           </h2>
@@ -668,7 +1219,7 @@ function ProductPage() {
       >
         <Card className="product-cta__card" variant="bordered">
           <Stack className="product-cta__content" space="md">
-            <p className="type-caption">Next Steps</p>
+            <Badge variant="secondary">Next Steps</Badge>
             <h2 className="type-heading-2" id="product-cta-title">
               Bring governed AI execution into enterprise review.
             </h2>
@@ -689,6 +1240,10 @@ function ProductPage() {
 }
 
 function App() {
+  if (window.location.pathname === '/trust') {
+    return <TrustCentrePage />
+  }
+
   if (window.location.pathname === '/product') {
     return <ProductPage />
   }
@@ -736,7 +1291,7 @@ function App() {
             variant="bordered"
           >
             <div className="workflow-preview__header">
-              <p className="type-caption">Controlled execution preview</p>
+              <Badge variant="secondary">Controlled execution preview</Badge>
               <h2 className="type-heading-3" id="workflow-preview-title">
                 Request to audit log
               </h2>
@@ -766,7 +1321,7 @@ function App() {
         width="wide"
       >
         <Stack className="enterprise-trust__header" space="md">
-          <p className="type-caption">Enterprise trust</p>
+          <Badge variant="secondary">Enterprise trust</Badge>
           <h2 className="type-heading-2" id="enterprise-trust-title">
             Enterprise trust built into every decision
           </h2>

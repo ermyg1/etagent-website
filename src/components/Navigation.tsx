@@ -4,8 +4,9 @@ import { Button } from './Button'
 import { Logo } from './Logo'
 
 const navItems = [
-  { href: '#home', label: 'Home' },
-  { href: '#governance-model', label: 'Governance model' },
+  { href: '/#home', label: 'Home' },
+  { href: '/#governance-model', label: 'Governance model' },
+  { href: '/trust', label: 'Trust Centre' },
 ]
 
 export function Navigation() {
