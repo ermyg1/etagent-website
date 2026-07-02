@@ -7,6 +7,7 @@ import {
   FileText,
   FileCheck,
   Gauge,
+  GitBranch,
   History,
   ListChecks,
   LockKeyhole,
@@ -237,6 +238,39 @@ const coreEnterpriseCapabilities = [
   },
 ]
 
+const enterprisePillars = [
+  {
+    body: 'Human approval, policy evaluation and controlled execution are foundational architectural components rather than optional safeguards.',
+    icon: ShieldCheck,
+    title: 'Governance-First Architecture',
+  },
+  {
+    body: 'Execution authority is intentionally constrained through explicit permissions and governed workflows to reduce operational risk.',
+    icon: LockKeyhole,
+    title: 'Security by Design',
+  },
+  {
+    body: 'Approvals, decisions and execution outcomes are structured to provide transparent operational evidence and support organisational oversight.',
+    icon: ClipboardCheck,
+    title: 'Auditability',
+  },
+  {
+    body: 'AI recommendations include supporting context to assist informed human review before any authorised execution.',
+    icon: FileText,
+    title: 'Explainability',
+  },
+  {
+    body: 'The platform remains independent of any individual AI model or provider through clearly defined architectural boundaries.',
+    icon: GitBranch,
+    title: 'Vendor-Neutral Integration',
+  },
+  {
+    body: 'The governance architecture has been designed to support future enterprise compliance programmes and evolving regulatory expectations.',
+    icon: FileCheck,
+    title: 'Future Compliance Support',
+  },
+]
+
 function App() {
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
@@ -316,9 +350,8 @@ function App() {
             Enterprise trust built into every decision
           </h2>
           <p className="type-body-large">
-            E.T Agent separates intelligence from authority so organisations retain
-            oversight, enforce policy, and maintain a complete audit trail for every
-            approved action.
+            Organisations retain oversight, enforce policy and maintain a complete
+            audit trail for every approved action.
           </p>
         </Stack>
 
@@ -365,11 +398,10 @@ function App() {
             challenge.
           </h2>
           <p className="type-body-large">
-            Modern AI systems can analyse information, generate content, write
-            software, and assist with complex decision-making. Enterprise
-            organisations, however, require governance, accountability, policy
-            enforcement, human oversight, and complete auditability before actions
-            are executed.
+            Modern AI can analyse information, generate content and assist complex
+            decisions. Enterprise organisations still need governance,
+            accountability, policy enforcement and complete auditability before
+            actions are executed.
           </p>
         </Stack>
 
@@ -444,11 +476,9 @@ function App() {
             execution.
           </h2>
           <p className="type-body-large">
-            AI can generate recommendations in seconds. Enterprise organisations
-            must ensure those recommendations align with internal policy,
-            regulatory obligations, business risk, and human accountability before
-            any action is taken. Governance is what transforms intelligence into
-            trustworthy execution.
+            Recommendations can be generated in seconds. Enterprise organisations
+            still need to verify policy alignment, business risk and human
+            accountability before any action is taken.
           </p>
         </Stack>
 
@@ -501,10 +531,9 @@ function App() {
             A governance-first platform for enterprise AI execution.
           </h2>
           <p className="type-body-large">
-            E.T Agent enables organisations to use AI confidently by separating
-            intelligence from execution. AI can analyse information, propose
-            plans, and support decision-making, while policy, human approval, and
-            auditability remain in control of every material action.
+            E.T Agent lets AI analyse information, propose plans and support
+            decisions while policy, human approval and auditability remain in
+            control of every material action.
           </p>
         </Stack>
 
@@ -693,10 +722,8 @@ function App() {
             without surrendering control.
           </p>
           <p className="homepage-capabilities__intro type-body">
-            E.T Agent's architecture provides enterprise capabilities that help
-            organisations deploy AI within clear operational, governance and
-            accountability boundaries. Each capability supports responsible
-            adoption without compromising human oversight.
+            Each capability supports AI adoption within clear operational,
+            governance and accountability boundaries.
           </p>
         </Stack>
 
@@ -733,6 +760,64 @@ function App() {
         <p className="homepage-capabilities__callout type-heading-4">
           Designed to strengthen enterprise governance, not replace enterprise
           judgement.
+        </p>
+      </Section>
+
+      <Section
+        aria-labelledby="built-for-enterprise-title"
+        className="homepage-enterprise"
+        id="built-for-enterprise"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-enterprise__header" space="md">
+          <Badge variant="secondary">Built for enterprise</Badge>
+          <h2 className="type-heading-2" id="built-for-enterprise-title">
+            Built for Enterprise
+          </h2>
+          <p className="type-body-large">
+            Designed with the operational, security and governance expectations
+            of modern organisations in mind.
+          </p>
+          <p className="homepage-enterprise__intro type-body">
+            E.T Agent is organised around governance, operational accountability
+            and architectures that support responsible deployment from the
+            beginning.
+          </p>
+        </Stack>
+
+        <div className="homepage-enterprise__grid">
+          {enterprisePillars.map((pillar) => (
+            <Card
+              aria-labelledby={`enterprise-pillar-${pillar.title
+                .toLowerCase()
+                .replaceAll(' ', '-')
+                .replaceAll('&', 'and')}`}
+              className="homepage-enterprise-card"
+              key={pillar.title}
+              variant="bordered"
+            >
+              <Icon
+                className="homepage-enterprise-card__icon"
+                icon={pillar.icon}
+                size="lg"
+              />
+              <h3
+                className="homepage-enterprise-card__title type-heading-4"
+                id={`enterprise-pillar-${pillar.title
+                  .toLowerCase()
+                  .replaceAll(' ', '-')
+                  .replaceAll('&', 'and')}`}
+              >
+                {pillar.title}
+              </h3>
+              <p className="type-body">{pillar.body}</p>
+            </Card>
+          ))}
+        </div>
+
+        <p className="homepage-enterprise__statement type-heading-4">
+          Enterprise trust begins with architecture, not marketing claims.
         </p>
       </Section>
     </PageLayout>
