@@ -204,6 +204,39 @@ const governanceComparisonRows = [
   },
 ]
 
+const coreEnterpriseCapabilities = [
+  {
+    body: 'High-impact actions remain subject to explicit human approval before execution, ensuring organisational responsibility stays with authorised decision-makers.',
+    icon: UserCheck,
+    title: 'Human Authorisation',
+  },
+  {
+    body: 'Every proposed action is evaluated against organisational policy before execution, helping ensure AI operates within defined governance boundaries.',
+    icon: ShieldCheck,
+    title: 'Policy-Gated Execution',
+  },
+  {
+    body: 'Execution authority is constrained by explicitly assigned capabilities rather than unrestricted AI access, reducing operational risk through defined permissions.',
+    icon: LockKeyhole,
+    title: 'Capability-Based Authority',
+  },
+  {
+    body: 'Recommendations include supporting context and impact information to assist informed human decision-making before any approved execution.',
+    icon: FileText,
+    title: 'Explainable Decision Support',
+  },
+  {
+    body: 'Approvals, decisions and execution outcomes are recorded to provide transparent evidence for governance, compliance and operational review.',
+    icon: ClipboardCheck,
+    title: 'Audit-Grade Evidence',
+  },
+  {
+    body: 'Governed workflows can be reconstructed to understand what occurred, how decisions were reached and how approved actions were performed.',
+    icon: History,
+    title: 'Deterministic Replay',
+  },
+]
+
 function App() {
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
@@ -641,6 +674,66 @@ function App() {
             material action rather than added afterwards.
           </p>
         </Card>
+      </Section>
+
+      <Section
+        aria-labelledby="core-enterprise-capabilities-title"
+        className="homepage-capabilities"
+        id="core-enterprise-capabilities"
+        spacing="default"
+        width="wide"
+      >
+        <Stack className="homepage-capabilities__header" space="md">
+          <Badge variant="secondary">Core enterprise capabilities</Badge>
+          <h2 className="type-heading-2" id="core-enterprise-capabilities-title">
+            Core Enterprise Capabilities
+          </h2>
+          <p className="type-body-large">
+            Governance capabilities designed to help organisations adopt AI
+            without surrendering control.
+          </p>
+          <p className="homepage-capabilities__intro type-body">
+            E.T Agent's architecture provides enterprise capabilities that help
+            organisations deploy AI within clear operational, governance and
+            accountability boundaries. Each capability supports responsible
+            adoption without compromising human oversight.
+          </p>
+        </Stack>
+
+        <div className="homepage-capabilities__grid">
+          {coreEnterpriseCapabilities.map((capability) => (
+            <Card
+              aria-labelledby={`core-capability-${capability.title
+                .toLowerCase()
+                .replaceAll(' ', '-')
+                .replaceAll('&', 'and')}`}
+              className="homepage-capability-card"
+              key={capability.title}
+              variant="bordered"
+            >
+              <Icon
+                className="homepage-capability-card__icon"
+                icon={capability.icon}
+                size="lg"
+              />
+              <h3
+                className="homepage-capability-card__title type-heading-4"
+                id={`core-capability-${capability.title
+                  .toLowerCase()
+                  .replaceAll(' ', '-')
+                  .replaceAll('&', 'and')}`}
+              >
+                {capability.title}
+              </h3>
+              <p className="type-body">{capability.body}</p>
+            </Card>
+          ))}
+        </div>
+
+        <p className="homepage-capabilities__callout type-heading-4">
+          Designed to strengthen enterprise governance, not replace enterprise
+          judgement.
+        </p>
       </Section>
     </PageLayout>
   )

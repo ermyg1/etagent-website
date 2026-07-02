@@ -789,6 +789,72 @@
   color: var(--color-text-muted);
 }
 
+.homepage-capabilities {
+  border-top: 1px solid var(--color-border);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface) 48%, transparent),
+      transparent 66%
+    );
+}
+
+.homepage-capabilities__header {
+  max-width: 860px;
+  margin-bottom: var(--space-2xl);
+}
+
+.homepage-capabilities__header .type-body-large {
+  max-width: 760px;
+  color: var(--color-text-muted);
+}
+
+.homepage-capabilities__intro {
+  max-width: 780px;
+  color: var(--color-text-muted);
+}
+
+.homepage-capabilities__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+
+.homepage-capability-card {
+  min-height: 100%;
+  padding: var(--space-xl);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface-elevated) 88%, var(--color-secondary) 12%),
+      var(--color-surface)
+    );
+}
+
+.homepage-capability-card__icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--space-lg);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 34%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+}
+
+.homepage-capability-card__title {
+  margin-bottom: var(--space-sm);
+}
+
+.homepage-capability-card .type-body {
+  color: var(--color-text-muted);
+}
+
+.homepage-capabilities__callout {
+  max-width: 760px;
+  margin: var(--space-2xl) auto 0;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -1141,6 +1207,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .homepage-capabilities__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .homepage-workflow__list {
     max-width: 720px;
   }
@@ -1349,6 +1419,23 @@
   .homepage-comparison__statement {
     margin-top: var(--space-xl);
     padding: var(--space-lg);
+    text-align: left;
+  }
+
+  .homepage-capabilities__header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .homepage-capabilities__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .homepage-capability-card {
+    padding: var(--space-lg);
+  }
+
+  .homepage-capabilities__callout {
+    margin-top: var(--space-xl);
     text-align: left;
   }
 
