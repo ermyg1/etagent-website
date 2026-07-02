@@ -12,11 +12,16 @@ import {
   ListChecks,
   LockKeyhole,
   MessageSquareText,
+  Network,
   PlayCircle,
+  Plug,
   Route,
+  ScrollText,
   ShieldCheck,
   SlidersHorizontal,
+  Users,
   UserCheck,
+  Workflow,
 } from 'lucide-react'
 import { Badge } from './components/Badge'
 import { Button } from './components/Button'
@@ -271,7 +276,423 @@ const enterprisePillars = [
   },
 ]
 
+const productPrinciples = [
+  {
+    body: 'Governance boundaries are established before intelligence can recommend or prepare action.',
+    icon: ShieldCheck,
+    title: 'Governance First',
+  },
+  {
+    body: 'Accountable people remain responsible for approving material actions before execution.',
+    icon: UserCheck,
+    title: 'Human Authority',
+  },
+  {
+    body: 'Capabilities are evaluated against policy before any operational power is made available.',
+    icon: SlidersHorizontal,
+    title: 'Policy Before Power',
+  },
+  {
+    body: 'Missing context, unclear approval or unresolved policy prevents execution by default.',
+    icon: LockKeyhole,
+    title: 'Fail Closed',
+  },
+  {
+    body: 'Requests, decisions, approvals and outcomes are structured as evidence from the beginning.',
+    icon: ClipboardCheck,
+    title: 'Audit by Design',
+  },
+  {
+    body: 'Governance remains independent of any individual AI model provider or model architecture.',
+    icon: GitBranch,
+    title: 'Vendor Neutral',
+  },
+]
+
+const platformWorkspaces = [
+  {
+    items: ['policies', 'approvals', 'permissions', 'impact summaries', 'risk evaluation'],
+    icon: ShieldCheck,
+    title: 'Governance Workspace',
+  },
+  {
+    items: ['planning', 'reasoning', 'recommendations', 'knowledge', 'analysis'],
+    icon: Brain,
+    title: 'Intelligence Workspace',
+  },
+  {
+    items: ['orchestration', 'governed automation', 'execution planning', 'workflow management'],
+    icon: Workflow,
+    title: 'Workflow Workspace',
+  },
+  {
+    items: ['approvals', 'evidence', 'replay', 'audit history', 'compliance'],
+    icon: ScrollText,
+    title: 'Audit Workspace',
+  },
+  {
+    items: ['users', 'roles', 'integrations', 'organisation settings', 'governance configuration'],
+    icon: Building2,
+    title: 'Administration Workspace',
+  },
+]
+
+const governancePipelineGroups = [
+  {
+    stages: ['Context Collection', 'Planning'],
+    title: 'AI Intelligence',
+  },
+  {
+    stages: ['Policy Evaluation', 'Risk Classification', 'Impact Summary'],
+    title: 'Governance Engine',
+  },
+  {
+    stages: ['Human Approval'],
+    title: 'Human Authority',
+  },
+  {
+    stages: ['Controlled Execution', 'Verification & Outcome Recording'],
+    title: 'Execution Layer',
+  },
+  {
+    stages: ['Immutable Audit Artefact'],
+    title: 'Audit System',
+  },
+]
+
+const governancePipeline = ['Request', ...governancePipelineGroups.flatMap((group) => group.stages)]
+
+const organisationTypes = [
+  {
+    items: ['research', 'content creation', 'organisation', 'personal workflows'],
+    icon: UserCheck,
+    title: 'Individuals',
+  },
+  {
+    items: ['collaboration', 'approvals', 'shared knowledge', 'governed workflows'],
+    icon: Users,
+    title: 'Teams',
+  },
+  {
+    items: ['governance', 'policy', 'audit', 'compliance', 'security'],
+    icon: Building2,
+    title: 'Enterprise',
+  },
+]
+
+const platformEvolution = [
+  { status: 'Complete', title: 'Homepage' },
+  { status: 'Complete', title: 'Platform' },
+  { status: 'Next', title: 'Trust Centre' },
+  { status: 'Future', title: 'Governance Demo' },
+  { status: 'Future', title: 'Enterprise Readiness' },
+  { status: 'Future', title: 'Procurement Centre' },
+]
+
+const productArchitectureNodes = [
+  { icon: Brain, title: 'Intelligence' },
+  { icon: Workflow, title: 'Workflow' },
+  { icon: ScrollText, title: 'Audit' },
+  { icon: Building2, title: 'Administration' },
+  { icon: Plug, title: 'Integrations' },
+]
+
+function createId(prefix: string, value: string) {
+  return `${prefix}-${value.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}`
+}
+
+function ProductPage() {
+  const focusSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.focus()
+  }
+
+  return (
+    <PageLayout>
+      <Section className="product-hero" id="product" spacing="spacious" width="wide">
+        <Stack className="product-hero__content" space="lg">
+          <Badge variant="primary">E.T Agent Platform</Badge>
+          <Stack space="md">
+            <h1 className="type-display">The Governed AI Execution Platform</h1>
+            <p className="type-body-large">
+              E.T Agent combines intelligent planning, policy-aware governance and
+              human-authorised execution into a single enterprise platform.
+            </p>
+          </Stack>
+          <div className="product-hero__actions" aria-label="Product calls to action">
+            <Button onClick={() => focusSection('platform-overview')} size="lg">
+              Explore the Platform
+            </Button>
+            <Button
+              onClick={() => focusSection('platform-principles')}
+              size="lg"
+              variant="outline"
+            >
+              View Governance
+            </Button>
+          </div>
+        </Stack>
+      </Section>
+
+      <Section
+        aria-labelledby="platform-overview-title"
+        className="product-overview"
+        id="platform-overview"
+        tabIndex={-1}
+        width="wide"
+      >
+        <div className="product-overview__grid">
+          <Stack className="product-overview__header" space="md">
+            <p className="type-caption">Platform Overview</p>
+            <h2 className="type-heading-2" id="platform-overview-title">
+              Multiple governed workspaces operating through a Governance Core.
+            </h2>
+            <p className="type-body-large">
+              The E.T Agent platform organises intelligence, workflow, audit,
+              administration and integrations around a shared governance layer so
+              enterprise action remains policy-aware and human-authorised.
+            </p>
+          </Stack>
+
+          <Card
+            aria-label="Conceptual E.T Agent Platform architecture"
+            className="product-architecture"
+            variant="bordered"
+          >
+            <p className="product-architecture__title type-caption">
+              E.T Agent Platform
+            </p>
+            <div className="product-architecture__core">
+              <Icon icon={Network} size="lg" />
+              <span>Governance Core</span>
+            </div>
+            <div className="product-architecture__nodes">
+              {productArchitectureNodes.map((node) => (
+                <div className="product-architecture__node" key={node.title}>
+                  <Icon icon={node.icon} size="md" />
+                  <span>{node.title}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="platform-principles-title"
+        className="product-principles"
+        id="platform-principles"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <p className="type-caption">Platform Principles</p>
+          <h2 className="type-heading-2" id="platform-principles-title">
+            Principles that keep intelligence governed.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--three">
+          {productPrinciples.map((principle) => (
+            <Card
+              aria-labelledby={createId('product-principle', principle.title)}
+              className="product-info-card"
+              key={principle.title}
+              variant="bordered"
+            >
+              <Icon className="product-info-card__icon" icon={principle.icon} size="lg" />
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('product-principle', principle.title)}
+              >
+                {principle.title}
+              </h3>
+              <p className="type-body">{principle.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="platform-workspaces-title"
+        className="product-workspaces"
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <p className="type-caption">Platform Workspaces</p>
+          <h2 className="type-heading-2" id="platform-workspaces-title">
+            Responsibilities organised across governed workspaces.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--workspaces">
+          {platformWorkspaces.map((workspace) => (
+            <Card
+              aria-labelledby={createId('product-workspace', workspace.title)}
+              className="product-workspace-card"
+              key={workspace.title}
+              variant="bordered"
+            >
+              <div className="product-workspace-card__heading">
+                <Icon className="product-info-card__icon" icon={workspace.icon} size="lg" />
+                <h3
+                  className="type-heading-4"
+                  id={createId('product-workspace', workspace.title)}
+                >
+                  {workspace.title}
+                </h3>
+              </div>
+              <ul className="product-list">
+                {workspace.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="execution-lifecycle-title"
+        className="product-lifecycle"
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <p className="type-caption">Execution Lifecycle</p>
+          <h2 className="type-heading-2" id="execution-lifecycle-title">
+            From request to audit artefact.
+          </h2>
+        </Stack>
+        <ol className="product-lifecycle__list">
+          {governancePipeline.map((step, index) => (
+            <li className="product-lifecycle__item" key={step}>
+              <span className="product-lifecycle__index">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span className="product-lifecycle__label">{step}</span>
+            </li>
+          ))}
+        </ol>
+        <div
+          aria-label="Governance pipeline responsibility groups"
+          className="product-lifecycle__groups"
+        >
+          <div className="product-lifecycle-group product-lifecycle-group--request">
+            <span className="product-lifecycle__index">01</span>
+            <span className="product-lifecycle__label">Request</span>
+          </div>
+          {governancePipelineGroups.map((group) => {
+            const stageStart =
+              governancePipeline.findIndex((stage) => stage === group.stages[0]) + 1
+
+            return (
+              <section className="product-lifecycle-group" key={group.title}>
+                <h3 className="product-lifecycle-group__title">{group.title}</h3>
+                <ol className="product-lifecycle-group__stages">
+                  {group.stages.map((stage, stageIndex) => (
+                    <li className="product-lifecycle-group__stage" key={stage}>
+                      <span className="product-lifecycle__index">
+                        {String(stageStart + stageIndex).padStart(2, '0')}
+                      </span>
+                      <span className="product-lifecycle__label">{stage}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )
+          })}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="organisations-title"
+        className="product-organisations"
+        width="wide"
+      >
+        <Stack className="product-section-header product-section-header--center" space="md">
+          <p className="type-caption">Built for Different Organisations</p>
+          <h2 className="type-heading-2" id="organisations-title">
+            Equal governance patterns for different scales of work.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--three">
+          {organisationTypes.map((organisation) => (
+            <Card
+              aria-labelledby={createId('product-organisation', organisation.title)}
+              className="product-info-card"
+              key={organisation.title}
+              variant="bordered"
+            >
+              <Icon className="product-info-card__icon" icon={organisation.icon} size="lg" />
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('product-organisation', organisation.title)}
+              >
+                {organisation.title}
+              </h3>
+              <ul className="product-list">
+                {organisation.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="platform-evolution-title"
+        className="product-evolution"
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <p className="type-caption">Platform Evolution</p>
+          <h2 className="type-heading-2" id="platform-evolution-title">
+            Website maturity, not a product roadmap.
+          </h2>
+        </Stack>
+        <ol className="product-evolution__list">
+          {platformEvolution.map((item) => (
+            <li className="product-evolution__item" key={item.title}>
+              <span className="product-evolution__title">{item.title}</span>
+              <Badge variant={item.status === 'Complete' ? 'success' : 'neutral'}>
+                {item.status}
+              </Badge>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section
+        aria-labelledby="product-cta-title"
+        className="product-cta"
+        spacing="compact"
+        width="wide"
+      >
+        <Card className="product-cta__card" variant="bordered">
+          <Stack className="product-cta__content" space="md">
+            <p className="type-caption">Next Steps</p>
+            <h2 className="type-heading-2" id="product-cta-title">
+              Bring governed AI execution into enterprise review.
+            </h2>
+          </Stack>
+          <div className="product-cta__actions" aria-label="Product next steps">
+            <Button size="lg">Request Early Access</Button>
+            <Button size="lg" variant="outline">
+              Explore Trust Centre
+            </Button>
+            <Button size="lg" variant="ghost">
+              Read Documentation
+            </Button>
+          </div>
+        </Card>
+      </Section>
+    </PageLayout>
+  )
+}
+
 function App() {
+  if (window.location.pathname === '/product') {
+    return <ProductPage />
+  }
+
   const focusWorkflowPreview = () => {
     document.getElementById('governance-model')?.focus()
   }
