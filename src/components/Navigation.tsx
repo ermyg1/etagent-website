@@ -6,6 +6,7 @@ import { Logo } from './Logo'
 const navItems = [
   { href: '/#home', label: 'Home' },
   { href: '/#governance-model', label: 'Governance model' },
+  { href: '/governance-demo', label: 'Governance demo' },
   { href: '/trust', label: 'Trust Centre' },
 ]
 

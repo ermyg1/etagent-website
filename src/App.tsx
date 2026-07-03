@@ -29,6 +29,7 @@ import { Card } from './components/Card'
 import { Icon } from './components/Icon'
 import { StatusBadge } from './components/StatusBadge'
 import { PageLayout, Section, Stack } from './components/layout'
+import { InteractiveGovernanceDemoPage } from './features/governance-demo'
 
 const workflowPreview = [
   'Request',
@@ -1246,6 +1247,10 @@ function App() {
 
   if (window.location.pathname === '/product') {
     return <ProductPage />
+  }
+
+  if (window.location.pathname === '/governance-demo') {
+    return <InteractiveGovernanceDemoPage />
   }
 
   const focusWorkflowPreview = () => {
