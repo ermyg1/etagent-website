@@ -7,12 +7,12 @@ export function FooterCallToAction() {
   return (
     <Card className="governance-demo-footer-cta__card" variant="bordered">
       <Stack className="governance-demo-footer-cta__content" space="sm">
-        <Badge variant="secondary">Foundation Complete</Badge>
+        <Badge variant="secondary">Governance Review</Badge>
         <h2 className="type-heading-3" id="governance-demo-footer-title">
-          Ready for future governance interaction milestones.
+          Continue the enterprise trust evaluation.
         </h2>
       </Stack>
-      <Button size="lg" variant="outline">
+      <Button onClick={() => window.location.assign('/trust')} size="lg" variant="outline">
         Review Trust Centre
       </Button>
     </Card>

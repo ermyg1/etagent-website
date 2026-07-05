@@ -13,7 +13,7 @@ export function GovernanceViewToggle({
 }: GovernanceViewToggleProps) {
   return (
     <div
-      aria-label="Governance demo view"
+      aria-label="Interactive Governance view"
       className="governance-demo-toggle"
       role="tablist"
     >

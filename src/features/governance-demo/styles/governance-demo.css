@@ -1,9 +1,14 @@
 .governance-demo-intro {
+  position: relative;
+  overflow: hidden;
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-background);
+  background:
+    radial-gradient(circle at 76% 10%, rgb(154 183 174 / 0.06), transparent 25rem),
+    var(--color-background);
 }
 
 .governance-demo-intro__content {
+  position: relative;
   max-width: 760px;
 }
 
@@ -15,6 +20,9 @@
 .governance-demo-views,
 .governance-demo-workspace-section {
   border-bottom: 1px solid var(--color-border);
+  background:
+    radial-gradient(circle at 12% 0%, rgb(255 255 255 / 0.04), transparent 24rem),
+    color-mix(in srgb, var(--color-background-raised) 34%, transparent);
 }
 
 .governance-demo-views__header {
@@ -33,7 +41,10 @@
   padding: var(--space-xs);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-background-raised);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.014)),
+    var(--color-background-raised);
+  box-shadow: var(--shadow-sm);
 }
 
 .governance-demo-toggle__button {
@@ -42,7 +53,10 @@
 }
 
 .governance-demo-toggle__button[aria-selected='true'] {
-  color: var(--color-neutral-950);
+  color: #06111a;
+  box-shadow:
+    0 12px 26px rgb(0 0 0 / 0.2),
+    0 0 18px rgb(127 168 201 / 0.1);
 }
 
 .governance-demo-docs > .type-heading-3 {
@@ -60,6 +74,56 @@
 .governance-demo-doc-card {
   min-height: 100%;
   padding: var(--space-xl);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018)),
+    var(--color-surface);
+}
+
+.governance-demo-doc-card,
+.governance-timeline__button,
+.walkthrough-stage-detail,
+.walkthrough-evidence,
+.governance-workspace-card,
+.governance-demo-footer-cta__card {
+  border-color: rgb(255 255 255 / 0.085);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.058), rgb(255 255 255 / 0.018) 48%, rgb(255 255 255 / 0.008)),
+    color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.governance-demo-doc-card,
+.walkthrough-stage-detail,
+.walkthrough-evidence,
+.governance-workspace-card,
+.governance-demo-footer-cta__card {
+  position: relative;
+  overflow: hidden;
+}
+
+.governance-demo-doc-card::before,
+.walkthrough-stage-detail::before,
+.walkthrough-evidence::before,
+.governance-workspace-card::before,
+.governance-demo-footer-cta__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(125deg, rgb(255 255 255 / 0.075), transparent 32%),
+    radial-gradient(circle at 18% 0%, rgb(255 255 255 / 0.052), transparent 18rem);
+  opacity: 0.72;
+}
+
+.governance-demo-doc-card > *,
+.walkthrough-stage-detail > *,
+.walkthrough-evidence > *,
+.governance-workspace-card > *,
+.governance-demo-footer-cta__card > * {
+  position: relative;
 }
 
 .governance-demo-doc-card__icon {
@@ -109,7 +173,18 @@
 }
 
 .governance-timeline__item {
+  position: relative;
   min-width: 0;
+}
+
+.governance-timeline__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 56px;
+  top: calc(100% + 1px);
+  width: 1px;
+  height: calc(var(--space-sm) + 2px);
+  background: color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
 }
 
 .governance-timeline__button {
@@ -123,7 +198,10 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-text-muted);
-  background: var(--color-surface);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.014)),
+    var(--color-surface);
+  box-shadow: var(--shadow-sm);
   text-align: left;
   transition:
     border-color var(--motion-fast) var(--motion-ease),
@@ -133,14 +211,19 @@
 
 .governance-timeline__button:hover,
 .governance-timeline__button[aria-current='step'] {
-  border-color: color-mix(in srgb, var(--color-primary) 54%, var(--color-border));
+  border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
   color: var(--color-text-strong);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
 .governance-timeline__button[aria-current='step'] {
-  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
-  box-shadow: inset 3px 0 0 var(--color-primary);
+  background:
+    radial-gradient(circle at 0% 0%, rgb(127 168 201 / 0.1), transparent 11rem),
+    color-mix(in srgb, var(--color-primary) 7%, var(--color-surface));
+  box-shadow:
+    inset 2px 0 0 color-mix(in srgb, var(--color-primary) 74%, var(--color-border)),
+    var(--shadow-md);
 }
 
 .governance-timeline__index {
@@ -177,7 +260,10 @@
 .walkthrough-evidence {
   min-height: 100%;
   padding: var(--space-xl);
-  background: var(--color-surface);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018)),
+    var(--color-surface);
+  box-shadow: var(--shadow-md);
 }
 
 .walkthrough-stage-detail {
@@ -272,7 +358,7 @@
   grid-template-columns: minmax(0, auto) 1fr minmax(0, auto);
   align-items: center;
   gap: var(--space-md);
-  padding-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-sm) 0;
 }
 
 .walkthrough-controls__status {
@@ -302,7 +388,11 @@
 .governance-workspace-card {
   min-height: 100%;
   padding: var(--space-xl);
-  border-left: 3px solid var(--color-border);
+  border-left: 3px solid color-mix(in srgb, var(--color-primary) 28%, var(--color-border));
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018)),
+    var(--color-surface);
+  box-shadow: var(--shadow-md);
 }
 
 .governance-workspace-card__topline {
@@ -333,6 +423,10 @@
   align-items: center;
   gap: var(--space-xl);
   padding: var(--space-xl);
+  background:
+    radial-gradient(circle at 82% 0%, rgb(154 183 174 / 0.065), transparent 21rem),
+    linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02)),
+    var(--color-surface);
 }
 
 .governance-demo-footer-cta__content {

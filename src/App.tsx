@@ -27,9 +27,11 @@ import { Badge } from './components/Badge'
 import { Button } from './components/Button'
 import { Card } from './components/Card'
 import { Icon } from './components/Icon'
+import { SectionNavigation } from './components/SectionNavigation'
 import { StatusBadge } from './components/StatusBadge'
 import { PageLayout, Section, Stack } from './components/layout'
 import { InteractiveGovernanceDemoPage } from './features/governance-demo'
+import { scrollToSection } from './utils/scroll'
 
 const workflowPreview = [
   'Request',
@@ -385,10 +387,10 @@ const organisationTypes = [
 const platformEvolution = [
   { status: 'Complete', title: 'Homepage' },
   { status: 'Complete', title: 'Platform' },
-  { status: 'Next', title: 'Trust Centre' },
-  { status: 'Future', title: 'Governance Demo' },
-  { status: 'Future', title: 'Enterprise Readiness' },
-  { status: 'Future', title: 'Procurement Centre' },
+  { status: 'Complete', title: 'Trust Centre' },
+  { status: 'Complete', title: 'Interactive Governance' },
+  { status: 'Planned', title: 'Enterprise Readiness' },
+  { status: 'Planned', title: 'Procurement Centre' },
 ]
 
 const productArchitectureNodes = [
@@ -571,19 +573,262 @@ const documentationHub = [
   { status: 'Planned', title: 'Compliance Roadmap' },
 ] as const
 
+const enterpriseContactRoutes = [
+  {
+    body: 'Discuss governance boundaries, execution controls and enterprise architecture review.',
+    title: 'Architecture Enquiries',
+  },
+  {
+    body: 'Review the governed request, approval and audit workflow with the enterprise team.',
+    title: 'Request a Demonstration',
+  },
+  {
+    body: 'Access architecture, governance, security and audit materials for technical evaluation.',
+    title: 'Documentation',
+  },
+  {
+    body: 'Use the primary business contact channel for enterprise evaluation and procurement.',
+    title: 'Business Email',
+  },
+  {
+    body: 'Review the public repository and implementation history for the website surface.',
+    title: 'GitHub',
+  },
+  {
+    body: 'Follow the company presence for product and enterprise updates.',
+    title: 'LinkedIn',
+  },
+] as const
+
 const trustLocalNavigation = [
-  { href: '#trust-overview', label: 'Overview' },
-  { href: '#trust-principles', label: 'Principles' },
-  { href: '#security-overview', label: 'Security' },
-  { href: '#governance-model-trust', label: 'Governance' },
-  { href: '#ai-boundaries', label: 'AI Boundaries' },
-  { href: '#compliance-alignment', label: 'Compliance' },
-  { href: '#enterprise-faq', label: 'FAQs' },
-  { href: '#documentation-hub', label: 'Documentation' },
+  { id: 'trust-overview', title: 'Overview' },
+  { id: 'trust-principles', title: 'Principles' },
+  { id: 'security-overview', title: 'Security' },
+  { id: 'governance-model-trust', title: 'Governance' },
+  { id: 'ai-boundaries', title: 'AI Boundaries' },
+  { id: 'compliance-alignment', title: 'Compliance' },
+  { id: 'enterprise-faq', title: 'FAQs' },
+  { id: 'documentation-hub', title: 'Documentation' },
 ]
+
+const homepageSectionNavigation = [
+  { id: 'home', title: 'Overview' },
+  { id: 'problem', title: 'Problem' },
+  { id: 'why-governance-matters', title: 'Governance' },
+  { id: 'governance-model', title: 'Governance Model' },
+  { id: 'how-et-agent-works', title: 'Architecture' },
+  { id: 'enterprise-trust', title: 'Trust' },
+  { id: 'interactive-governance', title: 'Interactive Governance' },
+  { id: 'enterprise-use-cases', title: 'Use Cases' },
+  { id: 'homepage-documentation', title: 'Documentation' },
+  { id: 'contact', title: 'Contact' },
+]
+
+const privacyPolicySections = [
+  {
+    body: [
+      'This Privacy Policy describes how E.T Agent collects, uses and protects information submitted through this website and related early-access enterprise evaluation workflows. It is intended as placeholder policy language for an early-stage enterprise software product and should be reviewed by qualified counsel before production use.',
+      'By using this website, contacting the team or requesting evaluation materials, visitors acknowledge that information may be processed as described below.',
+    ],
+    title: 'Introduction',
+  },
+  {
+    body: [
+      'We may collect business contact information such as name, work email address, organisation, role, enquiry details and any information voluntarily included in messages or evaluation requests.',
+      'We may also collect limited technical information such as IP address, browser type, device information, referring pages and general usage data to operate, secure and improve the website.',
+    ],
+    title: 'Information Collected',
+  },
+  {
+    body: [
+      'Information is used to respond to enquiries, provide requested materials, evaluate enterprise interest, improve website performance, protect the service and maintain records of communications with prospective customers and partners.',
+      'We do not use submitted business contact information to make automated decisions with legal or similarly significant effects.',
+    ],
+    title: 'How Information Is Used',
+  },
+  {
+    body: [
+      'The website may use essential cookies or similar technologies required for site functionality, security and analytics. Future analytics or preference cookies, if introduced, should be documented with appropriate consent controls where required.',
+    ],
+    title: 'Cookies',
+  },
+  {
+    body: [
+      'E.T Agent may rely on reputable third-party providers for hosting, analytics, communications, code repository management and operational tooling. These providers process information only as needed to support the website and related business operations.',
+      'Links to third-party websites, including documentation or repository platforms, are governed by the policies of those third parties.',
+    ],
+    title: 'Third-Party Services',
+  },
+  {
+    body: [
+      'We use reasonable administrative, technical and organisational safeguards intended to protect information submitted through the website. No method of transmission or storage is completely secure, and this policy does not guarantee absolute security.',
+    ],
+    title: 'Security',
+  },
+  {
+    body: [
+      'Privacy questions, access requests or deletion requests may be directed to the E.T Agent team through the enterprise contact route on this website.',
+    ],
+    title: 'Contact',
+  },
+] as const
+
+const termsOfUseSections = [
+  {
+    body: [
+      'This website provides information about E.T Agent, an early-stage governance-first AI platform for enterprise evaluation. Website content is provided for informational, technical review and business enquiry purposes only.',
+    ],
+    title: 'Website Purpose',
+  },
+  {
+    body: [
+      'Visitors agree not to misuse the website, interfere with its operation, attempt unauthorised access, submit unlawful or harmful content, scrape the site at unreasonable scale or use the website in a way that could impair availability or security.',
+    ],
+    title: 'Acceptable Use',
+  },
+  {
+    body: [
+      'All website content, product descriptions, interface concepts, logos, names, text, graphics and other materials are owned by E.T Agent or its licensors unless otherwise stated. No rights are granted except the limited right to view the website for evaluation and informational purposes.',
+    ],
+    title: 'Intellectual Property',
+  },
+  {
+    body: [
+      'The website and its content are provided on an as-is and as-available basis. E.T Agent does not warrant that the website will be uninterrupted, error-free, complete or suitable for any particular purpose.',
+    ],
+    title: 'No Warranty',
+  },
+  {
+    body: [
+      'To the fullest extent permitted by applicable law, E.T Agent will not be liable for indirect, incidental, consequential, special or punitive damages arising from use of, or inability to use, the website or its content.',
+    ],
+    title: 'Limitation of Liability',
+  },
+  {
+    body: [
+      'Questions about these Terms of Use may be directed through the enterprise contact route on this website.',
+    ],
+    title: 'Contact',
+  },
+] as const
 
 function createId(prefix: string, value: string) {
   return `${prefix}-${value.toLowerCase().replaceAll(' ', '-').replaceAll('&', 'and')}`
+}
+
+function LegalPage({
+  intro,
+  sections,
+  title,
+}: {
+  intro: string
+  sections: readonly { body: readonly string[]; title: string }[]
+  title: string
+}) {
+  return (
+    <PageLayout>
+      <Section
+        aria-labelledby="legal-page-title"
+        className="legal-page"
+        spacing="spacious"
+        width="narrow"
+      >
+        <Stack className="legal-page__header" space="md">
+          <Badge variant="primary">Legal</Badge>
+          <h1 className="type-display" id="legal-page-title">
+            {title}
+          </h1>
+          <p className="type-body-large">{intro}</p>
+        </Stack>
+
+        <div className="legal-page__content">
+          {sections.map((section) => (
+            <section
+              aria-labelledby={createId('legal-section', section.title)}
+              className="legal-page__section"
+              key={section.title}
+            >
+              <h2 className="type-heading-3" id={createId('legal-section', section.title)}>
+                {section.title}
+              </h2>
+              {section.body.map((paragraph) => (
+                <p className="type-body" key={paragraph}>
+                  {paragraph}
+                </p>
+              ))}
+            </section>
+          ))}
+
+          <section
+            aria-labelledby="legal-section-last-updated"
+            className="legal-page__section legal-page__section--meta"
+          >
+            <h2 className="type-heading-3" id="legal-section-last-updated">
+              Last Updated
+            </h2>
+            <p className="type-body">July 5, 2026</p>
+          </section>
+        </div>
+      </Section>
+    </PageLayout>
+  )
+}
+
+function PrivacyPolicyPage() {
+  return (
+    <LegalPage
+      intro="How E.T Agent handles information submitted through the website and early enterprise evaluation channels."
+      sections={privacyPolicySections}
+      title="Privacy Policy"
+    />
+  )
+}
+
+function TermsOfUsePage() {
+  return (
+    <LegalPage
+      intro="The terms that govern access to and use of the E.T Agent website."
+      sections={termsOfUseSections}
+      title="Terms of Use"
+    />
+  )
+}
+
+function NotFoundPage() {
+  return (
+    <PageLayout>
+      <Section
+        aria-labelledby="not-found-title"
+        className="not-found-page"
+        spacing="spacious"
+        width="narrow"
+      >
+        <Stack align="center" className="not-found-page__content" space="lg">
+          <Badge variant="secondary">404</Badge>
+          <Stack align="center" space="md">
+            <h1 className="type-display" id="not-found-title">
+              Page Not Found
+            </h1>
+            <p className="type-body-large">
+              The page you are looking for is not available on this website.
+            </p>
+          </Stack>
+          <div className="not-found-page__actions" aria-label="404 navigation">
+            <Button onClick={() => window.location.assign('/')} size="lg">
+              Return Home
+            </Button>
+            <Button
+              onClick={() => window.location.assign('/trust#documentation-hub')}
+              size="lg"
+              variant="outline"
+            >
+              Return to Documentation
+            </Button>
+          </div>
+        </Stack>
+      </Section>
+    </PageLayout>
+  )
 }
 
 function TrustCentrePage() {
@@ -616,7 +861,7 @@ function TrustCentrePage() {
             </Stack>
             <div className="trust-hero__actions" aria-label="Trust Centre actions">
               <Button onClick={() => focusSection('governance-model-trust')} size="lg">
-                View Governance
+                Explore Governance
               </Button>
               <Button
                 onClick={() => focusSection('security-overview')}
@@ -647,15 +892,10 @@ function TrustCentrePage() {
         </div>
       </Section>
 
-      <nav aria-label="Trust Centre sections" className="trust-local-nav">
-        <div className="trust-local-nav__inner">
-          {trustLocalNavigation.map((item) => (
-            <a href={item.href} key={item.href}>
-              {item.label}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <SectionNavigation
+        ariaLabel="Trust Centre sections"
+        sections={trustLocalNavigation}
+      />
 
       <Section
         aria-labelledby="trust-principles-title"
@@ -941,10 +1181,14 @@ function TrustCentrePage() {
           </Stack>
           <div className="product-cta__actions" aria-label="Trust Centre next steps">
             <Button onClick={() => window.location.assign('/product')} size="lg">
-              Product
+              View Product Architecture
             </Button>
-            <Button size="lg" variant="outline">
-              Contact
+            <Button
+              onClick={() => window.location.assign('/#contact')}
+              size="lg"
+              variant="outline"
+            >
+              Contact Enterprise Team
             </Button>
           </div>
         </Card>
@@ -972,14 +1216,14 @@ function ProductPage() {
           </Stack>
           <div className="product-hero__actions" aria-label="Product calls to action">
             <Button onClick={() => focusSection('platform-overview')} size="lg">
-              Explore the Platform
+              Explore Platform Architecture
             </Button>
             <Button
               onClick={() => focusSection('platform-principles')}
               size="lg"
               variant="outline"
             >
-              View Governance
+              Explore Governance
             </Button>
           </div>
         </Stack>
@@ -1176,7 +1420,7 @@ function ProductPage() {
             size="lg"
             variant="outline"
           >
-            Open Governance Demo
+            Open Interactive Governance
           </Button>
         </Card>
       </Section>
@@ -1225,7 +1469,7 @@ function ProductPage() {
         <Stack className="product-section-header" space="md">
           <Badge variant="secondary">Platform Evolution</Badge>
           <h2 className="type-heading-2" id="platform-evolution-title">
-            Website maturity, not a product roadmap.
+            Website surfaces aligned for enterprise evaluation.
           </h2>
         </Stack>
         <ol className="product-evolution__list">
@@ -1254,12 +1498,22 @@ function ProductPage() {
             </h2>
           </Stack>
           <div className="product-cta__actions" aria-label="Product next steps">
-            <Button size="lg">Request Early Access</Button>
-            <Button size="lg" variant="outline">
+            <Button onClick={() => window.location.assign('/#contact')} size="lg">
+              Request Architecture Review
+            </Button>
+            <Button
+              onClick={() => window.location.assign('/trust')}
+              size="lg"
+              variant="outline"
+            >
               Explore Trust Centre
             </Button>
-            <Button size="lg" variant="ghost">
-              Read Documentation
+            <Button
+              onClick={() => window.location.assign('/trust#documentation-hub')}
+              size="lg"
+              variant="ghost"
+            >
+              View Documentation
             </Button>
           </div>
         </Card>
@@ -1281,13 +1535,27 @@ function App() {
     return <InteractiveGovernanceDemoPage />
   }
 
-  const focusWorkflowPreview = () => {
-    document.getElementById('governance-model')?.focus()
+  if (window.location.pathname === '/privacy-policy') {
+    return <PrivacyPolicyPage />
+  }
+
+  if (window.location.pathname === '/terms-of-use') {
+    return <TermsOfUsePage />
+  }
+
+  if (window.location.pathname !== '/') {
+    return <NotFoundPage />
   }
 
   return (
     <PageLayout>
-      <Section className="homepage-hero" id="home" spacing="spacious" width="wide">
+      <Section
+        className="homepage-hero"
+        id="home"
+        spacing="spacious"
+        tabIndex={-1}
+        width="wide"
+      >
         <div className="homepage-hero__grid">
           <Stack className="homepage-hero__content" space="lg">
             <Badge variant="primary">Governance-first enterprise AI</Badge>
@@ -1305,13 +1573,15 @@ function App() {
               recommendations, enforce policy and execute only after human approval.
             </p>
             <div className="homepage-hero__actions" aria-label="Hero calls to action">
-              <Button size="lg">Request architecture review</Button>
+              <Button onClick={() => scrollToSection('contact')} size="lg">
+                Request Architecture Review
+              </Button>
               <Button
-                onClick={focusWorkflowPreview}
+                onClick={() => scrollToSection('governance-model')}
                 size="lg"
                 variant="outline"
               >
-                View governance model
+                View Governance Model
               </Button>
             </div>
           </Stack>
@@ -1347,51 +1617,10 @@ function App() {
         </div>
       </Section>
 
-      <Section
-        aria-labelledby="enterprise-trust-title"
-        className="enterprise-trust"
-        spacing="compact"
-        width="wide"
-      >
-        <Stack className="enterprise-trust__header" space="md">
-          <Badge variant="secondary">Enterprise trust</Badge>
-          <h2 className="type-heading-2" id="enterprise-trust-title">
-            Enterprise trust built into every decision
-          </h2>
-          <p className="type-body-large">
-            Organisations retain oversight, enforce policy and maintain a complete
-            audit trail for every approved action.
-          </p>
-        </Stack>
-
-        <div className="enterprise-trust__grid">
-          {enterpriseTrustPrinciples.map((principle) => (
-            <Card
-              aria-labelledby={`enterprise-trust-${principle.title
-                .toLowerCase()
-                .replaceAll(' ', '-')}`}
-              className="enterprise-trust-card"
-              key={principle.title}
-              variant="bordered"
-            >
-              <Icon
-                className="enterprise-trust-card__icon"
-                icon={principle.icon}
-                size="lg"
-              />
-              <h3
-                className="enterprise-trust-card__title type-heading-4"
-                id={`enterprise-trust-${principle.title
-                  .toLowerCase()
-                  .replaceAll(' ', '-')}`}
-              >
-                {principle.title}
-              </h3>
-              <p className="type-body">{principle.description}</p>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      <SectionNavigation
+        ariaLabel="Homepage sections"
+        sections={homepageSectionNavigation}
+      />
 
       <Section
         aria-labelledby="problem-title"
@@ -1476,6 +1705,7 @@ function App() {
         className="homepage-governance"
         id="why-governance-matters"
         spacing="default"
+        tabIndex={-1}
         width="wide"
       >
         <Stack className="homepage-governance__header" space="md">
@@ -1585,12 +1815,13 @@ function App() {
         className="homepage-workflow"
         id="how-et-agent-works"
         spacing="default"
+        tabIndex={-1}
         width="wide"
       >
         <Stack className="homepage-workflow__header" space="md">
           <Badge variant="secondary">HOW E.T AGENT WORKS</Badge>
           <h2 className="type-heading-2" id="how-et-agent-works-title">
-            How E.T Agent Works
+            Governed execution from request to audit.
           </h2>
           <p className="type-body-large">
             Every request follows a governed workflow before any action can be
@@ -1719,16 +1950,17 @@ function App() {
         className="homepage-capabilities"
         id="core-enterprise-capabilities"
         spacing="default"
+        tabIndex={-1}
         width="wide"
       >
         <Stack className="homepage-capabilities__header" space="md">
           <Badge variant="secondary">Core enterprise capabilities</Badge>
           <h2 className="type-heading-2" id="core-enterprise-capabilities-title">
-            Core Enterprise Capabilities
+            How E.T Agent operationalises governed AI.
           </h2>
           <p className="type-body-large">
-            Governance capabilities designed to help organisations adopt AI
-            without surrendering control.
+            Governance-first capabilities help organisations adopt AI without
+            surrendering policy control, human approval or audit readiness.
           </p>
           <p className="homepage-capabilities__intro type-body">
             Each capability supports AI adoption within clear operational,
@@ -1773,10 +2005,126 @@ function App() {
       </Section>
 
       <Section
+        aria-labelledby="enterprise-trust-title"
+        className="enterprise-trust"
+        id="enterprise-trust"
+        spacing="compact"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="enterprise-trust__header" space="md">
+          <Badge variant="secondary">Enterprise trust</Badge>
+          <h2 className="type-heading-2" id="enterprise-trust-title">
+            Trust is evidenced before execution.
+          </h2>
+          <p className="type-body-large">
+            Organisations retain oversight, enforce policy before power is
+            released and maintain an audit-ready trail for every approved action.
+          </p>
+        </Stack>
+
+        <div className="enterprise-trust__grid">
+          {enterpriseTrustPrinciples.map((principle) => (
+            <Card
+              aria-labelledby={`enterprise-trust-${principle.title
+                .toLowerCase()
+                .replaceAll(' ', '-')}`}
+              className="enterprise-trust-card"
+              key={principle.title}
+              variant="bordered"
+            >
+              <Icon
+                className="enterprise-trust-card__icon"
+                icon={principle.icon}
+                size="lg"
+              />
+              <h3
+                className="enterprise-trust-card__title type-heading-4"
+                id={`enterprise-trust-${principle.title
+                  .toLowerCase()
+                  .replaceAll(' ', '-')}`}
+              >
+                {principle.title}
+              </h3>
+              <p className="type-body">{principle.description}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="interactive-governance-title"
+        className="product-demo-bridge"
+        id="interactive-governance"
+        spacing="compact"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Card className="product-demo-bridge__card" variant="bordered">
+          <Stack className="product-demo-bridge__content" space="md">
+            <Badge variant="secondary">Interactive Governance</Badge>
+            <h2 className="type-heading-2" id="interactive-governance-title">
+              Explore the governed workflow before execution.
+            </h2>
+            <p className="type-body-large">
+              Follow a deterministic request through policy evaluation, impact
+              review, human approval, simulated execution and audit evidence.
+            </p>
+          </Stack>
+          <Button
+            onClick={() => window.location.assign('/governance-demo')}
+            size="lg"
+            variant="outline"
+          >
+            Explore Governance
+          </Button>
+        </Card>
+      </Section>
+
+      <Section
+        aria-labelledby="enterprise-use-cases-title"
+        className="product-organisations"
+        id="enterprise-use-cases"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header product-section-header--center" space="md">
+          <Badge variant="secondary">Enterprise use cases</Badge>
+          <h2 className="type-heading-2" id="enterprise-use-cases-title">
+            Governed workflows for teams, operators and enterprise control.
+          </h2>
+        </Stack>
+        <div className="product-card-grid product-card-grid--three">
+          {organisationTypes.map((organisation) => (
+            <Card
+              aria-labelledby={createId('homepage-use-case', organisation.title)}
+              className="product-info-card"
+              key={organisation.title}
+              variant="bordered"
+            >
+              <Icon className="product-info-card__icon" icon={organisation.icon} size="lg" />
+              <h3
+                className="product-info-card__title type-heading-4"
+                id={createId('homepage-use-case', organisation.title)}
+              >
+                {organisation.title}
+              </h3>
+              <ul className="product-list">
+                {organisation.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
         aria-labelledby="built-for-enterprise-title"
         className="homepage-enterprise"
         id="built-for-enterprise"
         spacing="default"
+        tabIndex={-1}
         width="wide"
       >
         <Stack className="homepage-enterprise__header" space="md">
@@ -1828,6 +2176,81 @@ function App() {
         <p className="homepage-enterprise__statement type-heading-4">
           Enterprise trust begins with architecture, not marketing claims.
         </p>
+      </Section>
+
+      <Section
+        aria-labelledby="homepage-documentation-title"
+        className="trust-section trust-documentation"
+        id="homepage-documentation"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Documentation</Badge>
+          <h2 className="type-heading-2" id="homepage-documentation-title">
+            Enterprise evaluation starts with clear documentation.
+          </h2>
+          <p className="type-body-large">
+            Architecture, governance, security and audit materials are organised
+            for technical review, procurement and assurance teams.
+          </p>
+        </Stack>
+        <div className="trust-documentation__grid">
+          {documentationHub.map((item) => (
+            <Card className="trust-doc-link" key={item.title} variant="bordered">
+              <div>
+                <Icon className="trust-doc-link__icon" icon={FileText} size="md" />
+                <h3 className="type-heading-4">{item.title}</h3>
+              </div>
+              <div className="trust-doc-link__meta">
+                <StatusBadge state={item.status} />
+                <span aria-hidden="true" className="trust-doc-link__arrow">
+                  →
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        aria-labelledby="contact-title"
+        className="product-cta"
+        id="contact"
+        spacing="compact"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Card className="product-cta__card" variant="bordered">
+          <Stack className="product-cta__content" space="md">
+            <Badge variant="secondary">Enterprise contact</Badge>
+            <h2 className="type-heading-2" id="contact-title">
+              Request an architecture review or product demonstration.
+            </h2>
+            <p className="type-body-large">
+              Enterprise evaluation routes for architecture enquiries, governed
+              workflow demonstrations, documentation access and business contact.
+            </p>
+          </Stack>
+          <div className="enterprise-contact-grid" aria-label="Enterprise contact routes">
+            {enterpriseContactRoutes.map((route) => (
+              <div className="enterprise-contact-card" key={route.title}>
+                <h3 className="type-heading-4">{route.title}</h3>
+                <p className="type-body">{route.body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="product-cta__actions" aria-label="Homepage contact actions">
+            <Button size="lg">Request Architecture Review</Button>
+            <Button
+              onClick={() => window.location.assign('/trust')}
+              size="lg"
+              variant="outline"
+            >
+              Review Trust Centre
+            </Button>
+          </div>
+        </Card>
       </Section>
     </PageLayout>
   )

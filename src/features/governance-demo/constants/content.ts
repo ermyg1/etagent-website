@@ -65,7 +65,7 @@ export const governanceDocumentation: Record<
         title: 'Why governance matters',
       },
       {
-        body: 'Decision owners can review intent, impact and evidence before approving or blocking future execution.',
+        body: 'Decision owners can review intent, impact and evidence before approving or blocking execution.',
         icon: UserCheck,
         id: 'business-outcome',
         title: 'Expected business outcome',
@@ -77,19 +77,19 @@ export const governanceDocumentation: Record<
     panelId: 'governance-demo-technical-panel',
     cards: [
       {
-        body: 'The demo shell separates scenario input, policy evaluation, approval and evidence regions for later implementation.',
+        body: 'The explorer separates scenario input, policy evaluation, approval and evidence regions into distinct governance responsibilities.',
         icon: GitBranch,
         id: 'technical-architecture',
         title: 'Architecture',
       },
       {
-        body: 'Future milestones will connect request, pipeline, decision, explanation, approval and audit stages.',
+        body: 'The pipeline connects request, decision explanation, approval and audit stages into a reviewable governance path.',
         icon: Route,
         id: 'technical-pipeline',
         title: 'Pipeline',
       },
       {
-        body: 'Policy handling is represented as a placeholder only. No rules, risk scoring or evaluation are implemented.',
+        body: 'Policy handling is represented as a governed evaluation layer for explaining how execution authority is constrained.',
         icon: ListChecks,
         id: 'technical-policy-layer',
         title: 'Policy Layer',
@@ -207,7 +207,7 @@ export const governanceWalkthroughStages: GovernanceWalkthroughStage[] = [
   },
   {
     answer:
-      'The approved action is represented as a controlled simulation in this website demo.',
+      'The approved action is represented as a controlled simulation in this governed workflow explorer.',
     authority: 'Execution is simulated here',
     evidence: ['Approved plan', 'Bounded capability', 'Simulated result'],
     icon: PlayCircle,

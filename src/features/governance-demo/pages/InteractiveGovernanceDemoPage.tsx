@@ -33,7 +33,7 @@ export function InteractiveGovernanceDemoPage() {
       >
         <div className="governance-demo-views__header">
           <h2 className="type-heading-2" id="governance-demo-view-title">
-            Documentation Views
+            Governance Views
           </h2>
           <GovernanceViewToggle
             activeView={activeView}
