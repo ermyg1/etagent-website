@@ -48,6 +48,13 @@ Preview the production build locally:
 npm run preview
 ```
 
+## Engineering Workflow
+
+- [Codex Engineering Workflow](./docs/engineering/CODEX_WORKFLOW.md)
+- [Development Workflow](./docs/DEVELOPMENT_WORKFLOW.md)
+- [Architecture Rules](./docs/ARCHITECTURE_RULES.md)
+- [Codex Instructions](./docs/CODEX_INSTRUCTIONS.md)
+
 ## Deployment Documentation
 
 - [Deployment](./docs/operations/DEPLOYMENT.md)
