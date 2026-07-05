@@ -1,7 +1,6 @@
 import { Badge } from '../../../components/Badge'
 import { Stack } from '../../../components/layout'
-import { governanceWorkspaceRegions } from '../constants/content'
-import { WorkspaceCard } from './WorkspaceCard'
+import { GovernanceWalkthrough } from './GovernanceWalkthrough'
 
 export function GovernanceWorkspace() {
   return (
@@ -12,25 +11,15 @@ export function GovernanceWorkspace() {
       <Stack className="governance-workspace__header" space="md">
         <Badge variant="primary">Governance Workspace</Badge>
         <h2 className="type-heading-2" id="governance-workspace-title">
-          Interactive Demo Structure
+          Interactive Governance Walkthrough
         </h2>
         <p className="type-body-large">
-          The workspace is divided into future scenario, decision, approval and
-          evidence regions. Each region is a placeholder for P4B.2.
+          Follow a deterministic governed workflow from request to outcome and
+          see how E.T Agent separates AI assistance from authority to act.
         </p>
       </Stack>
 
-      <div className="governance-workspace__grid">
-        {governanceWorkspaceRegions.map((region) => (
-          <WorkspaceCard
-            body={region.body}
-            icon={region.icon}
-            id={region.id}
-            key={region.title}
-            title={region.title}
-          />
-        ))}
-      </div>
+      <GovernanceWalkthrough />
     </section>
   )
 }

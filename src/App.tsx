@@ -1154,6 +1154,34 @@ function ProductPage() {
       </Section>
 
       <Section
+        aria-labelledby="product-demo-bridge-title"
+        className="product-demo-bridge"
+        spacing="compact"
+        width="wide"
+      >
+        <Card className="product-demo-bridge__card" variant="bordered">
+          <Stack className="product-demo-bridge__content" space="md">
+            <Badge variant="secondary">Interactive Walkthrough</Badge>
+            <h2 className="type-heading-2" id="product-demo-bridge-title">
+              Experience a governed workflow before execution.
+            </h2>
+            <p className="type-body-large">
+              Walk through a deterministic example that shows how a request is
+              analysed, reviewed against governance, approved by a human and
+              preserved as audit evidence.
+            </p>
+          </Stack>
+          <Button
+            onClick={() => window.location.assign('/governance-demo')}
+            size="lg"
+            variant="outline"
+          >
+            Open Governance Demo
+          </Button>
+        </Card>
+      </Section>
+
+      <Section
         aria-labelledby="organisations-title"
         className="product-organisations"
         width="wide"

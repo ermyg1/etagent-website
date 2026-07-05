@@ -1246,6 +1246,7 @@
 .product-principles,
 .product-workspaces,
 .product-lifecycle,
+.product-demo-bridge,
 .product-organisations,
 .product-evolution,
 .product-cta {
@@ -1254,6 +1255,7 @@
 
 .product-overview,
 .product-workspaces,
+.product-demo-bridge,
 .product-organisations,
 .product-cta {
   background: color-mix(in srgb, var(--color-background-raised) 46%, transparent);
@@ -1520,6 +1522,23 @@
 
 .product-lifecycle__groups {
   display: none;
+}
+
+.product-demo-bridge__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2xl);
+  padding: var(--space-xl);
+  background: var(--color-surface);
+}
+
+.product-demo-bridge__content {
+  max-width: 760px;
+}
+
+.product-demo-bridge__content .type-body-large {
+  color: var(--color-text-muted);
 }
 
 .product-lifecycle-group {
@@ -2309,6 +2328,11 @@
     align-items: start;
   }
 
+  .product-demo-bridge__card {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
   .trust-hero {
     min-height: auto;
   }
@@ -2712,6 +2736,15 @@
   .product-cta__card {
     gap: var(--space-xl);
     padding: var(--space-lg);
+  }
+
+  .product-demo-bridge__card {
+    gap: var(--space-xl);
+    padding: var(--space-lg);
+  }
+
+  .product-demo-bridge__card .ui-button {
+    width: 100%;
   }
 
   .form-grid {

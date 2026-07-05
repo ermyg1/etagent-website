@@ -1,9 +1,12 @@
 import {
+  Brain,
   ClipboardCheck,
   FileCheck,
   FileText,
   GitBranch,
+  Gauge,
   ListChecks,
+  PlayCircle,
   Route,
   ScrollText,
   ShieldCheck,
@@ -23,6 +26,17 @@ export type GovernanceWorkspaceRegion = {
   body: string
   icon: LucideIcon
   id: string
+  title: string
+}
+
+export type GovernanceWalkthroughStage = {
+  answer: string
+  authority: string
+  evidence: string[]
+  icon: LucideIcon
+  id: string
+  outcome: string
+  question: string
   title: string
 }
 
@@ -132,5 +146,100 @@ export const governanceWorkspaceRegions: GovernanceWorkspaceRegion[] = [
     icon: ClipboardCheck,
     id: 'audit',
     title: 'Audit',
+  },
+]
+
+export const governanceWalkthroughStages: GovernanceWalkthroughStage[] = [
+  {
+    answer:
+      'A business user asks E.T Agent to prepare a customer account update and route it through governed review.',
+    authority: 'Request captured before action',
+    evidence: ['Requester identity', 'Business intent', 'Requested capability'],
+    icon: FileText,
+    id: 'request',
+    outcome: 'The work begins as a recorded request, not an autonomous action.',
+    question: 'What was asked?',
+    title: 'Request',
+  },
+  {
+    answer:
+      'AI structures the request, identifies the likely work required and prepares a proposal for review.',
+    authority: 'AI can analyse but cannot execute',
+    evidence: ['Structured intent', 'Proposed steps', 'Required context'],
+    icon: Brain,
+    id: 'ai-analysis',
+    outcome: 'Intelligence supports the workflow without receiving authority to act.',
+    question: 'What does AI do?',
+    title: 'AI Analysis',
+  },
+  {
+    answer:
+      'The proposed action is checked against governance boundaries before any operational authority is released.',
+    authority: 'Policy comes before power',
+    evidence: ['Role boundary', 'Capability boundary', 'Approval requirement'],
+    icon: ShieldCheck,
+    id: 'policy-review',
+    outcome: 'AI cannot bypass policy, approve itself or escalate privileges.',
+    question: "Why can't AI act alone?",
+    title: 'Policy Review',
+  },
+  {
+    answer:
+      'The workflow explains the expected business impact so an accountable person can review the consequences.',
+    authority: 'Impact visible before approval',
+    evidence: ['Affected record', 'Proposed change', 'Risk note'],
+    icon: Gauge,
+    id: 'impact-summary',
+    outcome: 'The reviewer sees what could happen before deciding.',
+    question: 'What could happen?',
+    title: 'Impact Summary',
+  },
+  {
+    answer:
+      'An authorised human decides whether the proposed action should proceed, change or stop.',
+    authority: 'Human authority required',
+    evidence: ['Approver role', 'Decision timestamp', 'Approval status'],
+    icon: UserCheck,
+    id: 'human-approval',
+    outcome: 'Accountability remains with the person and organisation.',
+    question: 'Who decides?',
+    title: 'Human Approval',
+  },
+  {
+    answer:
+      'The approved action is represented as a controlled simulation in this website demo.',
+    authority: 'Execution is simulated here',
+    evidence: ['Approved plan', 'Bounded capability', 'Simulated result'],
+    icon: PlayCircle,
+    id: 'simulated-execution',
+    outcome: 'This page demonstrates governance only; it does not perform real execution.',
+    question: 'What happens next?',
+    title: 'Simulated Execution',
+  },
+  {
+    answer:
+      'The request, policy review, approval and simulated outcome are preserved as a reviewable record.',
+    authority: 'Audit evidence recorded',
+    evidence: ['Request trail', 'Decision trail', 'Outcome trail'],
+    icon: ClipboardCheck,
+    id: 'audit-record',
+    outcome: 'The workflow can be reviewed because accountability is built in from the start.',
+    question: 'How is accountability preserved?',
+    title: 'Audit Record',
+  },
+  {
+    answer:
+      'E.T Agent is different because governance happens before execution and human authority remains visible.',
+    authority: 'Governance before execution',
+    evidence: [
+      'Request governed',
+      'Human approved',
+      'Audit recorded',
+    ],
+    icon: FileCheck,
+    id: 'outcome',
+    outcome: 'The result is governed AI: transparent, auditable and trusted by design.',
+    question: 'Why is E.T Agent different?',
+    title: 'Outcome',
   },
 ]
