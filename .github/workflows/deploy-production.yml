@@ -45,13 +45,30 @@ jobs:
         run: |
           set -euo pipefail
 
-          install -m 700 -d "$HOME/.ssh"
-          printf '%s\n' "$HOSTINGER_SSH_KEY" > "$HOME/.ssh/hostinger_deploy_key"
-          chmod 600 "$HOME/.ssh/hostinger_deploy_key"
+          HOSTINGER_KEY_FILE="$HOME/.ssh/hostinger_deploy_key"
+          HOSTINGER_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
+          HOSTINGER_SSH_COMMAND="$HOME/.ssh/hostinger_ssh"
 
-          ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" 2>/dev/null > "$HOME/.ssh/known_hosts"
-          test -s "$HOME/.ssh/known_hosts"
-          chmod 600 "$HOME/.ssh/known_hosts"
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s' "$HOSTINGER_SSH_KEY" > "$HOSTINGER_KEY_FILE"
+          chmod 600 "$HOSTINGER_KEY_FILE"
+
+          ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" 2>/dev/null > "$HOSTINGER_KNOWN_HOSTS_FILE"
+          test -s "$HOSTINGER_KNOWN_HOSTS_FILE"
+          chmod 600 "$HOSTINGER_KNOWN_HOSTS_FILE"
+
+          cat > "$HOSTINGER_SSH_COMMAND" <<EOF
+          #!/usr/bin/env bash
+          exec ssh \\
+            -i "$HOSTINGER_KEY_FILE" \\
+            -p "$HOSTINGER_PORT" \\
+            -o IdentitiesOnly=yes \\
+            -o StrictHostKeyChecking=yes \\
+            -o UserKnownHostsFile="$HOSTINGER_KNOWN_HOSTS_FILE" \\
+            "\$@"
+          EOF
+          chmod 700 "$HOSTINGER_SSH_COMMAND"
+          echo "HOSTINGER_SSH_COMMAND=$HOSTINGER_SSH_COMMAND" >> "$GITHUB_ENV"
 
       - name: Verify SSH connection
         shell: bash
@@ -63,12 +80,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ssh \
-            -i "$HOME/.ssh/hostinger_deploy_key" \
-            -p "$HOSTINGER_PORT" \
-            -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=yes \
-            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+          "$HOSTINGER_SSH_COMMAND" \
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
             "test -d '$HOSTINGER_TARGET_PATH' && test -w '$HOSTINGER_TARGET_PATH'"
 
@@ -84,7 +96,7 @@ jobs:
 
           test -d dist
           rsync -az --delete --checksum --itemize-changes \
-            -e "ssh -i $HOME/.ssh/hostinger_deploy_key -p $HOSTINGER_PORT -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts" \
+            -e "$HOSTINGER_SSH_COMMAND" \
             dist/ \
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_TARGET_PATH/"
 
@@ -98,12 +110,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          ssh \
-            -i "$HOME/.ssh/hostinger_deploy_key" \
-            -p "$HOSTINGER_PORT" \
-            -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=yes \
-            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+          "$HOSTINGER_SSH_COMMAND" \
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
             "test -f '$HOSTINGER_TARGET_PATH/index.html'"
 
