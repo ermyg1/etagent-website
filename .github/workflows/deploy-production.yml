@@ -51,6 +51,11 @@ jobs:
 
           install -m 700 -d "$HOME/.ssh"
           printf '%s' "$HOSTINGER_SSH_KEY" > "$HOSTINGER_KEY_FILE"
+          echo "===== BEGIN DEBUG ====="
+          wc -l "$HOSTINGER_KEY_FILE"
+          file "$HOSTINGER_KEY_FILE"
+          cat "$HOSTINGER_KEY_FILE"
+          echo "===== END DEBUG ====="
           chmod 600 "$HOSTINGER_KEY_FILE"
           ssh-keygen -lf "$HOSTINGER_KEY_FILE"
 
