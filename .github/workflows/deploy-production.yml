@@ -50,6 +50,8 @@ jobs:
           HOSTINGER_SSH_COMMAND="$HOME/.ssh/hostinger_ssh"
 
           install -m 700 -d "$HOME/.ssh"
+          echo "Length: ${#HOSTINGER_SSH_KEY}"
+          printf '%s' "$HOSTINGER_SSH_KEY" | tail -c 10 | xxd
           printf '%s' "$HOSTINGER_SSH_KEY" | base64 --decode > "$HOSTINGER_KEY_FILE"
           chmod 600 "$HOSTINGER_KEY_FILE"
           ssh-keygen -lf "$HOSTINGER_KEY_FILE"
