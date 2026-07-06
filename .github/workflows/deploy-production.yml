@@ -1,0 +1,124 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Hostinger
+    runs-on: ubuntu-latest
+    environment: Production
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Build production assets
+        run: npm run build
+
+      - name: Prepare SSH
+        shell: bash
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+        run: |
+          set -euo pipefail
+
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$HOSTINGER_SSH_KEY" > "$HOME/.ssh/hostinger_deploy_key"
+          chmod 600 "$HOME/.ssh/hostinger_deploy_key"
+
+          ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" 2>/dev/null > "$HOME/.ssh/known_hosts"
+          test -s "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Verify SSH connection
+        shell: bash
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          HOSTINGER_TARGET_PATH: ${{ secrets.HOSTINGER_TARGET_PATH }}
+        run: |
+          set -euo pipefail
+
+          ssh \
+            -i "$HOME/.ssh/hostinger_deploy_key" \
+            -p "$HOSTINGER_PORT" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
+            "test -d '$HOSTINGER_TARGET_PATH' && test -w '$HOSTINGER_TARGET_PATH'"
+
+      - name: Deploy production build
+        shell: bash
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          HOSTINGER_TARGET_PATH: ${{ secrets.HOSTINGER_TARGET_PATH }}
+        run: |
+          set -euo pipefail
+
+          test -d dist
+          rsync -az --delete --checksum --itemize-changes \
+            -e "ssh -i $HOME/.ssh/hostinger_deploy_key -p $HOSTINGER_PORT -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts" \
+            dist/ \
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_TARGET_PATH/"
+
+      - name: Verify deployment
+        shell: bash
+        env:
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
+          HOSTINGER_TARGET_PATH: ${{ secrets.HOSTINGER_TARGET_PATH }}
+        run: |
+          set -euo pipefail
+
+          ssh \
+            -i "$HOME/.ssh/hostinger_deploy_key" \
+            -p "$HOSTINGER_PORT" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
+            "test -f '$HOSTINGER_TARGET_PATH/index.html'"
+
+      - name: Deployment summary
+        shell: bash
+        env:
+          HOSTINGER_TARGET_PATH: ${{ secrets.HOSTINGER_TARGET_PATH }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "## Production Deployment"
+            echo ""
+            echo "- Environment: Production"
+            echo "- Build output: dist/"
+            echo "- Target path: $HOSTINGER_TARGET_PATH"
+            echo "- Status: completed successfully"
+          } >> "$GITHUB_STEP_SUMMARY"
