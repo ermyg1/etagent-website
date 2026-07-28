@@ -166,7 +166,13 @@
 
 .delivery-demo-nav {
   position: sticky;
-  top: calc(var(--space-md) + 126px);
+  top: var(--delivery-demo-sticky-offset, calc(var(--space-md) + 126px));
+  max-height: calc(
+    100dvh - var(--delivery-demo-sticky-offset, calc(var(--space-md) + 126px)) - var(--space-md)
+  );
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 
 .delivery-demo-nav ol {
@@ -1184,9 +1190,17 @@
   }
 
   .delivery-demo-nav {
-    position: static;
+    position: sticky;
+    z-index: 7;
+    margin-inline: calc(var(--container-padding) * -1);
+    padding: var(--space-sm) var(--container-padding);
+    border-block: 1px solid color-mix(in srgb, var(--color-secondary) 24%, var(--color-border));
     overflow-x: auto;
-    padding-bottom: var(--space-sm);
+    overflow-y: hidden;
+    background:
+      linear-gradient(90deg, rgb(127 168 201 / 0.045), rgb(154 183 174 / 0.035)),
+      rgb(10 14 19 / 0.99);
+    box-shadow: 0 14px 26px rgb(0 0 0 / 0.22);
   }
 
   .delivery-demo-nav ol {

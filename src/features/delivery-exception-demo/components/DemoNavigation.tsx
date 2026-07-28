@@ -1,4 +1,5 @@
 import { Check, LockKeyhole } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { Icon } from '../../../components/Icon'
 import { demoViews, type DemoViewId } from '../data/demoData'
 
@@ -13,8 +14,50 @@ export function DemoNavigation({
   completedViews,
   onNavigate,
 }: DemoNavigationProps) {
+  const navigationRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const navigation = navigationRef.current
+    const activeItem = navigation?.querySelector<HTMLElement>('[aria-current="step"]')
+    const navigationList = navigation?.querySelector<HTMLElement>('ol')
+
+    if (!navigation || !activeItem || !navigationList) {
+      return
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const isHorizontal = window.getComputedStyle(navigationList).display === 'flex'
+
+    if (!isHorizontal) {
+      if (navigation.scrollHeight <= navigation.clientHeight) {
+        return
+      }
+
+      const top = activeItem.offsetTop - (navigation.clientHeight - activeItem.offsetHeight) / 2
+      navigation.scrollTo({
+        top: Math.max(0, top),
+        behavior: reduceMotion ? 'auto' : 'smooth',
+      })
+      return
+    }
+
+    if (navigation.scrollWidth <= navigation.clientWidth) {
+      return
+    }
+
+    const left = activeItem.offsetLeft - (navigation.clientWidth - activeItem.offsetWidth) / 2
+    navigation.scrollTo({
+      left: Math.max(0, left),
+      behavior: reduceMotion ? 'auto' : 'smooth',
+    })
+  }, [activeView])
+
   return (
-    <nav aria-label="Delivery exception review progress" className="delivery-demo-nav">
+    <nav
+      aria-label="Delivery exception review progress"
+      className="delivery-demo-nav"
+      ref={navigationRef}
+    >
       <ol>
         {demoViews.map((view, index) => {
           const isComplete = completedViews.includes(view.id)

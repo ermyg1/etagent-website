@@ -22,8 +22,11 @@ import '../styles/delivery-exception-demo.css'
 
 export function DeliveryExceptionDemoPage() {
   const [activeView, setActiveView] = useState<DemoViewId>('inbox')
+  const [navigationRequest, setNavigationRequest] = useState(0)
   const [record, setRecord] = useState<DecisionRecordData | null>(null)
   const [primaryNavigation, setPrimaryNavigation] = useState<HTMLElement | null>(null)
+  const navigationRequestedRef = useRef(false)
+  const stickyOffsetRef = useRef(0)
   const viewRef = useRef<HTMLDivElement>(null)
 
   const completedViews: DemoViewId[] = record ? ['record'] : []
@@ -78,13 +81,91 @@ export function DeliveryExceptionDemoPage() {
     }
   }, [])
 
-  const navigate = (view: DemoViewId) => {
-    setActiveView(view)
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' })
-    window.requestAnimationFrame(() => {
-      viewRef.current?.querySelector<HTMLElement>('h2')?.focus({ preventScroll: true })
+  useEffect(() => {
+    const workspaceSection = document.querySelector<HTMLElement>(
+      '.delivery-demo-workspace-section',
+    )
+    const header = document.querySelector<HTMLElement>('.site-header')
+    const disclosure = document.querySelector<HTMLElement>('.delivery-demo-disclosure')
+
+    if (!workspaceSection || !header || !disclosure) {
+      return undefined
+    }
+
+    const updateStickyOffset = () => {
+      const headerTop = Number.parseFloat(window.getComputedStyle(header).top) || 0
+      const spacing = Number.parseFloat(
+        window.getComputedStyle(document.documentElement).getPropertyValue('--space-sm'),
+      ) || 8
+      const stickyOffset =
+        headerTop + header.offsetHeight + disclosure.offsetHeight + spacing
+
+      stickyOffsetRef.current = stickyOffset
+      workspaceSection.style.setProperty(
+        '--delivery-demo-sticky-offset',
+        `${stickyOffset}px`,
+      )
+    }
+
+    const resizeObserver = new ResizeObserver(updateStickyOffset)
+    resizeObserver.observe(header)
+    resizeObserver.observe(disclosure)
+    window.addEventListener('resize', updateStickyOffset)
+    updateStickyOffset()
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateStickyOffset)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!navigationRequestedRef.current) {
+      return undefined
+    }
+
+    navigationRequestedRef.current = false
+    const heading = viewRef.current?.querySelector<HTMLElement>('h2')
+
+    if (!heading) {
+      return undefined
+    }
+
+    heading.focus({ preventScroll: true })
+
+    let scrollFrame = 0
+    const renderFrame = window.requestAnimationFrame(() => {
+      scrollFrame = window.requestAnimationFrame(() => {
+        const navigation = document.querySelector<HTMLElement>('.delivery-demo-nav')
+        const navigationList = navigation?.querySelector<HTMLElement>('ol')
+        const isHorizontalNavigation =
+          navigationList && window.getComputedStyle(navigationList).display === 'flex'
+        const spacing = Number.parseFloat(
+          window.getComputedStyle(document.documentElement).getPropertyValue('--space-md'),
+        ) || 16
+        const stickyStackHeight =
+          stickyOffsetRef.current + (isHorizontalNavigation ? navigation?.offsetHeight || 0 : 0)
+        const headingDocumentTop = window.scrollY + heading.getBoundingClientRect().top
+        const targetScrollY = headingDocumentTop - stickyStackHeight - spacing
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+        window.scrollTo({
+          top: Math.max(0, targetScrollY),
+          behavior: reduceMotion ? 'auto' : 'smooth',
+        })
+      })
     })
+
+    return () => {
+      window.cancelAnimationFrame(renderFrame)
+      window.cancelAnimationFrame(scrollFrame)
+    }
+  }, [activeView, navigationRequest])
+
+  const navigate = (view: DemoViewId) => {
+    navigationRequestedRef.current = true
+    setActiveView(view)
+    setNavigationRequest((request) => request + 1)
   }
 
   const views: Record<DemoViewId, React.ReactNode> = {
@@ -162,7 +243,11 @@ export function DeliveryExceptionDemoPage() {
         <strong>Synthetic demonstration. No operational actions are executed.</strong>
       </div>
 
-      <Section className="delivery-demo-workspace-section" spacing="compact" width="wide">
+      <Section
+        className="delivery-demo-workspace-section"
+        spacing="compact"
+        width="wide"
+      >
         <div className="delivery-demo-workspace">
           <DemoNavigation
             activeView={activeView}
