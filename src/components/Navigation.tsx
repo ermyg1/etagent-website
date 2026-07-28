@@ -8,6 +8,7 @@ const navItems = [
   { href: '/#home', label: 'Home' },
   { href: '/#governance-model', label: 'Governance model' },
   { href: '/governance-demo', label: 'Interactive Governance' },
+  { href: '/demo/delivery-exception-review', label: 'Use Case Demo' },
   { href: '/trust', label: 'Trust Centre' },
 ]
 
