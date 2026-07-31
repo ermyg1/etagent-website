@@ -56,10 +56,54 @@ const filters = [
   'Missing proof',
   'Payment review',
   'Urgent',
-]
+] as const
+
+type ExceptionFilter = (typeof filters)[number]
+
+const inboxCases = [
+  {
+    caseReference: caseDetails.caseReference,
+    category: 'Disputed delivery',
+    customer: caseDetails.customer,
+    driver: caseDetails.driver,
+    priority: 'Medium',
+    evidence: 'Incomplete',
+    decision: 'Review required',
+    opened: '14:32',
+    isSelected: true,
+  },
+  {
+    caseReference: 'SYN-EXC-2026-002',
+    category: 'Missing proof',
+    customer: 'Fictional placeholder',
+    driver: 'Synthetic record',
+    priority: 'Low',
+    evidence: 'Awaiting',
+    decision: 'Queued',
+    opened: '13:58',
+    isSelected: false,
+  },
+  {
+    caseReference: 'SYN-EXC-2026-003',
+    category: 'Payment review',
+    customer: 'Fictional placeholder',
+    driver: 'Synthetic record',
+    priority: 'High',
+    evidence: 'Incomplete',
+    decision: 'Queued',
+    opened: '12:41',
+    isSelected: false,
+  },
+] as const
 
 export function ExceptionInbox({ onNavigate }: ViewProps) {
-  const [activeFilter, setActiveFilter] = useState('All')
+  const [activeFilter, setActiveFilter] = useState<ExceptionFilter>('All')
+  const visibleCases = inboxCases.filter((exceptionCase) => {
+    if (activeFilter === 'All') return true
+    if (activeFilter === 'Urgent') return exceptionCase.priority === 'High'
+    return exceptionCase.category === activeFilter
+  })
+  const selectedCaseIsVisible = visibleCases.some((exceptionCase) => exceptionCase.isSelected)
 
   return (
     <ViewShell
@@ -102,50 +146,58 @@ export function ExceptionInbox({ onNavigate }: ViewProps) {
             </tr>
           </thead>
           <tbody>
-            <tr className="delivery-demo-table__selected">
-              <td>
-                <button onClick={() => onNavigate('overview')} type="button">
-                  {caseDetails.caseReference}
-                  <ArrowRight aria-hidden="true" />
-                </button>
-              </td>
-              <td>Disputed delivery</td>
-              <td>
-                {caseDetails.customer}
-                <small>{caseDetails.driver}</small>
-              </td>
-              <td><Badge variant="warning">Medium</Badge></td>
-              <td><Badge variant="warning">Incomplete</Badge></td>
-              <td><Badge variant="neutral">Review required</Badge></td>
-              <td>14:32</td>
-            </tr>
-            <tr aria-disabled="true">
-              <td>SYN-EXC-2026-002</td>
-              <td>Missing proof</td>
-              <td>Fictional placeholder<small>Synthetic record</small></td>
-              <td>Low</td>
-              <td>Awaiting</td>
-              <td>Queued</td>
-              <td>13:58</td>
-            </tr>
-            <tr aria-disabled="true">
-              <td>SYN-EXC-2026-003</td>
-              <td>Payment review</td>
-              <td>Fictional placeholder<small>Synthetic record</small></td>
-              <td>High</td>
-              <td>Incomplete</td>
-              <td>Queued</td>
-              <td>12:41</td>
-            </tr>
+            {visibleCases.map((exceptionCase) => (
+              <tr
+                aria-disabled={exceptionCase.isSelected ? undefined : true}
+                className={exceptionCase.isSelected ? 'delivery-demo-table__selected' : undefined}
+                key={exceptionCase.caseReference}
+              >
+                <td>
+                  {exceptionCase.isSelected ? (
+                    <button onClick={() => onNavigate('overview')} type="button">
+                      {exceptionCase.caseReference}
+                      <ArrowRight aria-hidden="true" />
+                    </button>
+                  ) : exceptionCase.caseReference}
+                </td>
+                <td>{exceptionCase.category}</td>
+                <td>{exceptionCase.customer}<small>{exceptionCase.driver}</small></td>
+                <td>
+                  {exceptionCase.isSelected
+                    ? <Badge variant="warning">{exceptionCase.priority}</Badge>
+                    : exceptionCase.priority}
+                </td>
+                <td>
+                  {exceptionCase.isSelected
+                    ? <Badge variant="warning">{exceptionCase.evidence}</Badge>
+                    : exceptionCase.evidence}
+                </td>
+                <td>
+                  {exceptionCase.isSelected
+                    ? <Badge variant="neutral">{exceptionCase.decision}</Badge>
+                    : exceptionCase.decision}
+                </td>
+                <td>{exceptionCase.opened}</td>
+              </tr>
+            ))}
+            {visibleCases.length === 0 && (
+              <tr>
+                <td className="delivery-demo-table__empty" colSpan={7}>
+                  No synthetic exceptions match this filter.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
-      <div className="delivery-demo-action">
-        <Button onClick={() => onNavigate('overview')}>
-          Open selected case
-          <ArrowRight aria-hidden="true" />
-        </Button>
-      </div>
+      {selectedCaseIsVisible && (
+        <div className="delivery-demo-action">
+          <Button onClick={() => onNavigate('overview')}>
+            Open selected case
+            <ArrowRight aria-hidden="true" />
+          </Button>
+        </div>
+      )}
     </ViewShell>
   )
 }

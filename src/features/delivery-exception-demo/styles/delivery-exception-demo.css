@@ -390,6 +390,12 @@
   opacity: 0.54;
 }
 
+.delivery-demo-table .delivery-demo-table__empty {
+  padding-block: var(--space-xl);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 .delivery-demo-table__selected {
   background:
     linear-gradient(90deg, rgb(127 168 201 / 0.08), transparent 55%),
