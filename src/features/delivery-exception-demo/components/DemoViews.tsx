@@ -42,13 +42,6 @@ type ViewProps = {
   onNavigate: (view: DemoViewId) => void
 }
 
-const metrics = [
-  ['Open exceptions', '8'],
-  ['Awaiting evidence', '3'],
-  ['Human decision required', '4'],
-  ['High-priority cases', '1'],
-]
-
 const filters = [
   'All',
   'Customer unavailable',
@@ -95,6 +88,22 @@ const inboxCases = [
     isSelected: false,
   },
 ] as const
+
+const metrics = [
+  ['Open exceptions', inboxCases.length],
+  [
+    'Evidence outstanding',
+    inboxCases.filter(({ evidence }) => evidence === 'Awaiting' || evidence === 'Incomplete').length,
+  ],
+  [
+    'Human decision required',
+    inboxCases.filter(({ decision }) => decision === 'Review required').length,
+  ],
+  [
+    'High-priority cases',
+    inboxCases.filter(({ priority }) => priority === 'High').length,
+  ],
+]
 
 export function ExceptionInbox({ onNavigate }: ViewProps) {
   const [activeFilter, setActiveFilter] = useState<ExceptionFilter>('All')
