@@ -1,0 +1,494 @@
+.fraud-reimbursement-demo .bank-hero {
+  padding: clamp(4rem, 9vw, 7rem) var(--container-padding) var(--space-2xl);
+  border-bottom: 1px solid var(--color-border);
+  background: radial-gradient(circle at 85% 15%, rgb(154 183 174 / 0.12), transparent 28rem);
+}
+
+.fraud-reimbursement-demo .bank-hero > * {
+  max-width: 900px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.fraud-reimbursement-demo .bank-hero h1 {
+  margin: 0.8rem auto;
+  color: var(--color-text-strong);
+  font-size: var(--type-heading-1);
+  line-height: var(--line-tight);
+}
+
+.fraud-reimbursement-demo .bank-hero p:last-child {
+  color: var(--color-text-muted);
+  font-size: var(--type-body-large);
+  line-height: 1.65;
+}
+
+.fraud-reimbursement-demo .bank-kicker {
+  color: var(--color-secondary);
+  font: 600 var(--type-caption) var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fraud-reimbursement-demo .bank-disclosure {
+  position: sticky;
+  top: calc(62px + var(--space-md));
+  z-index: 8;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem var(--container-padding);
+  border-block: 1px solid var(--color-border);
+  background: rgb(12 17 22 / 0.98);
+  text-align: center;
+}
+
+.fraud-reimbursement-demo .bank-disclosure span {
+  color: var(--color-text-muted);
+  font-size: var(--type-caption);
+}
+
+.fraud-reimbursement-demo .bank-workspace {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.25fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  width: min(1440px, 100%);
+  min-height: 800px;
+  margin: auto;
+  padding: var(--space-2xl) var(--container-padding);
+}
+
+.fraud-reimbursement-demo .bank-nav {
+  position: sticky;
+  top: 150px;
+  max-height: calc(100dvh - 170px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.fraud-reimbursement-demo .bank-nav ol {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fraud-reimbursement-demo .bank-nav__button {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  background: transparent;
+  text-align: left;
+}
+
+.fraud-reimbursement-demo .bank-nav__button span {
+  display: inline-grid;
+  width: 32px;
+  color: var(--color-secondary);
+  font-family: var(--font-mono);
+}
+
+.fraud-reimbursement-demo .bank-nav__button[aria-current='step'] {
+  border-color: var(--color-primary);
+  color: var(--color-text-strong);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-nav__button--locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.fraud-reimbursement-demo .bank-nav > p {
+  padding: var(--space-md);
+  border: 1px solid color-mix(in srgb, var(--color-error) 40%, var(--color-border));
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--type-small);
+}
+
+.fraud-reimbursement-demo .bank-content {
+  min-width: 0;
+}
+
+.fraud-reimbursement-demo .bank-view > header {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: var(--space-xl);
+}
+
+.fraud-reimbursement-demo .bank-view > header p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.fraud-reimbursement-demo .bank-metrics,
+.fraud-reimbursement-demo .bank-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-md);
+  margin: 0 0 var(--space-xl);
+}
+
+.fraud-reimbursement-demo .bank-metrics div,
+.fraud-reimbursement-demo .bank-details div,
+.fraud-reimbursement-demo .bank-grid article {
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo dt {
+  color: var(--color-text-muted);
+  font-size: var(--type-small);
+}
+
+.fraud-reimbursement-demo dd {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.fraud-reimbursement-demo .bank-metrics dd {
+  font-size: var(--type-heading-3);
+  font-weight: 700;
+}
+
+.fraud-reimbursement-demo .bank-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space-lg);
+}
+
+.fraud-reimbursement-demo .bank-filters button,
+.fraud-reimbursement-demo .bank-view button {
+  min-height: 44px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-filters button[aria-pressed='true'],
+.fraud-reimbursement-demo .bank-view button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-text-strong);
+}
+
+.fraud-reimbursement-demo .bank-table-wrap {
+  overflow-x: auto;
+}
+
+.fraud-reimbursement-demo .bank-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fraud-reimbursement-demo .bank-table-wrap caption {
+  padding: var(--space-md);
+  font-weight: 700;
+  text-align: left;
+}
+
+.fraud-reimbursement-demo .bank-table-wrap th,
+.fraud-reimbursement-demo .bank-table-wrap td {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.fraud-reimbursement-demo .bank-notice,
+.fraud-reimbursement-demo .bank-lock,
+.fraud-reimbursement-demo .bank-recommendation {
+  margin: var(--space-lg) 0;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-secondary) 7%, var(--color-surface));
+  line-height: 1.6;
+}
+
+.fraud-reimbursement-demo .bank-card-list,
+.fraud-reimbursement-demo .bank-governance {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.fraud-reimbursement-demo .bank-evidence,
+.fraud-reimbursement-demo .bank-rule {
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-evidence > div:first-child > span,
+.fraud-reimbursement-demo .bank-rule header span {
+  color: var(--color-secondary);
+  font: 500 var(--type-caption) var(--font-mono);
+}
+
+.fraud-reimbursement-demo .bank-evidence h3,
+.fraud-reimbursement-demo .bank-rule h3 {
+  margin: 0.4rem 0;
+  color: var(--color-text-strong);
+}
+
+.fraud-reimbursement-demo .bank-evidence blockquote {
+  margin: var(--space-md) 0;
+  padding: var(--space-md);
+  border-left: 3px solid var(--color-border);
+  background: rgb(255 255 255 / 0.025);
+}
+
+.fraud-reimbursement-demo .bank-rule header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fraud-reimbursement-demo .bank-rule > button {
+  margin-top: var(--space-md);
+}
+
+.fraud-reimbursement-demo .bank-timeline {
+  display: grid;
+  gap: var(--space-md);
+  padding-left: 1.5rem;
+}
+
+.fraud-reimbursement-demo .bank-timeline li {
+  padding: var(--space-lg);
+  border-left: 2px solid var(--color-primary);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.fraud-reimbursement-demo .bank-view form,
+.fraud-reimbursement-demo .bank-view fieldset {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.fraud-reimbursement-demo .bank-view fieldset {
+  margin: var(--space-lg) 0;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.fraud-reimbursement-demo .bank-view label {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+
+.fraud-reimbursement-demo .bank-view label:has(textarea) {
+  display: grid;
+}
+
+.fraud-reimbursement-demo .bank-view input[type='radio'],
+.fraud-reimbursement-demo .bank-view input[type='checkbox'] {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+}
+
+.fraud-reimbursement-demo .bank-view textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  background: var(--color-background);
+}
+
+.fraud-reimbursement-demo .bank-errors {
+  padding: var(--space-lg);
+  border: 2px solid var(--color-error);
+  border-radius: var(--radius-lg);
+}
+
+.fraud-reimbursement-demo .bank-field-error {
+  display: block;
+  margin: 0.25rem 0 0;
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.fraud-reimbursement-demo .bank-field-error::before {
+  content: 'Error: ';
+}
+
+.fraud-reimbursement-demo .bank-risk {
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.fraud-reimbursement-demo .bank-record {
+  display: grid;
+  gap: 1px;
+  background: var(--color-border);
+}
+
+.fraud-reimbursement-demo .bank-record div {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.3fr) 1fr;
+  gap: 1rem;
+  padding: 0.8rem;
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-governance details {
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.fraud-reimbursement-demo .bank-governance summary {
+  min-height: 44px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fraud-reimbursement-demo .bank-governance li {
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 1000px) {
+  .fraud-reimbursement-demo .bank-workspace {
+    display: block;
+  }
+
+  .fraud-reimbursement-demo .bank-nav {
+    position: sticky;
+    top: var(--bank-navigation-clearance, 135px);
+    z-index: 7;
+    max-height: none;
+    margin: 0 calc(var(--container-padding) * -1) var(--space-xl);
+    padding: 0 var(--container-padding);
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: var(--color-background);
+  }
+
+  .fraud-reimbursement-demo .bank-nav ol {
+    display: flex;
+    width: max-content;
+  }
+
+  .fraud-reimbursement-demo .bank-nav li {
+    flex: 0 0 auto;
+  }
+
+  .fraud-reimbursement-demo .bank-nav__button {
+    width: auto;
+  }
+
+  .fraud-reimbursement-demo .bank-nav > .bank-nav__boundary {
+    display: none;
+  }
+
+  .fraud-reimbursement-demo .bank-metrics,
+  .fraud-reimbursement-demo .bank-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .fraud-reimbursement-demo .bank-disclosure {
+    position: static;
+  }
+
+  .fraud-reimbursement-demo .bank-nav {
+    top: var(--bank-header-clearance, 62px);
+  }
+
+  .fraud-reimbursement-demo .bank-workspace {
+    padding-top: 0;
+  }
+
+  .fraud-reimbursement-demo .bank-metrics,
+  .fraud-reimbursement-demo .bank-details,
+  .fraud-reimbursement-demo .bank-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap {
+    overflow: visible;
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap table,
+  .fraud-reimbursement-demo .bank-table-wrap thead,
+  .fraud-reimbursement-demo .bank-table-wrap tbody,
+  .fraud-reimbursement-demo .bank-table-wrap tr,
+  .fraud-reimbursement-demo .bank-table-wrap th,
+  .fraud-reimbursement-demo .bank-table-wrap td {
+    display: block;
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap tr {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap td,
+  .fraud-reimbursement-demo .bank-table-wrap th {
+    padding: 0.45rem;
+    border: 0;
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap td::before {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(2)::before { content: 'Type'; }
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(3)::before { content: 'Amount'; }
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(4)::before { content: 'Priority'; }
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(5)::before { content: 'Evidence'; }
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(6)::before { content: 'Readiness'; }
+  .fraud-reimbursement-demo .bank-table-wrap td:nth-child(7)::before { content: 'Review'; }
+
+  .fraud-reimbursement-demo .bank-record div {
+    grid-template-columns: 1fr;
+  }
+
+  .fraud-reimbursement-demo .bank-rule header {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fraud-reimbursement-demo .bank-nav,
+  .fraud-reimbursement-demo .bank-nav * {
+    scroll-behavior: auto !important;
+  }
+}

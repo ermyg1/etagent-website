@@ -32,6 +32,8 @@ import { StatusBadge } from './components/StatusBadge'
 import { PageLayout, Section, Stack } from './components/layout'
 import { InteractiveGovernanceDemoPage } from './features/governance-demo'
 import { DeliveryExceptionDemoPage } from './features/delivery-exception-demo'
+import { FraudReimbursementDemoPage } from './features/fraud-reimbursement-demo'
+import { UseCasesPage } from './features/use-cases'
 import { scrollToSection } from './utils/scroll'
 
 const workflowPreview = [
@@ -1538,6 +1540,14 @@ function App() {
 
   if (window.location.pathname === '/demo/delivery-exception-review') {
     return <DeliveryExceptionDemoPage />
+  }
+
+  if (window.location.pathname === '/use-cases') {
+    return <UseCasesPage />
+  }
+
+  if (window.location.pathname === '/demo/fraud-reimbursement-review') {
+    return <FraudReimbursementDemoPage />
   }
 
   if (window.location.pathname === '/privacy-policy') {

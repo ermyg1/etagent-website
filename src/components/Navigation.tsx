@@ -8,7 +8,7 @@ const navItems = [
   { href: '/#home', label: 'Home' },
   { href: '/#governance-model', label: 'Governance model' },
   { href: '/governance-demo', label: 'Interactive Governance' },
-  { href: '/demo/delivery-exception-review', label: 'Use Case Demo' },
+  { href: '/use-cases', label: 'Use Cases' },
   { href: '/trust', label: 'Trust Centre' },
 ]
 
@@ -88,6 +88,9 @@ export function Navigation() {
   }, [isOpen])
 
   const isActive = (href: string) => {
+    if (href === '/use-cases') {
+      return ['/use-cases', '/demo/delivery-exception-review', '/demo/fraud-reimbursement-review'].includes(currentPath)
+    }
     if (href === '/#home') {
       return currentPath === '/' && (currentHash === '' || currentHash === '#home')
     }

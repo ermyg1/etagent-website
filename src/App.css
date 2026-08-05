@@ -2972,7 +2972,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 900px) {
   .site-header {
     top: var(--space-sm);
     width: min(calc(100% - 1rem), var(--container-wide));
