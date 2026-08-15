@@ -33,6 +33,7 @@ import { PageLayout, Section, Stack } from './components/layout'
 import { InteractiveGovernanceDemoPage } from './features/governance-demo'
 import { DeliveryExceptionDemoPage } from './features/delivery-exception-demo'
 import { FraudReimbursementDemoPage } from './features/fraud-reimbursement-demo'
+import { CommandCentreDemoPage } from './features/command-centre-demo'
 import { UseCasesPage } from './features/use-cases'
 import { scrollToSection } from './utils/scroll'
 
@@ -1548,6 +1549,10 @@ function App() {
 
   if (window.location.pathname === '/demo/fraud-reimbursement-review') {
     return <FraudReimbursementDemoPage />
+  }
+
+  if (window.location.pathname === '/demo/command-centre') {
+    return <CommandCentreDemoPage />
   }
 
   if (window.location.pathname === '/privacy-policy') {

@@ -16,6 +16,13 @@ const useCases = [
     boundary:
       'A fictional banking workflow. No bank account, banking system or real customer data is connected.',
   },
+  {
+    title: 'E.T Agent Command Centre',
+    sector: 'Governed enterprise workspace',
+    href: '/demo/command-centre',
+    boundary:
+      'A synthetic governed workspace combining intelligence, work review, approvals and audit evidence. No live integrations or external actions.',
+  },
 ]
 
 export function UseCasesPage() {
@@ -26,7 +33,7 @@ export function UseCasesPage() {
           <p className="use-cases__eyebrow">Use cases</p>
           <h1 id="use-cases-title">Governed workflows across enterprise contexts.</h1>
           <p className="use-cases__intro">
-            Both demonstrations apply the same architecture: Evidence → Policy assessment → Impact
+            These demonstrations apply the same architecture: Evidence → Policy assessment → Impact
             analysis → Advisory recommendation → Human authority → Decision record → External
             execution blocked.
           </p>
