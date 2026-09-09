@@ -9,6 +9,7 @@ const navItems = [
   { href: '/#governance-model', label: 'Governance model' },
   { href: '/governance-demo', label: 'Interactive Governance' },
   { href: '/use-cases', label: 'Use Cases' },
+  { href: '/demo/command-centre', label: 'Command Centre' },
   { href: '/trust', label: 'Trust Centre' },
 ]
 
@@ -23,7 +24,7 @@ export function Navigation() {
       return undefined
     }
 
-    const mobileQuery = window.matchMedia('(max-width: 767px)')
+    const mobileQuery = window.matchMedia('(max-width: 900px)')
     const scrollPosition = window.scrollY
     const { body, documentElement } = document
     const previousBodyStyles = {

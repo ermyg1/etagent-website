@@ -66,6 +66,8 @@ Recommended Homepage section IDs for W3B:
 
 Navigation changes are not authorized in W3A. These anchors are provided for W3B Homepage Implementation.
 
+The approved website accuracy, contact and navigation improvement scope adds `Command Centre` immediately after `Use Cases` in primary navigation, linking to the existing `/demo/command-centre` route. The governance-model section and navigation link remain in place. The existing `900px` navigation layout breakpoint also governs open-menu scroll locking.
+
 ## 4. Content Model by Section
 
 ### Hero
@@ -83,6 +85,13 @@ Primary copy direction:
 
 - Avoid claiming autonomous AI execution.
 - Emphasize governed, approved and auditable execution.
+
+Approved public demonstration presentation:
+
+- Below the positioning text: `Current stage: prototype and synthetic demonstrations. Explore fictional workflows with simulated outcomes. No live business systems are connected and no external actions are performed.`
+- Primary CTA: `Request Architecture Review`, scrolling to the existing contact section.
+- Secondary CTA: `Explore the Command Centre`, a semantic link to `/demo/command-centre` using existing outline-button styling.
+- Compact workflow labels: `Simulated Execution` and `Demonstration Audit Record`. These describe the public demonstration; the core architectural workflow and auditability principles below remain unchanged.
 
 ### Enterprise Trust Banner
 
@@ -334,6 +343,10 @@ CTA copy:
 
 - Primary: `Request architecture review`.
 - Secondary: `Contact the team`.
+
+The approved homepage contact implementation uses a semantic primary email link to `mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review`, with the existing button styling. The Business Email card displays `ermias@etagent.io` as a selectable mailto link. The existing `Review Trust Centre` secondary action is retained.
+
+The existing homepage and Trust Centre documentation groups display `Public document not published` on each card and omit navigation arrows. Each group explains: `Public documentation is being prepared. Email ermias@etagent.io to discuss which materials can be shared for an evaluation.` The address is a mailto link; internal document completion states are unchanged.
 
 ## 5. Component Mapping
 

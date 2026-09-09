@@ -1,4 +1,5 @@
 import './App.css'
+import { useEffect } from 'react'
 import {
   Brain,
   Building2,
@@ -37,14 +38,72 @@ import { CommandCentreDemoPage } from './features/command-centre-demo'
 import { UseCasesPage } from './features/use-cases'
 import { scrollToSection } from './utils/scroll'
 
+const pageMetadata: Record<string, { title: string; description: string }> = {
+  '/': {
+    title: 'E.T Agent | Governance-First Enterprise AI',
+    description:
+      "Explore E.T Agent's governance-first approach to enterprise AI through synthetic demonstrations of policy checks, human review and decision evidence.",
+  },
+  '/product': {
+    title: 'Platform | E.T Agent',
+    description:
+      'Explore the E.T Agent platform concept, governance principles and proposed workspaces for human-approved enterprise AI.',
+  },
+  '/trust': {
+    title: 'Trust Centre | E.T Agent',
+    description:
+      'Review E.T Agent governance principles, security design, AI boundaries and enterprise readiness plans.',
+  },
+  '/use-cases': {
+    title: 'Use Cases | E.T Agent',
+    description:
+      'Explore fictional enterprise workflows that demonstrate policy checks, human review and decision evidence with synthetic data.',
+  },
+  '/governance-demo': {
+    title: 'Interactive Governance Demo | E.T Agent',
+    description:
+      'Follow a synthetic governance walkthrough from request and policy evaluation to human approval, simulated execution and decision evidence.',
+  },
+  '/demo/command-centre': {
+    title: 'Command Centre Demo | E.T Agent',
+    description:
+      'Explore a synthetic Command Centre demonstration of governed workflow review using fictional cases, with no external actions.',
+  },
+  '/demo/delivery-exception-review': {
+    title: 'Delivery Exception Demo | E.T Agent',
+    description:
+      'Review a fictional delivery exception using synthetic evidence, policy checks and human review, with no live delivery actions.',
+  },
+  '/demo/fraud-reimbursement-review': {
+    title: 'Fraud Reimbursement Demo | E.T Agent',
+    description:
+      'Explore a fictional fraud reimbursement review using synthetic case evidence and human decision controls, with no banking actions.',
+  },
+  '/privacy-policy': {
+    title: 'Privacy Policy | E.T Agent',
+    description:
+      'Read the E.T Agent website privacy policy for information submitted through the website and early enterprise evaluation channels.',
+  },
+  '/terms-of-use': {
+    title: 'Terms of Use | E.T Agent',
+    description:
+      'Read the terms governing access to and use of the E.T Agent website for information and enterprise evaluation.',
+  },
+}
+
+const notFoundMetadata = {
+  title: 'Page Not Found | E.T Agent',
+  description: 'This page is not available. Return to the E.T Agent homepage or explore the documentation overview.',
+}
+
 const workflowPreview = [
   'Request',
   'Intelligence',
   'Policy Engine',
   'Impact Summary',
   'Human Approval',
-  'Execution',
-  'Immutable Audit Log',
+  'Simulated Execution',
+  'Demonstration Audit Record',
 ]
 
 const enterpriseTrustPrinciples = [
@@ -1151,6 +1210,11 @@ function TrustCentrePage() {
           <h2 className="type-heading-2" id="documentation-hub-title">
             Enterprise documentation areas.
           </h2>
+          <p className="type-body-large">
+            Public documentation is being prepared. Email{' '}
+            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a> to discuss
+            which materials can be shared for an evaluation.
+          </p>
         </Stack>
         <div className="trust-documentation__grid">
           {documentationHub.map((item) => (
@@ -1160,10 +1224,7 @@ function TrustCentrePage() {
                 <h3 className="type-heading-4">{item.title}</h3>
               </div>
               <div className="trust-doc-link__meta">
-                <StatusBadge state={item.status} />
-                <span aria-hidden="true" className="trust-doc-link__arrow">
-                  →
-                </span>
+                <p className="type-body">Public document not published</p>
               </div>
             </Card>
           ))}
@@ -1527,6 +1588,15 @@ function ProductPage() {
 }
 
 function App() {
+  const pathname = window.location.pathname
+
+  useEffect(() => {
+    const metadata = pageMetadata[pathname] ?? notFoundMetadata
+    document.title = metadata.title
+    document.querySelector<HTMLMetaElement>('meta[name="description"]')
+      ?.setAttribute('content', metadata.description)
+  }, [pathname])
+
   if (window.location.pathname === '/trust') {
     return <TrustCentrePage />
   }
@@ -1592,17 +1662,21 @@ function App() {
               E.T Agent separates intelligence from authority so teams can evaluate
               recommendations, enforce policy and execute only after human approval.
             </p>
+            <p className="type-body">
+              Current stage: prototype and synthetic demonstrations. Explore
+              fictional workflows with simulated outcomes. No live business systems
+              are connected and no external actions are performed.
+            </p>
             <div className="homepage-hero__actions" aria-label="Hero calls to action">
               <Button onClick={() => scrollToSection('contact')} size="lg">
                 Request Architecture Review
               </Button>
-              <Button
-                onClick={() => scrollToSection('governance-model')}
-                size="lg"
-                variant="outline"
+              <a
+                className="ui-button ui-button--outline ui-button--lg"
+                href="/demo/command-centre"
               >
-                View Governance Model
-              </Button>
+                <span>Explore the Command Centre</span>
+              </a>
             </div>
           </Stack>
 
@@ -2211,8 +2285,9 @@ function App() {
             Enterprise evaluation starts with clear documentation.
           </h2>
           <p className="type-body-large">
-            Architecture, governance, security and audit materials are organised
-            for technical review, procurement and assurance teams.
+            Public documentation is being prepared. Email{' '}
+            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a> to discuss
+            which materials can be shared for an evaluation.
           </p>
         </Stack>
         <div className="trust-documentation__grid">
@@ -2223,10 +2298,7 @@ function App() {
                 <h3 className="type-heading-4">{item.title}</h3>
               </div>
               <div className="trust-doc-link__meta">
-                <StatusBadge state={item.status} />
-                <span aria-hidden="true" className="trust-doc-link__arrow">
-                  →
-                </span>
+                <p className="type-body">Public document not published</p>
               </div>
             </Card>
           ))}
@@ -2257,11 +2329,21 @@ function App() {
               <div className="enterprise-contact-card" key={route.title}>
                 <h3 className="type-heading-4">{route.title}</h3>
                 <p className="type-body">{route.body}</p>
+                {route.title === 'Business Email' && (
+                  <p className="type-body">
+                    <a href="mailto:ermias@etagent.io">ermias@etagent.io</a>
+                  </p>
+                )}
               </div>
             ))}
           </div>
           <div className="product-cta__actions" aria-label="Homepage contact actions">
-            <Button size="lg">Request Architecture Review</Button>
+            <a
+              className="ui-button ui-button--primary ui-button--lg"
+              href="mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review"
+            >
+              <span>Request Architecture Review</span>
+            </a>
             <Button
               onClick={() => window.location.assign('/trust')}
               size="lg"
