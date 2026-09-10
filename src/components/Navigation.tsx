@@ -1,5 +1,5 @@
 import { Menu, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { Button } from './Button'
 import { Logo } from './Logo'
 import { scrollToSection } from '../utils/scroll'
@@ -15,6 +15,8 @@ const navItems = [
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const navigationRef = useRef<HTMLElement>(null)
+  const releaseScrollRef = useRef<(() => void) | null>(null)
   const currentPath = window.location.pathname
   const currentHash = window.location.hash
   const contactTarget = '/#contact'
@@ -24,13 +26,9 @@ export function Navigation() {
       return undefined
     }
 
-    const mobileQuery = window.matchMedia('(max-width: 900px)')
+    const mobileQuery = window.matchMedia('(max-width: 1320px)')
     const scrollPosition = window.scrollY
-    const { body, documentElement } = document
-    const previousBodyStyles = {
-      overflow: body.style.overflow,
-      overscrollBehavior: body.style.overscrollBehavior,
-    }
+    const { documentElement } = document
     const previousDocumentStyles = {
       overflow: documentElement.style.overflow,
       overscrollBehavior: documentElement.style.overscrollBehavior,
@@ -38,7 +36,9 @@ export function Navigation() {
     let isScrollLocked = false
 
     const preventBackgroundScroll = (event: Event) => {
-      event.preventDefault()
+      if (!(event.target instanceof Node) || !navigationRef.current?.contains(event.target)) {
+        event.preventDefault()
+      }
     }
 
     const lockScroll = () => {
@@ -46,8 +46,8 @@ export function Navigation() {
         return
       }
 
-      body.style.overflow = 'hidden'
-      body.style.overscrollBehavior = 'none'
+      // An overflow-hidden body becomes the sticky header's scroll container.
+      // Lock only the viewport so the header keeps its visible sticky position.
       documentElement.style.overflow = 'hidden'
       documentElement.style.overscrollBehavior = 'none'
       document.addEventListener('touchmove', preventBackgroundScroll, { passive: false })
@@ -62,13 +62,13 @@ export function Navigation() {
 
       document.removeEventListener('touchmove', preventBackgroundScroll)
       document.removeEventListener('wheel', preventBackgroundScroll)
-      body.style.overflow = previousBodyStyles.overflow
-      body.style.overscrollBehavior = previousBodyStyles.overscrollBehavior
       documentElement.style.overflow = previousDocumentStyles.overflow
       documentElement.style.overscrollBehavior = previousDocumentStyles.overscrollBehavior
-      window.scrollTo(0, scrollPosition)
+      window.scrollTo({ top: scrollPosition, behavior: 'instant' })
       isScrollLocked = false
     }
+
+    releaseScrollRef.current = restoreScroll
 
     const syncScrollLock = () => {
       if (mobileQuery.matches) {
@@ -77,16 +77,56 @@ export function Navigation() {
       }
 
       restoreScroll()
+      setIsOpen(false)
     }
 
-    syncScrollLock()
+    if (mobileQuery.matches) {
+      lockScroll()
+    }
     mobileQuery.addEventListener('change', syncScrollLock)
 
     return () => {
       mobileQuery.removeEventListener('change', syncScrollLock)
       restoreScroll()
+      releaseScrollRef.current = null
     }
   }, [isOpen])
+
+  const closeMenu = () => {
+    // Restore before a link or contact action moves to its destination.
+    releaseScrollRef.current?.()
+    setIsOpen(false)
+  }
+
+  const handleMenuKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!isOpen || event.defaultPrevented) {
+      return
+    }
+
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      event.stopPropagation()
+      closeMenu()
+      event.currentTarget.querySelector<HTMLButtonElement>('.site-header__toggle')
+        ?.focus({ preventScroll: true })
+      return
+    }
+
+    if (event.key === 'Tab') {
+      const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('a, button'))
+        .filter((control) => control.getClientRects().length > 0 && getComputedStyle(control).visibility !== 'hidden')
+      const first = controls[0]
+      const last = controls[controls.length - 1]
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last?.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first?.focus()
+      }
+    }
+  }
 
   const isActive = (href: string) => {
     if (href === '/use-cases') {
@@ -103,7 +143,7 @@ export function Navigation() {
     return currentPath === href
   }
   const navigateToContact = () => {
-    setIsOpen(false)
+    closeMenu()
 
     if (window.location.pathname === '/') {
       scrollToSection('contact')
@@ -114,13 +154,14 @@ export function Navigation() {
   }
 
   return (
-    <header className="site-header">
+    <header className="site-header" onKeyDown={handleMenuKeyDown}>
       <div className="site-header__inner">
         <Logo />
         <nav
           aria-label="Primary navigation"
           className={isOpen ? 'site-nav site-nav--open' : 'site-nav'}
           id="primary-navigation"
+          ref={navigationRef}
         >
           {navItems.map((item) => (
             <a
@@ -128,7 +169,7 @@ export function Navigation() {
               className={isActive(item.href) ? 'site-nav__link site-nav__link--active' : 'site-nav__link'}
               href={item.href}
               key={item.href}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMenu}
             >
               {item.label}
             </a>
@@ -145,7 +186,7 @@ export function Navigation() {
           aria-expanded={isOpen}
           aria-label="Toggle navigation"
           className="site-header__toggle"
-          onClick={() => setIsOpen((current) => !current)}
+          onClick={() => isOpen ? closeMenu() : setIsOpen(true)}
           type="button"
         >
           {isOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}

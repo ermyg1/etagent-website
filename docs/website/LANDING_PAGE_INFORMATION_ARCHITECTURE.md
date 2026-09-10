@@ -66,7 +66,7 @@ Recommended Homepage section IDs for W3B:
 
 Navigation changes are not authorized in W3A. These anchors are provided for W3B Homepage Implementation.
 
-The approved website accuracy, contact and navigation improvement scope adds `Command Centre` immediately after `Use Cases` in primary navigation, linking to the existing `/demo/command-centre` route. The governance-model section and navigation link remain in place. The existing `900px` navigation layout breakpoint also governs open-menu scroll locking.
+The approved website accuracy, contact and navigation improvement scope adds `Command Centre` immediately after `Use Cases` in primary navigation, linking to the existing `/demo/command-centre` route. The governance-model section and navigation link remain in place. The `1320px` navigation layout breakpoint also governs open-menu scroll locking, allowing room for the measured desktop header and page gutters above that width.
 
 ## 4. Content Model by Section
 
