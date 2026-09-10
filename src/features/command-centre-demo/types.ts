@@ -3,6 +3,7 @@ export type WorkflowCategory = 'Intelligence' | 'Operational Review'
 export type WorkStatus =
   | 'Intelligence prepared'
   | 'Awaiting human decision'
+  | 'Governance refresh required'
   | 'Review available'
   | 'Policy blocked'
   | 'Simulated outcome prepared'
@@ -58,6 +59,10 @@ export type Decision = 'approve' | 'decline' | 'more-evidence'
 export type DecisionRecord = {
   id: string
   workItemId: string
+  planId: string
+  planVersion: number
+  planReference: string
+  approvalReference: string | 'Not applicable — no approval created'
   timestamp: string
   decision: string
   rationale: string
@@ -68,6 +73,44 @@ export type DecisionRecord = {
   dataClassification: string
   externalSystemsAffected: string
   limitation: 'Temporary browser-local demonstration record'
+}
+
+export type AuthoritativePlan = {
+  id: string
+  workItemId: 'SYN-CMD-001'
+  version: 1 | 2
+  reference: string
+  policyReference: string
+  impactReference: string
+  communicationScope: string
+  proposedAction: string
+}
+
+export type ApprovalEvidence = {
+  reference: string
+  timestamp: string
+  boundPlanId: string
+  boundPlanVersion: number
+  boundPlanReference: string
+  status: 'VALID — CURRENT PLAN' | 'INVALIDATED'
+  reasonCode?: 'APPROVAL_INVALIDATED_PLAN_CHANGED'
+}
+
+export type ApprovalInvalidationRecord = {
+  id: string
+  timestamp: string
+  previousPlanId: string
+  previousPlanVersion: number
+  previousPlanReference: string
+  newPlanId: string
+  newPlanVersion: number
+  newPlanReference: string
+  previousApprovalReference: string
+  previousApprovalState: 'VALID — CURRENT PLAN'
+  resultingApprovalState: 'INVALIDATED'
+  reasonCode: 'APPROVAL_INVALIDATED_PLAN_CHANGED'
+  resultingExecutionAuthority: 'NONE'
+  externalAction: 'No external action occurred'
 }
 
 export type QueueFilter =

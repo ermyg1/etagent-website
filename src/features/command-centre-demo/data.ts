@@ -1,4 +1,4 @@
-import type { WorkItem } from './types'
+import type { AuthoritativePlan, WorkItem } from './types'
 
 const noExecutionImpact = {
   externalSystemsAffected: 'None',
@@ -122,6 +122,30 @@ export const intelligenceSignals = [
 ] as const
 
 export const fictionalDecisionTimestamp = '18 February 2026, 14:30 UTC (fictional)'
+export const fictionalInvalidationTimestamp = '18 February 2026, 14:34 UTC (fictional)'
+export const fictionalSecondDecisionTimestamp = '18 February 2026, 14:38 UTC (fictional)'
+
+export const planV1 = {
+  id: 'SYN-PLAN-CMD-001',
+  workItemId: 'SYN-CMD-001',
+  version: 1,
+  reference: 'PLAN-REF-SYN-CMD-001-V1-COMMS-INTERNAL',
+  policyReference: 'POL-SYN-CMD-001-A',
+  impactReference: 'IMP-SYN-CMD-001-A',
+  communicationScope: 'Internal partnership-team review only',
+  proposedAction: 'Prepare a simulated draft outreach brief for internal human review only.',
+} as const satisfies AuthoritativePlan
+
+export const planV2 = {
+  id: 'SYN-PLAN-CMD-001',
+  workItemId: 'SYN-CMD-001',
+  version: 2,
+  reference: 'PLAN-REF-SYN-CMD-001-V2-COMMS-AGENCY',
+  policyReference: 'POL-SYN-CMD-001-A',
+  impactReference: 'IMP-SYN-CMD-001-B',
+  communicationScope: 'Internal partnership team plus fictional external-agency review',
+  proposedAction: 'Prepare a simulated draft outreach brief for internal and fictional external-agency review.',
+} as const satisfies AuthoritativePlan
 
 export const pipeline = [
   ['Request', 'Defined fictional request received'],
