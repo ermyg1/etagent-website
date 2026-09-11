@@ -7,7 +7,8 @@ import { PageLayout } from '../../../components/layout'
 import {
   fictionalDecisionTimestamp, fictionalInvalidationTimestamp, fictionalSecondDecisionTimestamp,
   canonicalizeReplayInput, evaluateGovernanceReplay, initialWorkItems, intelligenceSignals, pipeline,
-  planV1, planV2, planV2ReplayInput, recordedPlanV2GovernanceResult, replayComparisonLabels,
+  planV1, planV2, planV2PreApprovalCheckpoint, planV2ReplayInput, recordedPlanV2GovernanceResult,
+  replayComparisonLabels,
 } from '../data'
 import type {
   ApprovalEvidence, ApprovalInvalidationRecord, AuthoritativePlan, Decision, DecisionRecord,
@@ -259,7 +260,9 @@ export function CommandCentreDemoPage() {
 
       if (materialResult === 'MATCH') setReplayRecord({
         replayReference: 'SYN-RPL-CMD-001-V2-01',
-        sourceGovernanceRecord: 'SYN-DEC-CMD-001-B',
+        sourceGovernanceCheckpoint: planV2PreApprovalCheckpoint.reference,
+        checkpointState: planV2PreApprovalCheckpoint.state,
+        decisionRecordAtReplayTime: planV2PreApprovalCheckpoint.decisionRecordAtReplayTime,
         planId: planV2.id,
         planVersion: planV2.version,
         planReference: planV2.reference,
@@ -376,7 +379,7 @@ export function CommandCentreDemoPage() {
               </div>}
               {replayRecord && <div aria-live="polite" className="cc-replay-record" role="status">
                 <div className="cc-replay-record__header"><div><p className="cc-kicker">Replay Verification Record</p><h4>{replayRecord.replayReference}</h4></div><span className="cc-match">MATERIAL GOVERNANCE RESULT: {replayRecord.materialResult}</span></div>
-                <dl className="cc-detail-list"><div><dt>Replay Reference</dt><dd>{replayRecord.replayReference}</dd></div><div><dt>Source Governance Record</dt><dd>{replayRecord.sourceGovernanceRecord}</dd></div><div><dt>Plan</dt><dd>{replayRecord.planId}</dd></div><div><dt>Plan Version</dt><dd>v{replayRecord.planVersion}</dd></div><div><dt>Plan Reference</dt><dd>{replayRecord.planReference}</dd></div><div><dt>Authority Granted By Replay</dt><dd>{replayRecord.authorityGrantedByReplay}</dd></div><div><dt>External Action</dt><dd>{replayRecord.externalAction}</dd></div><div><dt>Status</dt><dd>{replayRecord.status}</dd></div></dl>
+                <dl className="cc-detail-list"><div><dt>Replay Reference</dt><dd>{replayRecord.replayReference}</dd></div><div><dt>Source Governance Checkpoint</dt><dd>{replayRecord.sourceGovernanceCheckpoint}</dd></div><div><dt>Checkpoint State</dt><dd>{replayRecord.checkpointState}</dd></div><div><dt>Decision Record At Replay Time</dt><dd>{replayRecord.decisionRecordAtReplayTime}</dd></div><div><dt>Plan</dt><dd>{replayRecord.planId}</dd></div><div><dt>Plan Version</dt><dd>v{replayRecord.planVersion}</dd></div><div><dt>Plan Reference</dt><dd>{replayRecord.planReference}</dd></div><div><dt>Authority Granted By Replay</dt><dd>{replayRecord.authorityGrantedByReplay}</dd></div><div><dt>External Action</dt><dd>{replayRecord.externalAction}</dd></div><div><dt>Status</dt><dd>{replayRecord.status}</dd></div></dl>
                 <div className="cc-replay-fingerprint"><span>Replay Input Fingerprint</span><strong>SHA-256</strong><code>{replayRecord.inputFingerprint}</code><p>Browser-local SHA-256 fingerprint of the synthetic replay input. This is not a digital signature and does not provide execution authority.</p></div>
                 <div className="cc-replay-comparisons">{replayRecord.comparisons.map((comparison) => <article key={comparison.field}><header><strong>{comparison.label}</strong><span className="cc-match">{comparison.status}</span></header><dl><div><dt>Original</dt><dd>{comparison.original}</dd></div><div><dt>Replay</dt><dd>{comparison.replay}</dd></div></dl></article>)}</div>
                 <p className="cc-replay-boundary"><LockKeyhole aria-hidden="true" /> Replay does not recreate or reactivate approval, create execution authority, or execute an external action. Fresh Plan v2 approval remains a separate human decision.</p>

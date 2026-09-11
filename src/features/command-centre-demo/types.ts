@@ -166,7 +166,9 @@ export type ReplayEvaluationAttempt = {
 
 export type ReplayVerificationRecord = {
   replayReference: 'SYN-RPL-CMD-001-V2-01'
-  sourceGovernanceRecord: 'SYN-DEC-CMD-001-B'
+  sourceGovernanceCheckpoint: 'SYN-GOV-CMD-001-V2-PREAPPROVAL'
+  checkpointState: 'Policy and impact established for Plan v2; fresh human decision not yet recorded'
+  decisionRecordAtReplayTime: 'NONE'
   planId: string
   planVersion: 2
   planReference: string

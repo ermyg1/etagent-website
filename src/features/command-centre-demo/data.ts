@@ -147,6 +147,12 @@ export const planV2 = {
   proposedAction: 'Prepare a simulated draft outreach brief for internal and fictional external-agency review.',
 } as const satisfies AuthoritativePlan
 
+export const planV2PreApprovalCheckpoint = {
+  reference: 'SYN-GOV-CMD-001-V2-PREAPPROVAL',
+  state: 'Policy and impact established for Plan v2; fresh human decision not yet recorded',
+  decisionRecordAtReplayTime: 'NONE',
+} as const
+
 export const planV2ReplayInput: GovernanceReplayInput = {
   scenarioReference: planV2.workItemId,
   plan: { ...planV2 },
