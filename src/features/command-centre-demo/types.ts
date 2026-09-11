@@ -113,6 +113,71 @@ export type ApprovalInvalidationRecord = {
   externalAction: 'No external action occurred'
 }
 
+export type GovernanceReplayInput = {
+  scenarioReference: 'SYN-CMD-001'
+  plan: AuthoritativePlan
+  materialChange: {
+    field: 'communicationScope'
+    previousPlanVersion: 1
+    previousValue: string
+    authoritativeValue: string
+    classification: 'MATERIAL'
+  }
+  policyInput: {
+    reference: string
+    establishedForPlanVersion: number
+    controls: Array<Pick<PolicyControl, 'code' | 'result'>>
+  }
+  impactInput: {
+    reference: string
+    establishedForPlanVersion: number
+    externalSystemsAffected: string
+  }
+  capabilityClassification: WorkflowCategory
+  executionMode: 'SIMULATED'
+  freshHumanApprovalPresent: false
+  externalExecutionAvailable: false
+}
+
+export type GovernanceReplayResult = {
+  policyEvaluation: string
+  impactAssessment: string
+  humanApprovalRequirement: string
+  executionAuthority: string
+  simulatedGovernanceOutcome: string
+  externalAction: string
+}
+
+export type ReplayComparisonField = keyof GovernanceReplayResult
+
+export type ReplayMaterialComparison = {
+  field: ReplayComparisonField
+  label: string
+  original: string
+  replay: string
+  status: 'MATCH' | 'MISMATCH'
+}
+
+export type ReplayEvaluationAttempt = {
+  inputFingerprint: string
+  comparisons: ReplayMaterialComparison[]
+  materialResult: 'MATCH' | 'MISMATCH'
+}
+
+export type ReplayVerificationRecord = {
+  replayReference: 'SYN-RPL-CMD-001-V2-01'
+  sourceGovernanceRecord: 'SYN-DEC-CMD-001-B'
+  planId: string
+  planVersion: 2
+  planReference: string
+  inputFingerprint: string
+  comparisons: ReplayMaterialComparison[]
+  materialResult: 'MATCH'
+  authorityGrantedByReplay: 'NONE'
+  externalAction: 'NONE'
+  status: 'Temporary browser-local synthetic replay evidence'
+}
+
 export type QueueFilter =
   | 'All'
   | 'Intelligence'

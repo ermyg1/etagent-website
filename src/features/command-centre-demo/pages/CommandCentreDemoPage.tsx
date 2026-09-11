@@ -6,11 +6,12 @@ import {
 import { PageLayout } from '../../../components/layout'
 import {
   fictionalDecisionTimestamp, fictionalInvalidationTimestamp, fictionalSecondDecisionTimestamp,
-  initialWorkItems, intelligenceSignals, pipeline, planV1, planV2,
+  canonicalizeReplayInput, evaluateGovernanceReplay, initialWorkItems, intelligenceSignals, pipeline,
+  planV1, planV2, planV2ReplayInput, recordedPlanV2GovernanceResult, replayComparisonLabels,
 } from '../data'
 import type {
   ApprovalEvidence, ApprovalInvalidationRecord, AuthoritativePlan, Decision, DecisionRecord,
-  QueueFilter, WorkItem,
+  QueueFilter, ReplayComparisonField, ReplayEvaluationAttempt, ReplayVerificationRecord, WorkItem,
 } from '../types'
 import '../styles/command-centre-demo.css'
 
@@ -24,6 +25,11 @@ const filters: QueueFilter[] = ['All', 'Intelligence', 'Operational Review', 'Aw
 const decisionLabels: Record<Decision, string> = {
   approve: 'Approve simulated brief preparation', decline: 'Decline', 'more-evidence': 'Request more evidence',
 }
+
+const replayComparisonFields: ReplayComparisonField[] = [
+  'policyEvaluation', 'impactAssessment', 'humanApprovalRequirement', 'executionAuthority',
+  'simulatedGovernanceOutcome', 'externalAction',
+]
 
 type PlanVersion = 1 | 2
 type V2GovernanceStage = 'refresh-required' | 'policy-established' | 'impact-established'
@@ -93,6 +99,9 @@ export function CommandCentreDemoPage() {
   const [decisionRecords, setDecisionRecords] = useState<DecisionRecord[]>([])
   const [approvalEvidence, setApprovalEvidence] = useState<ApprovalEvidence[]>([])
   const [invalidationRecord, setInvalidationRecord] = useState<ApprovalInvalidationRecord | null>(null)
+  const [replayAttempt, setReplayAttempt] = useState<ReplayEvaluationAttempt | null>(null)
+  const [replayRecord, setReplayRecord] = useState<ReplayVerificationRecord | null>(null)
+  const [replayError, setReplayError] = useState('')
   const errorRef = useRef<HTMLDivElement>(null)
   const recordHeadingRef = useRef<HTMLHeadingElement>(null)
   const currentPlanHeadingRef = useRef<HTMLHeadingElement>(null)
@@ -105,6 +114,10 @@ export function CommandCentreDemoPage() {
   const currentApproval = approvalEvidence.find((approval) => approval.boundPlanVersion === currentPlanVersion)
   const v1Approval = approvalEvidence.find((approval) => approval.boundPlanVersion === 1)
   const v2GovernanceReady = currentPlanVersion === 1 || v2GovernanceStage === 'impact-established'
+  const replayCheckpointReady = currentPlanVersion === 2
+    && v2GovernanceStage === 'impact-established'
+    && !currentDecisionRecord
+    && !currentApproval
 
   const planGovernance = (version: PlanVersion): PlanGovernanceDetails => {
     const approval = approvalEvidence.find((item) => item.boundPlanVersion === version)
@@ -142,8 +155,8 @@ export function CommandCentreDemoPage() {
     gaps: workItems.reduce((count, item) => count + item.evidenceGaps.length, 0),
     awaiting: workItems.filter((item) => item.status === 'Awaiting human decision' || item.status === 'Governance refresh required').length,
     blocked: workItems.filter((item) => item.status === 'Policy blocked').length,
-    records: decisionRecords.length + (invalidationRecord ? 1 : 0),
-  }), [decisionRecords, invalidationRecord, workItems])
+    records: decisionRecords.length + (invalidationRecord ? 1 : 0) + (replayRecord ? 1 : 0),
+  }), [decisionRecords, invalidationRecord, replayRecord, workItems])
 
   const submitDecision = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -221,10 +234,50 @@ export function CommandCentreDemoPage() {
     setV2GovernanceStage('impact-established')
     setWorkItems((items) => items.map((item) => item.id === 'SYN-CMD-001' ? { ...item, status: 'Awaiting human decision' } : item))
   }
+  const replayGovernanceEvaluation = async () => {
+    if (!replayCheckpointReady) return
+    setReplayAttempt(null)
+    setReplayRecord(null)
+    setReplayError('')
+
+    try {
+      if (!globalThis.crypto?.subtle) throw new Error('Web Crypto SHA-256 is unavailable.')
+      const canonicalInput = canonicalizeReplayInput(planV2ReplayInput)
+      const digest = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(canonicalInput))
+      const inputFingerprint = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+      const replayResult = evaluateGovernanceReplay(planV2ReplayInput)
+      const comparisons = replayComparisonFields.map((field) => ({
+        field,
+        label: replayComparisonLabels[field],
+        original: recordedPlanV2GovernanceResult[field],
+        replay: replayResult[field],
+        status: recordedPlanV2GovernanceResult[field] === replayResult[field] ? 'MATCH' as const : 'MISMATCH' as const,
+      }))
+      const materialResult = comparisons.every((comparison) => comparison.status === 'MATCH') ? 'MATCH' as const : 'MISMATCH' as const
+      const attempt: ReplayEvaluationAttempt = { inputFingerprint, comparisons, materialResult }
+      setReplayAttempt(attempt)
+
+      if (materialResult === 'MATCH') setReplayRecord({
+        replayReference: 'SYN-RPL-CMD-001-V2-01',
+        sourceGovernanceRecord: 'SYN-DEC-CMD-001-B',
+        planId: planV2.id,
+        planVersion: planV2.version,
+        planReference: planV2.reference,
+        inputFingerprint,
+        comparisons,
+        materialResult,
+        authorityGrantedByReplay: 'NONE',
+        externalAction: 'NONE',
+        status: 'Temporary browser-local synthetic replay evidence',
+      })
+    } catch {
+      setReplayError('Replay verification could not be completed because browser-local SHA-256 generation failed or is unavailable. No verification record was created and no authority was granted.')
+    }
+  }
   const resetDemo = () => {
     setWorkItems(initialWorkItems); setFilter('All'); setSelectedId(initialWorkItems[0].id); setDecision(''); setRationale('')
     setErrors([]); setCurrentPlanVersion(1); setV2GovernanceStage('refresh-required'); setDecisionRecords([])
-    setApprovalEvidence([]); setInvalidationRecord(null)
+    setApprovalEvidence([]); setInvalidationRecord(null); setReplayAttempt(null); setReplayRecord(null); setReplayError('')
   }
 
   return (
@@ -300,6 +353,34 @@ export function CommandCentreDemoPage() {
               {v2GovernanceStage === 'refresh-required' && <button onClick={refreshPolicyEvaluation} type="button">Refresh policy evaluation for Plan v2</button>}
               {v2GovernanceStage === 'policy-established' && <button onClick={refreshImpactAssessment} type="button">Refresh impact assessment for Plan v2</button>}
               {v2GovernanceStage === 'impact-established' && !currentDecisionRecord && <p className="cc-complete"><CheckCircle2 aria-hidden="true" /> Plan v2 policy and impact evaluation are established. A fresh human decision is now required.</p>}
+            </article>}
+
+            {currentPlanVersion === 2 && <article className="cc-replay">
+              <div className="cc-panel__header"><div><p className="cc-kicker">Deterministic governance replay · Synthetic</p><h3>Replay the Plan v2 governance checkpoint</h3></div><RotateCcw aria-hidden="true" /></div>
+              <p>E.T Agent does not claim deterministic AI reasoning. This demonstration verifies that the same version-bound synthetic governance inputs reproduce the same authority-controlling governance result.</p>
+              <p>Only the browser-local governance evaluation is replayed. AI reasoning, human judgement, human approval and external execution are outside the replay boundary.</p>
+              <dl className="cc-replay-inputs"><div><dt>Scenario</dt><dd>{planV2ReplayInput.scenarioReference}</dd></div><div><dt>Authoritative plan</dt><dd>{planV2ReplayInput.plan.id} · v{planV2ReplayInput.plan.version}</dd></div><div><dt>Plan reference</dt><dd>{planV2ReplayInput.plan.reference}</dd></div><div><dt>Material change</dt><dd>{planV2ReplayInput.materialChange.field} · {planV2ReplayInput.materialChange.classification}</dd></div><div><dt>Policy input</dt><dd>{planV2ReplayInput.policyInput.reference} · established for v{planV2ReplayInput.policyInput.establishedForPlanVersion}</dd></div><div><dt>Impact input</dt><dd>{planV2ReplayInput.impactInput.reference} · established for v{planV2ReplayInput.impactInput.establishedForPlanVersion}</dd></div><div><dt>Execution mode</dt><dd>{planV2ReplayInput.executionMode}</dd></div><div><dt>Fresh human approval</dt><dd>ABSENT</dd></div></dl>
+              <div aria-live="polite" className={`cc-replay-availability ${replayCheckpointReady ? 'cc-replay-availability--ready' : ''}`} role="status">
+                {replayCheckpointReady
+                  ? 'REPLAY CHECKPOINT ESTABLISHED — policy and impact are established for Plan v2; fresh human approval is absent and execution authority is NONE.'
+                  : currentDecisionRecord || currentApproval
+                    ? 'REPLAY UNAVAILABLE — the pre-approval Plan v2 checkpoint has passed. Reset the synthetic demo to replay that checkpoint again.'
+                    : 'REPLAY UNAVAILABLE — establish both the Plan v2 policy evaluation and impact assessment first.'}
+              </div>
+              <button disabled={!replayCheckpointReady} onClick={replayGovernanceEvaluation} type="button">Replay Governance Evaluation</button>
+              {replayError && <div className="cc-replay-error" role="alert"><strong>REPLAY VERIFICATION ERROR</strong><p>{replayError}</p></div>}
+              {replayAttempt?.materialResult === 'MISMATCH' && <div aria-live="polite" className="cc-replay-result cc-replay-result--mismatch" role="status">
+                <h4>MATERIAL GOVERNANCE RESULT: MISMATCH</h4>
+                <p>The replay did not reproduce every recorded material field. No successful verification record was created and no authority was granted.</p>
+                <div className="cc-replay-comparisons">{replayAttempt.comparisons.map((comparison) => <article key={comparison.field}><header><strong>{comparison.label}</strong><span className={comparison.status === 'MATCH' ? 'cc-match' : 'cc-mismatch'}>{comparison.status}</span></header><dl><div><dt>Original</dt><dd>{comparison.original}</dd></div><div><dt>Replay</dt><dd>{comparison.replay}</dd></div></dl></article>)}</div>
+              </div>}
+              {replayRecord && <div aria-live="polite" className="cc-replay-record" role="status">
+                <div className="cc-replay-record__header"><div><p className="cc-kicker">Replay Verification Record</p><h4>{replayRecord.replayReference}</h4></div><span className="cc-match">MATERIAL GOVERNANCE RESULT: {replayRecord.materialResult}</span></div>
+                <dl className="cc-detail-list"><div><dt>Replay Reference</dt><dd>{replayRecord.replayReference}</dd></div><div><dt>Source Governance Record</dt><dd>{replayRecord.sourceGovernanceRecord}</dd></div><div><dt>Plan</dt><dd>{replayRecord.planId}</dd></div><div><dt>Plan Version</dt><dd>v{replayRecord.planVersion}</dd></div><div><dt>Plan Reference</dt><dd>{replayRecord.planReference}</dd></div><div><dt>Authority Granted By Replay</dt><dd>{replayRecord.authorityGrantedByReplay}</dd></div><div><dt>External Action</dt><dd>{replayRecord.externalAction}</dd></div><div><dt>Status</dt><dd>{replayRecord.status}</dd></div></dl>
+                <div className="cc-replay-fingerprint"><span>Replay Input Fingerprint</span><strong>SHA-256</strong><code>{replayRecord.inputFingerprint}</code><p>Browser-local SHA-256 fingerprint of the synthetic replay input. This is not a digital signature and does not provide execution authority.</p></div>
+                <div className="cc-replay-comparisons">{replayRecord.comparisons.map((comparison) => <article key={comparison.field}><header><strong>{comparison.label}</strong><span className="cc-match">{comparison.status}</span></header><dl><div><dt>Original</dt><dd>{comparison.original}</dd></div><div><dt>Replay</dt><dd>{comparison.replay}</dd></div></dl></article>)}</div>
+                <p className="cc-replay-boundary"><LockKeyhole aria-hidden="true" /> Replay does not recreate or reactivate approval, create execution authority, or execute an external action. Fresh Plan v2 approval remains a separate human decision.</p>
+              </div>}
             </article>}
 
             <article className="cc-panel cc-approval-panel">

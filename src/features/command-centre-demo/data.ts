@@ -1,4 +1,4 @@
-import type { AuthoritativePlan, WorkItem } from './types'
+import type { AuthoritativePlan, GovernanceReplayInput, GovernanceReplayResult, WorkItem } from './types'
 
 const noExecutionImpact = {
   externalSystemsAffected: 'None',
@@ -146,6 +146,90 @@ export const planV2 = {
   communicationScope: 'Internal partnership team plus fictional external-agency review',
   proposedAction: 'Prepare a simulated draft outreach brief for internal and fictional external-agency review.',
 } as const satisfies AuthoritativePlan
+
+export const planV2ReplayInput: GovernanceReplayInput = {
+  scenarioReference: planV2.workItemId,
+  plan: { ...planV2 },
+  materialChange: {
+    field: 'communicationScope',
+    previousPlanVersion: planV1.version,
+    previousValue: planV1.communicationScope,
+    authoritativeValue: planV2.communicationScope,
+    classification: 'MATERIAL',
+  },
+  policyInput: {
+    reference: planV2.policyReference,
+    establishedForPlanVersion: planV2.version,
+    controls: initialWorkItems[0].policies.map(({ code, result }) => ({ code, result })),
+  },
+  impactInput: {
+    reference: planV2.impactReference,
+    establishedForPlanVersion: planV2.version,
+    externalSystemsAffected: initialWorkItems[0].impact.externalSystemsAffected,
+  },
+  capabilityClassification: initialWorkItems[0].category,
+  executionMode: 'SIMULATED',
+  freshHumanApprovalPresent: false,
+  externalExecutionAvailable: false,
+}
+
+export const recordedPlanV2GovernanceResult: GovernanceReplayResult = {
+  policyEvaluation: 'ESTABLISHED FOR PLAN V2',
+  impactAssessment: 'ESTABLISHED FOR PLAN V2',
+  humanApprovalRequirement: 'REQUIRED',
+  executionAuthority: 'NONE',
+  simulatedGovernanceOutcome: 'BLOCKED PENDING GOVERNANCE',
+  externalAction: 'NONE',
+}
+
+export const replayComparisonLabels = {
+  policyEvaluation: 'Policy evaluation',
+  impactAssessment: 'Impact assessment',
+  humanApprovalRequirement: 'Human approval requirement',
+  executionAuthority: 'Execution authority',
+  simulatedGovernanceOutcome: 'Simulated governance outcome',
+  externalAction: 'External action',
+} as const satisfies Record<keyof GovernanceReplayResult, string>
+
+export function canonicalizeReplayInput(value: unknown): string {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return `[${value.map(canonicalizeReplayInput).join(',')}]`
+
+  const object = value as Record<string, unknown>
+  return `{${Object.keys(object).sort().map((key) => `${JSON.stringify(key)}:${canonicalizeReplayInput(object[key])}`).join(',')}}`
+}
+
+export function evaluateGovernanceReplay(input: GovernanceReplayInput): GovernanceReplayResult {
+  const planIsAuthoritative = input.scenarioReference === input.plan.workItemId
+    && input.materialChange.authoritativeValue === input.plan.communicationScope
+    && input.materialChange.classification === 'MATERIAL'
+  const policyIsEstablished = planIsAuthoritative
+    && input.policyInput.reference === input.plan.policyReference
+    && input.policyInput.establishedForPlanVersion === input.plan.version
+  const impactIsEstablished = planIsAuthoritative
+    && input.impactInput.reference === input.plan.impactReference
+    && input.impactInput.establishedForPlanVersion === input.plan.version
+  const approvalControlRequiresHuman = input.policyInput.controls.some(
+    (control) => control.code === 'APRV-01' && control.result === 'Requires human decision',
+  )
+  const humanApprovalIsRequired = approvalControlRequiresHuman && !input.freshHumanApprovalPresent
+  const executionIsContained = input.executionMode === 'SIMULATED'
+    && !input.externalExecutionAvailable
+    && !input.freshHumanApprovalPresent
+
+  return {
+    policyEvaluation: policyIsEstablished ? `ESTABLISHED FOR PLAN V${input.plan.version}` : 'REFRESH REQUIRED',
+    impactAssessment: impactIsEstablished ? `ESTABLISHED FOR PLAN V${input.plan.version}` : 'REFRESH REQUIRED',
+    humanApprovalRequirement: humanApprovalIsRequired ? 'REQUIRED' : 'NOT ESTABLISHED — FAIL CLOSED',
+    executionAuthority: executionIsContained ? 'NONE' : 'NONE — FAIL CLOSED',
+    simulatedGovernanceOutcome: policyIsEstablished && impactIsEstablished && humanApprovalIsRequired && executionIsContained
+      ? 'BLOCKED PENDING GOVERNANCE'
+      : 'BLOCKED — REPLAY INPUTS NOT ESTABLISHED',
+    externalAction: executionIsContained && input.impactInput.externalSystemsAffected === 'None'
+      ? 'NONE'
+      : 'NONE — FAIL CLOSED',
+  }
+}
 
 export const pipeline = [
   ['Request', 'Defined fictional request received'],
