@@ -220,7 +220,9 @@ export function DeliveryExceptionDemoPage() {
             <p className="type-body-large">
               This synthetic demonstration shows how E.T Agent can support a courier
               operator's evidence-led exception-review process. It is not a courier-management
-              platform and is not connected to a live delivery system.
+              platform and is not connected to a live delivery system. No AI model or inference
+              provider is invoked; the policy assessments and recommendations shown here are
+              represented fixtures.
             </p>
           </div>
           <div className="delivery-demo-hero__boundary">

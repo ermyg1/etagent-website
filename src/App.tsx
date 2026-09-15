@@ -1419,7 +1419,10 @@ function ProductPage() {
             <h1 className="type-display">The Governed AI Execution Platform</h1>
             <p className="type-body-large">
               E.T Agent combines intelligent planning, policy-aware governance and
-              human-authorised execution into a single enterprise platform.
+              human-authorised execution into a single enterprise platform. This page describes
+              E.T Agent's intended governed platform architecture. The current public release is a
+              prototype using browser-local demonstrations, not a live AI or operational execution
+              service.
             </p>
           </Stack>
           <div className="product-hero__actions" aria-label="Product calls to action">
@@ -1808,7 +1811,8 @@ function App() {
             <p className="type-body">
               Current stage: prototype and synthetic demonstrations. Explore
               fictional workflows with simulated outcomes. No live business systems
-              are connected and no external actions are performed.
+              are connected and no external actions are performed. No AI model or
+              inference provider is invoked in the current public demonstrations.
             </p>
             <div className="homepage-hero__actions" aria-label="Hero calls to action">
               <Button onClick={() => scrollToSection('contact')} size="lg">

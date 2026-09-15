@@ -342,7 +342,9 @@ export function FraudReimbursementDemoPage() {
           <span>
             All customers, payments, evidence and policies are fictional. No bank account or
             banking system is connected. This is not legal advice. No real fraud or reimbursement
-            determination occurs.
+            determination occurs. No AI model or inference provider is invoked. Policy results,
+            recommendations and SUPPORTED_INFERENCE entries are pre-authored case fixtures, not
+            live model inference.
           </span>
         </aside>
         <section className="bank-workspace">

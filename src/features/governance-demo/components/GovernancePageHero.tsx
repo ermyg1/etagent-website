@@ -12,7 +12,10 @@ export function GovernancePageHero() {
         <p className="type-body-large">
           Visitors can explore how governed AI decisions progress through
           policy, human approval and audit before execution authority is
-          released.
+          released. This is an illustrative governance walkthrough. The displayed
+          AI analysis, policy results and evidence are represented fixtures; no AI
+          model or inference provider, live integration, operational execution or
+          production record is created.
         </p>
       </Stack>
     </Stack>

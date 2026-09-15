@@ -289,7 +289,7 @@ export function CommandCentreDemoPage() {
         <p className="cc-kicker">E.T Agent · Governed workspace</p><h1>Command Centre</h1>
         <p className="cc-hero__intro">Review synthetic intelligence, governed work, human decisions and factual audit evidence from one bounded enterprise interface.</p>
         <ul className="cc-statuses" aria-label="Demonstration status">{['Synthetic demo', 'PLAN_ONLY or SIMULATED', 'No live integrations', 'Human approval required'].map((status) => <li key={status}>{status}</li>)}</ul>
-        <div className="cc-disclosure" role="note"><ShieldCheck aria-hidden="true" /><p>This demonstration uses fictional records and temporary browser-local state. Outcomes are simulated. E.T Agent does not access external accounts, call live integrations or perform operational actions.</p></div>
+        <div className="cc-disclosure" role="note"><ShieldCheck aria-hidden="true" /><p>This demonstration uses fictional records and temporary browser-local state. Outcomes are simulated. E.T Agent does not access external accounts, call live integrations or perform operational actions. No AI model or inference provider is invoked. The intelligence, policy and impact outputs shown here are represented fixtures for this synthetic workflow.</p></div>
         <p className="cc-reset-note">Refreshing or resetting clears temporary demo state.</p>
       </header>
 
