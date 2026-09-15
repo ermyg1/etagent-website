@@ -9,6 +9,7 @@ import {
   FileCheck,
   Gauge,
   GitBranch,
+  Globe2,
   History,
   ListChecks,
   LockKeyhole,
@@ -561,6 +562,34 @@ const aiCannotItems = [
   'Trigger irreversible actions automatically',
 ]
 
+const currentPublicDemoFlow = [
+  'Synthetic or fictional case',
+  'Visitor browser',
+  'Governance demonstration',
+  'Human decision',
+  'Temporary browser-local evidence',
+  'No operational execution',
+]
+
+const currentReplayFlow = [
+  'Deterministic governance replay',
+  'Browser Web Crypto',
+  'SHA-256 fingerprint',
+  'Authority: NONE',
+  'External action: NONE',
+]
+
+const currentDemoBoundaries = [
+  'AI model or provider integration',
+  'Application backend',
+  'Operational API',
+  'CRM integration',
+  'Courier integration',
+  'Banking integration',
+  'Persistent production audit store',
+  'Live operational execution',
+]
+
 const complianceAlignment = [
   {
     body: 'Governance, human accountability and evidence design are aligned with privacy-aware operational controls.',
@@ -669,6 +698,7 @@ const trustLocalNavigation = [
   { id: 'security-overview', title: 'Security' },
   { id: 'governance-model-trust', title: 'Governance' },
   { id: 'ai-boundaries', title: 'AI Boundaries' },
+  { id: 'current-model-data-flow', title: 'Model & Data Flow' },
   { id: 'compliance-alignment', title: 'Compliance' },
   { id: 'enterprise-faq', title: 'FAQs' },
   { id: 'documentation-hub', title: 'Documentation' },
@@ -1133,6 +1163,119 @@ function TrustCentrePage() {
             </ul>
           </Card>
         </div>
+      </Section>
+
+      <Section
+        aria-labelledby="current-model-data-flow-title"
+        className="trust-section trust-model-data-flow"
+        id="current-model-data-flow"
+        tabIndex={-1}
+        width="wide"
+      >
+        <Stack className="product-section-header" space="md">
+          <Badge variant="secondary">Current-state assurance</Badge>
+          <h2 className="type-heading-2" id="current-model-data-flow-title">
+            Current Model &amp; Data Flow
+          </h2>
+          <p className="type-body-large">
+            The public site currently demonstrates governance with synthetic or fictional
+            information. No AI model or AI inference provider runs inside these demonstrations.
+          </p>
+        </Stack>
+
+        <Stack space="xl">
+          <div className="trust-governance__grid">
+            <Stack className="trust-governance__content" space="md">
+              <Badge variant="success">Current Public Demonstration</Badge>
+              <h3 className="type-heading-3">A browser-local governance demonstration</h3>
+              <p className="type-body">
+                No live courier, banking, social-media, CRM or enterprise system is connected.
+                Demo decisions, rationales, approval evidence and replay evidence remain temporary
+                browser-local state. Refreshing the page clears those interactive records.
+              </p>
+              <p className="type-body">
+                No demonstration business or case information is sent by application logic to an
+                E.T Agent backend, AI provider or operational integration.
+              </p>
+              <Card variant="bordered">
+                <Badge variant="neutral">Browser-local replay boundary</Badge>
+                <p className="type-body">
+                  {currentReplayFlow.join(' → ')}. The deterministic governance replay runs locally,
+                  and SHA-256 replay fingerprinting uses the browser Web Crypto API. Replay does not
+                  create approval, create execution authority or cause an external operational action.
+                </p>
+              </Card>
+            </Stack>
+            <ol className="trust-stack" aria-label="Current public demonstration flow">
+              {currentPublicDemoFlow.map((step, index) => (
+                <li className="trust-stack__item" key={step}>
+                  <span className="trust-stack__index">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="product-card-grid product-card-grid--three">
+            <Card className="trust-doc-card" variant="bordered">
+              <div className="trust-doc-card__heading">
+                <Icon className="product-info-card__icon" icon={Globe2} size="lg" />
+                <Badge variant="neutral">Current External Boundaries</Badge>
+              </div>
+              <h3 className="product-info-card__title type-heading-4">
+                Ordinary web and contact boundaries
+              </h3>
+              <p className="type-body">
+                The public site is a static React/Vite website deployed to Hostinger. Google Fonts
+                causes ordinary browser requests for font resources. GitHub and LinkedIn links
+                navigate externally when selected.
+              </p>
+              <p className="type-body">
+                Enterprise contact links use mailto and hand control to the visitor's browser or
+                email application. The website does not currently submit enterprise contact
+                information through an E.T Agent website form or backend.
+              </p>
+            </Card>
+
+            <Card className="trust-doc-card" variant="bordered">
+              <div className="trust-doc-card__heading">
+                <Icon className="product-info-card__icon" icon={LockKeyhole} size="lg" />
+                <Badge variant="warning">Not Present Today</Badge>
+              </div>
+              <h3 className="product-info-card__title type-heading-4">
+                Current demonstration boundary
+              </h3>
+              <ul className="product-list">
+                {currentDemoBoundaries.map((boundary) => (
+                  <li key={boundary}>{boundary}</li>
+                ))}
+              </ul>
+            </Card>
+
+            <Card className="trust-doc-card" variant="bordered">
+              <div className="trust-doc-card__heading">
+                <Icon className="product-info-card__icon" icon={ShieldCheck} size="lg" />
+                <Badge variant="primary">Future Provider Boundary</Badge>
+              </div>
+              <h3 className="product-info-card__title type-heading-4">
+                Future intelligence remains governed
+              </h3>
+              <p className="type-body">
+                No AI model or provider is integrated into the current public website. Future
+                approved model providers may supply intelligence to governed workflows, but
+                provider selection does not create execution authority. Any future integration
+                remains subject to E.T Agent's policy, approval and execution-gate controls.
+              </p>
+              <ul className="product-list" aria-label="Future provider authority principles">
+                <li>Provider is not Authority.</li>
+                <li>Model is not Authority.</li>
+                <li>Intelligence is not Authority.</li>
+              </ul>
+            </Card>
+          </div>
+        </Stack>
       </Section>
 
       <Section
