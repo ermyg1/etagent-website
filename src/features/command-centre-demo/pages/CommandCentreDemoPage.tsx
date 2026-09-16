@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FormEvent, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type RefObject } from 'react'
 import {
   AlertTriangle, ArrowUpRight, CheckCircle2, ClipboardCheck, FileSearch, FileWarning,
   Globe2, LockKeyhole, RotateCcw, ShieldCheck, UserCheck,
@@ -31,6 +31,19 @@ const replayComparisonFields: ReplayComparisonField[] = [
   'policyEvaluation', 'impactAssessment', 'humanApprovalRequirement', 'executionAuthority',
   'simulatedGovernanceOutcome', 'externalAction',
 ]
+
+const visuallyHidden: CSSProperties = {
+  border: 0,
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: '1px',
+  margin: '-1px',
+  overflow: 'hidden',
+  padding: 0,
+  position: 'absolute',
+  whiteSpace: 'nowrap',
+  width: '1px',
+}
 
 type PlanVersion = 1 | 2
 type V2GovernanceStage = 'refresh-required' | 'policy-established' | 'impact-established'
@@ -103,9 +116,13 @@ export function CommandCentreDemoPage() {
   const [replayAttempt, setReplayAttempt] = useState<ReplayEvaluationAttempt | null>(null)
   const [replayRecord, setReplayRecord] = useState<ReplayVerificationRecord | null>(null)
   const [replayError, setReplayError] = useState('')
+  const [governanceAnnouncement, setGovernanceAnnouncement] = useState('')
   const errorRef = useRef<HTMLDivElement>(null)
   const recordHeadingRef = useRef<HTMLHeadingElement>(null)
   const currentPlanHeadingRef = useRef<HTMLHeadingElement>(null)
+  const impactRefreshButtonRef = useRef<HTMLButtonElement>(null)
+  const replayButtonRef = useRef<HTMLButtonElement>(null)
+  const pendingGovernanceFocusRef = useRef<'impact-refresh' | 'replay' | null>(null)
 
   const visibleItems = useMemo(() => workItems.filter((item) => matchesFilter(item, filter)), [filter, workItems])
   const selected = visibleItems.find((item) => item.id === selectedId) ?? visibleItems[0]
@@ -119,6 +136,20 @@ export function CommandCentreDemoPage() {
     && v2GovernanceStage === 'impact-established'
     && !currentDecisionRecord
     && !currentApproval
+
+  useEffect(() => {
+    const pendingTarget = pendingGovernanceFocusRef.current
+    if (pendingTarget === 'impact-refresh' && v2GovernanceStage === 'policy-established') {
+      pendingGovernanceFocusRef.current = null
+      impactRefreshButtonRef.current?.focus()
+      setGovernanceAnnouncement('Plan v2 policy evaluation refreshed. Impact assessment refresh is now available.')
+    }
+    if (pendingTarget === 'replay' && v2GovernanceStage === 'impact-established') {
+      pendingGovernanceFocusRef.current = null
+      replayButtonRef.current?.focus()
+      setGovernanceAnnouncement('Plan v2 impact assessment refreshed. Deterministic governance replay is now available.')
+    }
+  }, [v2GovernanceStage])
 
   const planGovernance = (version: PlanVersion): PlanGovernanceDetails => {
     const approval = approvalEvidence.find((item) => item.boundPlanVersion === version)
@@ -205,6 +236,7 @@ export function CommandCentreDemoPage() {
     setDecision('')
     setRationale('')
     setErrors([])
+    setGovernanceAnnouncement('')
     setWorkItems((items) => items.map((item) => item.id === 'SYN-CMD-001' ? {
       ...item, status: 'Governance refresh required',
       impact: { ...item.impact, reference: planV2.impactReference, proposedAction: planV2.proposedAction,
@@ -228,10 +260,13 @@ export function CommandCentreDemoPage() {
   }
 
   const refreshPolicyEvaluation = () => {
-    if (currentPlanVersion === 2 && v2GovernanceStage === 'refresh-required') setV2GovernanceStage('policy-established')
+    if (currentPlanVersion !== 2 || v2GovernanceStage !== 'refresh-required') return
+    pendingGovernanceFocusRef.current = 'impact-refresh'
+    setV2GovernanceStage('policy-established')
   }
   const refreshImpactAssessment = () => {
     if (currentPlanVersion !== 2 || v2GovernanceStage !== 'policy-established') return
+    pendingGovernanceFocusRef.current = 'replay'
     setV2GovernanceStage('impact-established')
     setWorkItems((items) => items.map((item) => item.id === 'SYN-CMD-001' ? { ...item, status: 'Awaiting human decision' } : item))
   }
@@ -278,9 +313,10 @@ export function CommandCentreDemoPage() {
     }
   }
   const resetDemo = () => {
+    pendingGovernanceFocusRef.current = null
     setWorkItems(initialWorkItems); setFilter('All'); setSelectedId(initialWorkItems[0].id); setDecision(''); setRationale('')
     setErrors([]); setCurrentPlanVersion(1); setV2GovernanceStage('refresh-required'); setDecisionRecords([])
-    setApprovalEvidence([]); setInvalidationRecord(null); setReplayAttempt(null); setReplayRecord(null); setReplayError('')
+    setApprovalEvidence([]); setInvalidationRecord(null); setReplayAttempt(null); setReplayRecord(null); setReplayError(''); setGovernanceAnnouncement('')
   }
 
   return (
@@ -354,8 +390,9 @@ export function CommandCentreDemoPage() {
                 <li><strong>Simulated outcome</strong><span>{currentApproval ? 'AVAILABLE — BROWSER-LOCAL ONLY' : currentDecisionRecord ? 'BLOCKED — NO APPROVAL' : 'BLOCKED PENDING GOVERNANCE'}</span></li>
               </ol>
               {v2GovernanceStage === 'refresh-required' && <button onClick={refreshPolicyEvaluation} type="button">Refresh policy evaluation for Plan v2</button>}
-              {v2GovernanceStage === 'policy-established' && <button onClick={refreshImpactAssessment} type="button">Refresh impact assessment for Plan v2</button>}
+              {v2GovernanceStage === 'policy-established' && <button onClick={refreshImpactAssessment} ref={impactRefreshButtonRef} type="button">Refresh impact assessment for Plan v2</button>}
               {v2GovernanceStage === 'impact-established' && !currentDecisionRecord && <p className="cc-complete"><CheckCircle2 aria-hidden="true" /> Plan v2 policy and impact evaluation are established. A fresh human decision is now required.</p>}
+              <p aria-atomic="true" role="status" style={visuallyHidden}>{governanceAnnouncement}</p>
             </article>}
 
             {currentPlanVersion === 2 && <article className="cc-replay">
@@ -370,7 +407,7 @@ export function CommandCentreDemoPage() {
                     ? 'REPLAY UNAVAILABLE — the pre-approval Plan v2 checkpoint has passed. Reset the synthetic demo to replay that checkpoint again.'
                     : 'REPLAY UNAVAILABLE — establish both the Plan v2 policy evaluation and impact assessment first.'}
               </div>
-              <button disabled={!replayCheckpointReady} onClick={replayGovernanceEvaluation} type="button">Replay Governance Evaluation</button>
+              <button disabled={!replayCheckpointReady} onClick={replayGovernanceEvaluation} ref={replayButtonRef} type="button">Replay Governance Evaluation</button>
               {replayError && <div className="cc-replay-error" role="alert"><strong>REPLAY VERIFICATION ERROR</strong><p>{replayError}</p></div>}
               {replayAttempt?.materialResult === 'MISMATCH' && <div aria-live="polite" className="cc-replay-result cc-replay-result--mismatch" role="status">
                 <h4>MATERIAL GOVERNANCE RESULT: MISMATCH</h4>
