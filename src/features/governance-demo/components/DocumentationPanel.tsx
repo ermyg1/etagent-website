@@ -16,12 +16,13 @@ export function DocumentationPanel({ activeView }: DocumentationPanelProps) {
 
         return (
           <div
-            aria-labelledby={`${documentation.panelId}-title`}
+            aria-labelledby={`governance-demo-${view}-tab`}
             className="governance-demo-docs"
             hidden={!isVisible}
             id={documentation.panelId}
             key={view}
             role="tabpanel"
+            tabIndex={isVisible ? 0 : -1}
           >
             <h2 className="type-heading-3" id={`${documentation.panelId}-title`}>
               {documentation.label}
