@@ -11,6 +11,11 @@ export function EvidenceCard({ item }: { item: EvidenceItem }) {
     <article className={`bank-evidence bank-status--${item.classification.toLowerCase()}`}>
       <div>
         <span>{item.classification.replaceAll('_', ' ')}</span>
+        {item.classification === 'SUPPORTED_INFERENCE' && (
+          <p className="type-body">
+            Pre-authored synthetic case fixture; no live model inference.
+          </p>
+        )}
         <h3>
           {item.id}: {item.title}
         </h3>
