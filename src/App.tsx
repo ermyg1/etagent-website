@@ -39,8 +39,15 @@ import { CommandCentreDemoPage } from './features/command-centre-demo'
 import { UseCasesPage } from './features/use-cases'
 import { scrollToSection } from './utils/scroll'
 
-const pageMetadata: Record<string, { title: string; description: string }> = {
+type PageMetadata = {
+  title: string
+  description: string
+  canonical?: string
+}
+
+const pageMetadata: Record<string, PageMetadata> = {
   '/': {
+    canonical: 'https://etagent.io/',
     title: 'E.T Agent | Governance-First Enterprise AI',
     description:
       "Explore E.T Agent's governance-first approach to enterprise AI through synthetic demonstrations of policy checks, human review and decision evidence.",
@@ -51,21 +58,25 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
       'Explore the E.T Agent platform concept, governance principles and proposed workspaces for human-approved enterprise AI.',
   },
   '/trust': {
+    canonical: 'https://etagent.io/trust',
     title: 'Trust Centre | E.T Agent',
     description:
       'Review E.T Agent governance principles, security design, AI boundaries and enterprise readiness plans.',
   },
   '/use-cases': {
+    canonical: 'https://etagent.io/use-cases',
     title: 'Use Cases | E.T Agent',
     description:
       'Explore fictional enterprise workflows that demonstrate policy checks, human review and decision evidence with synthetic data.',
   },
   '/governance-demo': {
+    canonical: 'https://etagent.io/governance-demo',
     title: 'Interactive Governance Demo | E.T Agent',
     description:
       'Follow a synthetic governance walkthrough from request and policy evaluation to human approval, simulated execution and decision evidence.',
   },
   '/demo/command-centre': {
+    canonical: 'https://etagent.io/demo/command-centre',
     title: 'Command Centre Demo | E.T Agent',
     description:
       'Explore a synthetic Command Centre demonstration of governed workflow review using fictional cases, with no external actions.',
@@ -92,7 +103,7 @@ const pageMetadata: Record<string, { title: string; description: string }> = {
   },
 }
 
-const notFoundMetadata = {
+const notFoundMetadata: PageMetadata = {
   title: 'Page Not Found | E.T Agent',
   description: 'This page is not available. Return to the E.T Agent homepage or explore the documentation overview.',
 }
@@ -1741,6 +1752,14 @@ function App() {
     document.title = metadata.title
     document.querySelector<HTMLMetaElement>('meta[name="description"]')
       ?.setAttribute('content', metadata.description)
+
+    if (metadata.canonical) {
+      const link = document.createElement('link')
+      link.rel = 'canonical'
+      link.href = metadata.canonical
+      document.head.appendChild(link)
+      return () => link.remove()
+    }
   }, [pathname])
 
   if (window.location.pathname === '/trust') {
