@@ -169,6 +169,13 @@ Responsibilities:
 
 Future pages should compose from `PageLayout` before adding page-specific content.
 
+Shared layout accessibility contract:
+
+- Keep one native "Skip to main content" link immediately before `Navigation`, first in the page's Tab order. It stays offscreen until focused, then appears above the header with an opaque theme surface, visible focus and wrapping text, without animation.
+- Render exactly one `main` landmark and one `id="main-content"` target per route, including the unmatched-route fallback. The shared main uses `tabIndex={-1}` for fragment focus without becoming a sequential Tab stop; page content must not add another main landmark or reuse the target ID.
+- Preserve native fragment navigation and history. Activation, including when `#main-content` is already present, focuses main; the next Tab follows document order and may reach the footer on static pages.
+- Main shares the section fragment scroll offset. While `#main-content` is targeted, its top margin accounts for the sticky header’s responsive top inset. Normal page openings retain their original spacing. Verify the target’s top edge clears the header when header sizing changes.
+
 ### LayoutContainer
 
 `LayoutContainer` lives at `src/components/LayoutContainer.tsx` and remains available for simple contained regions.

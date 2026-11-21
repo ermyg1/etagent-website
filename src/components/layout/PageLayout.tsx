@@ -88,8 +88,11 @@ function DefaultFooter() {
 export function PageLayout({ children, footer }: PageLayoutProps) {
   return (
     <div className="page-layout">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Navigation />
-      <main className="page-layout__main">{children}</main>
+      <main className="page-layout__main" id="main-content" tabIndex={-1}>{children}</main>
       <footer className="page-layout__footer">
         {footer ?? <DefaultFooter />}
       </footer>
