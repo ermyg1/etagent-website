@@ -73,12 +73,19 @@ jobs:
             exit 1
           }
           endpoint="[$HOSTINGER_HOST]:$HOSTINGER_PORT"
-          scanned=$(ssh-keyscan -p "$HOSTINGER_PORT" -t ed25519 "$HOSTINGER_HOST" 2>/dev/null)
-          if [[ ! "$scanned" =~ ^"$endpoint"[[:blank:]]+ssh-ed25519[[:blank:]]+([A-Za-z0-9+/=]+)$ ]]; then
+          if ! public_key=$(ssh-keyscan -p "$HOSTINGER_PORT" -t ed25519 "$HOSTINGER_HOST" |
+            LC_ALL=C awk -v endpoint="$endpoint" '
+              /^#/ || /^[[:space:]]*$/ { next }
+              {
+                if (++records > 1 || NF != 3 || $1 != endpoint || $2 != "ssh-ed25519" ||
+                    length($3) != 68 || $3 ~ /[^A-Za-z0-9+\/]/) exit 1
+                print $2, $3
+              }
+              END { if (records != 1) exit 1 }
+            '); then
             echo "Expected one ED25519 host key for the deployment endpoint" >&2
             exit 1
           fi
-          public_key="ssh-ed25519 ${BASH_REMATCH[1]}"
           fingerprint=$(printf '%s\n' "$public_key" | ssh-keygen -E sha256 -lf - | awk '{print $2}')
           [[ "$fingerprint" == "$expected_fingerprint" ]] || {
             echo "Deployment host-key fingerprint mismatch" >&2
