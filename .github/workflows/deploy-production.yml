@@ -2,6 +2,12 @@ name: Deploy Production
 
 on:
   workflow_dispatch:
+    inputs:
+      verification_only:
+        description: Verify SSH access and the target directory without deploying
+        type: boolean
+        required: true
+        default: true
 
 concurrency:
   group: production-deployment
@@ -19,24 +25,30 @@ jobs:
 
     steps:
       - name: Checkout repository
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         uses: actions/checkout@v6
 
       - name: Set up Node.js
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
           cache: npm
 
       - name: Install dependencies
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         run: npm ci
 
       - name: Run lint
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         run: npm run lint
 
       - name: Build production assets
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         run: npm run build
 
       - name: Prepare SSH
+        id: prepare_ssh
         shell: bash
         env:
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
@@ -49,31 +61,35 @@ jobs:
           HOSTINGER_KNOWN_HOSTS_FILE="$HOME/.ssh/known_hosts"
           HOSTINGER_SSH_COMMAND="$HOME/.ssh/hostinger_ssh"
 
+          umask 077
           install -m 700 -d "$HOME/.ssh"
           printf '%s' "$HOSTINGER_SSH_KEY" | base64 --decode > "$HOSTINGER_KEY_FILE"
           chmod 600 "$HOSTINGER_KEY_FILE"
-          ssh-keygen -lf "$HOSTINGER_KEY_FILE"
+          ssh-keygen -lf "$HOSTINGER_KEY_FILE" >/dev/null 2>&1
 
           ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" 2>/dev/null > "$HOSTINGER_KNOWN_HOSTS_FILE"
           test -s "$HOSTINGER_KNOWN_HOSTS_FILE"
           chmod 600 "$HOSTINGER_KNOWN_HOSTS_FILE"
 
-          cat > "$HOSTINGER_SSH_COMMAND" <<EOF
+          cat > "$HOSTINGER_SSH_COMMAND" <<'EOF'
           #!/usr/bin/env bash
-          exec ssh \\
-            -i "$HOSTINGER_KEY_FILE" \\
-            -p "$HOSTINGER_PORT" \\
-            -o IdentitiesOnly=yes \\
-            -o StrictHostKeyChecking=yes \\
-            -o UserKnownHostsFile="$HOSTINGER_KNOWN_HOSTS_FILE" \\
-            "\$@"
+          exec ssh \
+            -i "$HOME/.ssh/hostinger_deploy_key" \
+            -p "$HOSTINGER_PORT" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
+            "$@"
           EOF
           chmod 700 "$HOSTINGER_SSH_COMMAND"
           echo "HOSTINGER_SSH_COMMAND=$HOSTINGER_SSH_COMMAND" >> "$GITHUB_ENV"
 
       - name: Verify SSH connection
+        id: verify_ssh
         shell: bash
         env:
+          VERIFICATION_ONLY: ${{ toJSON(inputs.verification_only) }}
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
           HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
           HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
@@ -81,11 +97,30 @@ jobs:
         run: |
           set -euo pipefail
 
-          "$HOSTINGER_SSH_COMMAND" \
-            "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
-            "test -d '$HOSTINGER_TARGET_PATH' && test -w '$HOSTINGER_TARGET_PATH'"
+          # Escape single quotes for the remote shell's single-quoted path.
+          target=${HOSTINGER_TARGET_PATH//\'/\'\\\'\'}
+          check="test -d '$target'"
+          if [[ "$VERIFICATION_ONLY" == false ]]; then
+            check+=" && test -w '$target'"
+          fi
+          "$HOSTINGER_SSH_COMMAND" "$HOSTINGER_USERNAME@$HOSTINGER_HOST" "$check" >/dev/null 2>&1
+
+      - name: SSH verification summary
+        if: ${{ always() && toJSON(inputs.verification_only) == 'true' }}
+        shell: bash
+        env:
+          PREPARATION_RESULT: ${{ steps.prepare_ssh.outcome }}
+          CHECK_RESULT: ${{ steps.verify_ssh.outcome }}
+        run: |
+          {
+            echo "## Production SSH verification"
+            echo "- Mode: verification only"
+            echo "- SSH preparation: $PREPARATION_RESULT"
+            echo "- Authentication and target directory check: $CHECK_RESULT"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy production build
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         shell: bash
         env:
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
@@ -99,9 +134,10 @@ jobs:
           rsync -az --delete --checksum --itemize-changes \
             -e "$HOSTINGER_SSH_COMMAND" \
             dist/ \
-            "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_TARGET_PATH/"
+            "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_TARGET_PATH/" 2>/dev/null
 
       - name: Verify deployment
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         shell: bash
         env:
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
@@ -111,14 +147,14 @@ jobs:
         run: |
           set -euo pipefail
 
+          target=${HOSTINGER_TARGET_PATH//\'/\'\\\'\'}
           "$HOSTINGER_SSH_COMMAND" \
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
-            "test -f '$HOSTINGER_TARGET_PATH/index.html'"
+            "test -f '$target/index.html'" >/dev/null 2>&1
 
       - name: Deployment summary
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
         shell: bash
-        env:
-          HOSTINGER_TARGET_PATH: ${{ secrets.HOSTINGER_TARGET_PATH }}
         run: |
           set -euo pipefail
 
@@ -127,6 +163,5 @@ jobs:
             echo ""
             echo "- Environment: Production"
             echo "- Build output: dist/"
-            echo "- Target path: $HOSTINGER_TARGET_PATH"
             echo "- Status: completed successfully"
           } >> "$GITHUB_STEP_SUMMARY"
