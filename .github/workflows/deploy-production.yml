@@ -67,8 +67,24 @@ jobs:
           chmod 600 "$HOSTINGER_KEY_FILE"
           ssh-keygen -lf "$HOSTINGER_KEY_FILE" >/dev/null 2>&1
 
-          ssh-keyscan -p "$HOSTINGER_PORT" -H "$HOSTINGER_HOST" 2>/dev/null > "$HOSTINGER_KNOWN_HOSTS_FILE"
-          test -s "$HOSTINGER_KNOWN_HOSTS_FILE"
+          expected_fingerprint='SHA256:fwycmrlucEC2miTteF36i+ARsu589R6TzGoscWUdpWs'
+          [[ "$HOSTINGER_HOST" == '153.92.7.185' && "$HOSTINGER_PORT" == '65002' ]] || {
+            echo "Unexpected deployment endpoint" >&2
+            exit 1
+          }
+          endpoint="[$HOSTINGER_HOST]:$HOSTINGER_PORT"
+          scanned=$(ssh-keyscan -p "$HOSTINGER_PORT" -t ed25519 "$HOSTINGER_HOST" 2>/dev/null)
+          if [[ ! "$scanned" =~ ^"$endpoint"[[:blank:]]+ssh-ed25519[[:blank:]]+([A-Za-z0-9+/=]+)$ ]]; then
+            echo "Expected one ED25519 host key for the deployment endpoint" >&2
+            exit 1
+          fi
+          public_key="ssh-ed25519 ${BASH_REMATCH[1]}"
+          fingerprint=$(printf '%s\n' "$public_key" | ssh-keygen -E sha256 -lf - | awk '{print $2}')
+          [[ "$fingerprint" == "$expected_fingerprint" ]] || {
+            echo "Deployment host-key fingerprint mismatch" >&2
+            exit 1
+          }
+          printf '%s %s\n' "$endpoint" "$public_key" > "$HOSTINGER_KNOWN_HOSTS_FILE"
           chmod 600 "$HOSTINGER_KNOWN_HOSTS_FILE"
 
           cat > "$HOSTINGER_SSH_COMMAND" <<'EOF'
@@ -79,6 +95,10 @@ jobs:
             -o BatchMode=yes \
             -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes \
+            -o HostKeyAlgorithms=ssh-ed25519 \
+            -o GlobalKnownHostsFile=/dev/null \
+            -o VerifyHostKeyDNS=no \
+            -o UpdateHostKeys=no \
             -o UserKnownHostsFile="$HOME/.ssh/known_hosts" \
             "$@"
           EOF
