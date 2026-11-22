@@ -53,19 +53,19 @@ export const governanceDocumentation: Record<
     panelId: 'governance-demo-business-panel',
     cards: [
       {
-        body: 'A proposed AI action is presented as a governed decision path rather than an automatic execution.',
+        body: 'The walkthrough shows a fictional customer account update passing through review.',
         icon: FileText,
         id: 'business-action',
         title: 'What happens?',
       },
       {
-        body: 'Policy checks, approval boundaries and audit evidence remain visible before operational authority is released.',
+        body: 'Each stage shows the policy, approval or evidence a reviewer would consider.',
         icon: ShieldCheck,
         id: 'business-governance',
         title: 'Why governance matters',
       },
       {
-        body: 'Decision owners can review intent, impact and evidence before approving or blocking execution.',
+        body: 'The example shows how a decision owner could review intent and impact before authorising a change.',
         icon: UserCheck,
         id: 'business-outcome',
         title: 'Expected business outcome',
@@ -77,7 +77,7 @@ export const governanceDocumentation: Record<
     panelId: 'governance-demo-technical-panel',
     cards: [
       {
-        body: 'The explorer separates scenario input, policy evaluation, approval and evidence regions into distinct governance responsibilities.',
+        body: 'Each stage displays a pre-authored explanation of one governance responsibility.',
         icon: GitBranch,
         id: 'technical-architecture',
         title: 'Architecture',
@@ -95,13 +95,13 @@ export const governanceDocumentation: Record<
         title: 'Policy Layer',
       },
       {
-        body: 'Audit output is reserved for a later milestone and is currently shown as a structural region only.',
+        body: 'The audit stage displays sample evidence fields for this fictional request.',
         icon: ClipboardCheck,
         id: 'technical-audit-layer',
         title: 'Audit Layer',
       },
       {
-        body: 'Execution remains intentionally absent from this foundation. The page does not trigger operational behaviour.',
+        body: 'Selecting a stage changes the explanation on screen. The walkthrough performs no operational action.',
         icon: FileCheck,
         id: 'technical-execution-layer',
         title: 'Execution Layer',
@@ -153,39 +153,39 @@ export const governanceWalkthroughStages: GovernanceWalkthroughStage[] = [
   {
     answer:
       'A business user asks E.T Agent to prepare a customer account update and route it through governed review.',
-    authority: 'Request captured before action',
+    authority: 'Fictional request',
     evidence: ['Requester identity', 'Business intent', 'Requested capability'],
     icon: FileText,
     id: 'request',
-    outcome: 'The work begins as a recorded request, not an autonomous action.',
+    outcome: 'The example starts with a predefined request.',
     question: 'What was asked?',
     title: 'Request',
   },
   {
     answer:
-      'AI structures the request, identifies the likely work required and prepares a proposal for review.',
-    authority: 'AI can analyse but cannot execute',
+      'The example displays a pre-authored analysis of the request and a proposal for review.',
+    authority: 'Advisory role in the design',
     evidence: ['Structured intent', 'Proposed steps', 'Required context'],
     icon: Brain,
     id: 'ai-analysis',
     outcome: 'Intelligence supports the workflow without receiving authority to act.',
-    question: 'What does AI do?',
-    title: 'AI Analysis',
+    question: 'What would AI contribute?',
+    title: 'Example AI analysis',
   },
   {
     answer:
-      'The proposed action is checked against governance boundaries before any operational authority is released.',
+      'This stage displays the example policy result and the boundaries that would apply to the request.',
     authority: 'Policy comes before power',
     evidence: ['Role boundary', 'Capability boundary', 'Approval requirement'],
     icon: ShieldCheck,
     id: 'policy-review',
-    outcome: 'AI cannot bypass policy, approve itself or escalate privileges.',
+    outcome: 'The architecture reserves approval for a person.',
     question: "Why can't AI act alone?",
     title: 'Policy Review',
   },
   {
     answer:
-      'The workflow explains the expected business impact so an accountable person can review the consequences.',
+      'This stage illustrates the impact information a reviewer would need before approving a change.',
     authority: 'Impact visible before approval',
     evidence: ['Affected record', 'Proposed change', 'Risk note'],
     icon: Gauge,
@@ -196,14 +196,14 @@ export const governanceWalkthroughStages: GovernanceWalkthroughStage[] = [
   },
   {
     answer:
-      'An authorised human decides whether the proposed action should proceed, change or stop.',
+      'This stage illustrates the decision an authorised reviewer would make.',
     authority: 'Human authority required',
     evidence: ['Approver role', 'Decision timestamp', 'Approval status'],
     icon: UserCheck,
     id: 'human-approval',
     outcome: 'Accountability remains with the person and organisation.',
     question: 'Who decides?',
-    title: 'Human Approval',
+    title: 'Illustrative human approval',
   },
   {
     answer:
@@ -218,28 +218,28 @@ export const governanceWalkthroughStages: GovernanceWalkthroughStage[] = [
   },
   {
     answer:
-      'The request, policy review, approval and simulated outcome are preserved as a reviewable record.',
-    authority: 'Audit evidence recorded',
+      'This stage displays sample fields for a decision record.',
+    authority: 'Sample evidence fields',
     evidence: ['Request trail', 'Decision trail', 'Outcome trail'],
     icon: ClipboardCheck,
     id: 'audit-record',
-    outcome: 'The workflow can be reviewed because accountability is built in from the start.',
-    question: 'How is accountability preserved?',
-    title: 'Audit Record',
+    outcome: 'The fields describe the request, decision and simulated outcome a reviewer would inspect.',
+    question: 'What could a reviewer inspect?',
+    title: 'Example audit record',
   },
   {
     answer:
-      'E.T Agent is different because governance happens before execution and human authority remains visible.',
+      'The illustrated sequence places human review before a simulated outcome.',
     authority: 'Governance before execution',
     evidence: [
-      'Request governed',
-      'Human approved',
-      'Audit recorded',
+      'Example request',
+      'Illustrative approval',
+      'Sample record',
     ],
     icon: FileCheck,
     id: 'outcome',
-    outcome: 'The result is governed AI: transparent, auditable and trusted by design.',
-    question: 'Why is E.T Agent different?',
+    outcome: 'The visitor can revisit each stage to inspect the example.',
+    question: 'What does the example show?',
     title: 'Outcome',
   },
 ]

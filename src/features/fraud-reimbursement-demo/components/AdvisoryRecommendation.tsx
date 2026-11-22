@@ -22,7 +22,7 @@ export function AdvisoryRecommendation() {
   return (
     <>
       <div className="bank-recommendation">
-        <span>Immutable advisory recommendation</span>
+        <span>Pre-authored advisory recommendation</span>
         <h3>{recommendation}</h3>
       </div>
       <dl className="bank-details">

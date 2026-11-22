@@ -218,11 +218,9 @@ export function DeliveryExceptionDemoPage() {
               E.T Agent: Governed Delivery Exception Review
             </h1>
             <p className="type-body-large">
-              This synthetic demonstration shows how E.T Agent can support a courier
-              operator's evidence-led exception-review process. It is not a courier-management
-              platform and is not connected to a live delivery system. No AI model or inference
-              provider is invoked; the policy assessments and recommendations shown here are
-              represented fixtures.
+              This fictional case illustrates how a courier operator might review a delivery exception.
+              The demo uses pre-authored policy assessments and recommendations. It invokes no AI
+              model or inference provider and has no connection to a live delivery system.
             </p>
           </div>
           <div className="delivery-demo-hero__boundary">

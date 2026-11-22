@@ -13,7 +13,7 @@ export function DecisionRecord({ record }: { record: DecisionRecordData | null }
   return (
     <>
       <div className="bank-notice">
-        <strong>Temporary in-memory record — immutable until refresh.</strong> This is not a
+        <strong>This decision is read-only in the demo and clears on refresh.</strong> This is not a
         production banking record. No bank account or banking system was accessed. No real fraud,
         reimbursement or regulatory decision occurred. No external action was executed.
       </div>

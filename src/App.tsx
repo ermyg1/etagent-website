@@ -26,18 +26,16 @@ import {
   Workflow,
 } from 'lucide-react'
 import { Badge } from './components/Badge'
-import { Button } from './components/Button'
 import { Card } from './components/Card'
 import { Icon } from './components/Icon'
 import { SectionNavigation } from './components/SectionNavigation'
-import { StatusBadge } from './components/StatusBadge'
 import { PageLayout, Section, Stack } from './components/layout'
 import { InteractiveGovernanceDemoPage } from './features/governance-demo'
 import { DeliveryExceptionDemoPage } from './features/delivery-exception-demo'
 import { FraudReimbursementDemoPage } from './features/fraud-reimbursement-demo'
 import { CommandCentreDemoPage } from './features/command-centre-demo'
 import { UseCasesPage } from './features/use-cases'
-import { scrollToSection } from './utils/scroll'
+import { followSectionLink } from './utils/scroll'
 
 type PageMetadata = {
   title: string
@@ -61,7 +59,7 @@ const pageMetadata: Record<string, PageMetadata> = {
     canonical: 'https://etagent.io/trust',
     title: 'Trust Centre | E.T Agent',
     description:
-      'Review E.T Agent governance principles, security design, AI boundaries and enterprise readiness plans.',
+      'Review E.T Agent governance principles, security design objectives and the boundaries of the public demonstrations.',
   },
   '/use-cases': {
     canonical: 'https://etagent.io/use-cases',
@@ -105,13 +103,13 @@ const pageMetadata: Record<string, PageMetadata> = {
 
 const notFoundMetadata: PageMetadata = {
   title: 'Page Not Found | E.T Agent',
-  description: 'This page is not available. Return to the E.T Agent homepage or explore the documentation overview.',
+  description: 'This page is unavailable. Return to the homepage or check document availability.',
 }
 
 const workflowPreview = [
   'Request',
   'Intelligence',
-  'Policy Engine',
+  'Illustrated policy check',
   'Impact Summary',
   'Human Approval',
   'Simulated Execution',
@@ -120,29 +118,29 @@ const workflowPreview = [
 
 const enterpriseTrustPrinciples = [
   {
-    description: 'Authority starts with governance boundaries before intelligence can recommend action.',
+    description: 'The architecture sets governance boundaries before a recommendation can become a proposed action.',
     icon: ShieldCheck,
     title: 'Governance First',
   },
   {
-    description: 'Every recommendation is checked against role, risk and organisation-level policy.',
+    description: 'The design calls for review against role, risk and organisational policy.',
     icon: SlidersHorizontal,
     title: 'Policy Controlled',
   },
   {
-    description: 'Material actions wait for an accountable person to review and authorize execution.',
+    description: 'The design reserves approval of material actions for an accountable reviewer.',
     icon: UserCheck,
     title: 'Human Approved',
   },
   {
-    description: 'Unclear policy, missing approval or incomplete context stops execution by default.',
+    description: 'The design calls for work to stop when policy, approval or context is missing.',
     icon: LockKeyhole,
     title: 'Fail Closed',
   },
   {
-    description: 'Requests, decisions, approvals and outcomes are preserved for complete reviewability.',
+    description: 'A reviewable decision history is an architectural objective.',
     icon: FileCheck,
-    title: 'Audit Ready',
+    title: 'Auditability by design',
   },
 ]
 
@@ -165,12 +163,12 @@ const enterpriseRequirementItems = [
 
 const governancePrinciples = [
   {
-    body: 'AI analyses information and proposes actions.',
+    body: 'In the proposed architecture, AI supplies recommendations.',
     icon: Brain,
     title: 'Intelligence informs',
   },
   {
-    body: 'Every recommendation is evaluated against organisational policy before execution.',
+    body: 'Policy review should precede execution.',
     icon: ShieldCheck,
     title: 'Policy decides',
   },
@@ -180,20 +178,20 @@ const governancePrinciples = [
     title: 'Humans remain accountable',
   },
   {
-    body: 'Each approved action produces a complete audit record that can be reviewed later.',
+    body: 'The design calls for recording the approval and its outcome.',
     icon: FileCheck,
-    title: 'Every decision is traceable',
+    title: 'Decision traceability',
   },
 ]
 
 const introducingPlatformPrinciples = [
   {
-    body: 'AI analyses requests and prepares structured execution plans.',
+    body: 'The architecture assigns planning to the intelligence layer.',
     icon: Brain,
     title: 'Intelligent Planning',
   },
   {
-    body: 'Every proposed action is checked against organisational rules before execution.',
+    body: 'The design places organisational policy review before execution.',
     icon: ShieldCheck,
     title: 'Policy Evaluation',
   },
@@ -203,9 +201,9 @@ const introducingPlatformPrinciples = [
     title: 'Human Approval',
   },
   {
-    body: 'Every approved action produces a permanent, reviewable audit artefact.',
+    body: 'Immutable auditability is an architectural objective. The public demos show sample evidence and temporary records.',
     icon: FileCheck,
-    title: 'Immutable Audit',
+    title: 'Auditability objective',
   },
 ]
 
@@ -216,109 +214,109 @@ const howItWorksSteps = [
     title: 'Intent',
   },
   {
-    body: 'The AI develops a proposed plan without taking action.',
+    body: 'Prepare a proposed plan.',
     icon: Route,
     title: 'Planning',
   },
   {
-    body: 'The platform determines which approved capabilities would be required.',
+    body: 'Identify the capabilities the plan would require.',
     icon: ListChecks,
     title: 'Capability Analysis',
   },
   {
-    body: 'Governance policies determine whether the requested action is permitted.',
+    body: 'Review the request against organisational policy.',
     icon: ShieldCheck,
     title: 'Policy Evaluation',
   },
   {
-    body: 'Potential impact and risk level are assessed before approval.',
+    body: 'Assess risk before approval.',
     icon: Gauge,
     title: 'Risk Classification',
   },
   {
-    body: 'A clear explanation describes exactly what would happen if approved.',
+    body: 'Explain expected effects and uncertainties.',
     icon: FileText,
     title: 'Impact Summary',
   },
   {
-    body: 'Execution requires explicit human authorisation.',
+    body: 'Require explicit human authorisation.',
     icon: UserCheck,
     title: 'Human Approval',
   },
   {
-    body: 'Approved actions execute in a controlled simulated environment.',
+    body: 'The demonstration shows a simulated outcome.',
     icon: PlayCircle,
     title: 'Execution (Simulated)',
   },
   {
-    body: 'A permanent audit record is generated for transparency and review.',
+    body: 'The example shows the information a reviewer would inspect.',
     icon: ClipboardCheck,
-    title: 'Audit Artefact',
+    title: 'Example decision record',
   },
   {
-    body: 'Authorised users can review the complete workflow and replay decisions for audit, investigation, and continuous improvement.',
+    body: 'Visitors can revisit the stages. The Command Centre separately demonstrates replay of one synthetic checkpoint.',
     icon: History,
-    title: 'Review & Replay',
+    title: 'Review the example',
   },
 ]
 
 const governanceComparisonRows = [
   {
-    conventional: 'AI proposes and executes.',
-    etAgent: 'AI proposes. Humans authorise execution.',
+    question: 'Who can authorise a material action?',
+    answer: 'The design reserves approval for an accountable person.',
   },
   {
-    conventional: 'Policy applied after deployment or minimally.',
-    etAgent: 'Policy evaluated before execution.',
+    question: 'When should policy be checked?',
+    answer: 'The design places policy review before execution.',
   },
   {
-    conventional: 'Limited visibility into decisions.',
-    etAgent: 'Explainable governance workflow.',
+    question: 'What can a reviewer inspect?',
+    answer: 'The example shows the request, expected impact and reasons for review.',
   },
   {
-    conventional: 'Audit capability varies.',
-    etAgent: 'Immutable audit artefacts.',
+    question: 'What record is available?',
+    answer: 'The public demos show sample evidence and temporary browser-local records.',
   },
   {
-    conventional: 'Focus on automation.',
-    etAgent: 'Focus on accountable automation.',
+    question: 'Who owns the decision?',
+    answer: 'The design assigns responsibility to a human reviewer.',
   },
   {
-    conventional: 'Trust is difficult to verify.',
-    etAgent: 'Trust is continuously evidenced.',
+    question: 'How can the example be reviewed?',
+    answer: 'Visitors can inspect the displayed decision steps and evidence limits.',
   },
 ]
 
 const coreEnterpriseCapabilities = [
   {
-    body: 'High-impact actions remain subject to explicit human approval before execution, ensuring organisational responsibility stays with authorised decision-makers.',
+    body: 'The design requires human authorisation for high-impact actions.',
     icon: UserCheck,
     title: 'Human Authorisation',
   },
   {
-    body: 'Every proposed action is evaluated against organisational policy before execution, helping ensure AI operates within defined governance boundaries.',
+    body: 'The architecture places policy evaluation before execution.',
     icon: ShieldCheck,
     title: 'Policy-Gated Execution',
   },
   {
-    body: 'Execution authority is constrained by explicitly assigned capabilities rather than unrestricted AI access, reducing operational risk through defined permissions.',
+    body: 'The capability model limits the authority an action should receive.',
     icon: LockKeyhole,
     title: 'Capability-Based Authority',
   },
   {
-    body: 'Recommendations include supporting context and impact information to assist informed human decision-making before any approved execution.',
+    body: 'The examples show supporting context and expected impact for human review.',
     icon: FileText,
     title: 'Explainable Decision Support',
   },
   {
-    body: 'Approvals, decisions and execution outcomes are recorded to provide transparent evidence for governance, compliance and operational review.',
+    body: 'The interactive case demos display a temporary record of the visitor’s decision.',
     icon: ClipboardCheck,
-    title: 'Audit-Grade Evidence',
+    title: 'Example decision evidence',
   },
   {
-    body: 'Governed workflows can be reconstructed to understand what occurred, how decisions were reached and how approved actions were performed.',
+    body: 'The Command Centre compares one predefined Plan v2 checkpoint with its expected governance result in the browser.',
     icon: History,
-    title: 'Deterministic Replay',
+    title: 'Synthetic checkpoint replay',
   },
 ]
 
@@ -329,60 +327,60 @@ const enterprisePillars = [
     title: 'Governance-First Architecture',
   },
   {
-    body: 'Execution authority is intentionally constrained through explicit permissions and governed workflows to reduce operational risk.',
+    body: 'The design calls for permissions limited to the role and task.',
     icon: LockKeyhole,
     title: 'Security by Design',
   },
   {
-    body: 'Approvals, decisions and execution outcomes are structured to provide transparent operational evidence and support organisational oversight.',
+    body: 'A reviewer should be able to trace a proposed action to its approval and outcome.',
     icon: ClipboardCheck,
     title: 'Auditability',
   },
   {
-    body: 'AI recommendations include supporting context to assist informed human review before any authorised execution.',
+    body: 'A recommendation should explain its basis and the likely impact.',
     icon: FileText,
     title: 'Explainability',
   },
   {
-    body: 'The platform remains independent of any individual AI model or provider through clearly defined architectural boundaries.',
+    body: 'The architecture is intended to support provider choice. The public demos invoke no AI model.',
     icon: GitBranch,
-    title: 'Vendor-Neutral Integration',
+    title: 'Provider independence',
   },
   {
-    body: 'The governance architecture has been designed to support future enterprise compliance programmes and evolving regulatory expectations.',
+    body: 'The design aims to make responsibilities and decisions reviewable.',
     icon: FileCheck,
-    title: 'Future Compliance Support',
+    title: 'Organisational oversight',
   },
 ]
 
 const productPrinciples = [
   {
-    body: 'Governance boundaries are established before intelligence can recommend or prepare action.',
+    body: 'Define governance boundaries before planning an action.',
     icon: ShieldCheck,
     title: 'Governance First',
   },
   {
-    body: 'Accountable people remain responsible for approving material actions before execution.',
+    body: 'Reserve approval of material actions for accountable people.',
     icon: UserCheck,
     title: 'Human Authority',
   },
   {
-    body: 'Capabilities are evaluated against policy before any operational power is made available.',
+    body: 'Evaluate capabilities against policy before granting authority.',
     icon: SlidersHorizontal,
     title: 'Policy Before Power',
   },
   {
-    body: 'Missing context, unclear approval or unresolved policy prevents execution by default.',
+    body: 'Stop when context, policy or approval is unresolved.',
     icon: LockKeyhole,
     title: 'Fail Closed',
   },
   {
-    body: 'Requests, decisions, approvals and outcomes are structured as evidence from the beginning.',
+    body: 'Design for reviewable evidence from request to outcome.',
     icon: ClipboardCheck,
     title: 'Audit by Design',
   },
   {
-    body: 'Governance remains independent of any individual AI model provider or model architecture.',
+    body: 'Keep governance independent of provider choice.',
     icon: GitBranch,
     title: 'Vendor Neutral',
   },
@@ -434,7 +432,7 @@ const governancePipelineGroups = [
     title: 'Execution Layer',
   },
   {
-    stages: ['Immutable Audit Artefact'],
+    stages: ['Immutable audit artefact (design objective)'],
     title: 'Audit System',
   },
 ]
@@ -459,14 +457,7 @@ const organisationTypes = [
   },
 ]
 
-const platformEvolution = [
-  { status: 'Complete', title: 'Homepage' },
-  { status: 'Complete', title: 'Platform' },
-  { status: 'Complete', title: 'Trust Centre' },
-  { status: 'Complete', title: 'Interactive Governance' },
-  { status: 'Planned', title: 'Enterprise Readiness' },
-  { status: 'Planned', title: 'Procurement Centre' },
-]
+const publishedPages = ['Homepage', 'Platform overview', 'Trust Centre', 'Governance walkthrough']
 
 const productArchitectureNodes = [
   { icon: Brain, title: 'Intelligence' },
@@ -478,34 +469,34 @@ const productArchitectureNodes = [
 
 const trustPrinciples = [
   {
-    body: 'Accountable people remain responsible for approving material actions before execution.',
+    body: 'Assign responsibility for material actions to a human reviewer.',
     icon: UserCheck,
     title: 'Human Authority',
   },
   {
-    body: 'Governance boundaries are evaluated before AI recommendations become operational plans.',
+    body: 'Review governance requirements before turning a proposal into an operational plan.',
     icon: ShieldCheck,
     title: 'Governance First',
   },
   {
-    body: 'Missing context, unresolved policy or absent approval prevents execution by default.',
+    body: 'Stop when context, policy or approval is unresolved.',
     icon: LockKeyhole,
     title: 'Fail Closed',
   },
   {
-    body: 'Requests, decisions, approvals and outcomes are structured so they can be reviewed.',
+    body: 'Design decision records so a reviewer can trace a request to its outcome.',
     icon: ClipboardCheck,
     title: 'Auditability',
   },
   {
-    body: 'AI recommendations include supporting context so reviewers can understand proposed impact.',
+    body: 'Explain the basis and expected impact of a recommendation.',
     icon: FileText,
     title: 'Transparency',
   },
   {
-    body: 'Execution paths are constrained by defined capabilities, policy checks and recorded outcomes.',
+    body: 'Limit execution to defined capabilities and require policy checks and outcome review.',
     icon: Workflow,
-    title: 'Deterministic Execution',
+    title: 'Bounded execution by design',
   },
 ]
 
@@ -521,35 +512,34 @@ const trustBuildSteps = [
 
 const securityOverview = [
   {
-    body: 'User and organisation identity are treated as inputs to governance decisions and access boundaries.',
+    body: 'The proposed governance model takes user and organisation identity into account.',
     icon: Users,
     title: 'Identity',
   },
   {
-    body: 'Policy checks are positioned before execution so proposed actions can be blocked or routed for review.',
+    body: 'The architecture places a policy gate before execution.',
     icon: ShieldCheck,
     title: 'Policy Enforcement',
   },
   {
-    body: 'Capabilities are scoped to defined roles and workflows rather than unrestricted AI authority.',
+    body: 'The design calls for permissions scoped to a role and workflow.',
     icon: LockKeyhole,
     title: 'Least Privilege',
   },
   {
-    body: 'The platform separates intelligence, governance, execution and evidence responsibilities.',
+    body: 'The architecture assigns intelligence, governance, execution and evidence to distinct responsibilities.',
     icon: Network,
     title: 'Secure Architecture',
   },
   {
     body: 'Execution surfaces are designed to remain bounded by explicit capability and environment controls.',
     icon: Building2,
-    title: 'Infrastructure Isolation',
+    title: 'Environment boundaries',
   },
   {
-    body: 'Encryption-related controls are part of the future enterprise readiness roadmap and are not claimed as complete here.',
+    body: 'Encryption requirements would need to be specified for a production deployment.',
     icon: FileCheck,
-    status: 'Planned',
-    title: 'Future Encryption Roadmap',
+    title: 'Encryption requirements',
   },
 ] as const
 
@@ -559,7 +549,7 @@ const governanceStack = [
   'Human Authority',
   'Execution Layer',
   'Verification',
-  'Immutable Audit Artefact',
+  'Immutable audit artefact (design objective)',
 ]
 
 const aiCanItems = ['Analyse', 'Recommend', 'Summarise', 'Plan', 'Evaluate']
@@ -583,7 +573,7 @@ const currentPublicDemoFlow = [
 ]
 
 const currentReplayFlow = [
-  'Deterministic governance replay',
+  'Command Centre Plan v2 checkpoint replay',
   'Browser Web Crypto',
   'SHA-256 fingerprint',
   'Authority: NONE',
@@ -601,34 +591,6 @@ const currentDemoBoundaries = [
   'Live operational execution',
 ]
 
-const complianceAlignment = [
-  {
-    body: 'Governance, human accountability and evidence design are aligned with privacy-aware operational controls.',
-    status: 'In Progress',
-    title: 'GDPR',
-  },
-  {
-    body: 'Architecture boundaries and access-control patterns are designed with information security management expectations in mind.',
-    status: 'In Progress',
-    title: 'ISO 27001',
-  },
-  {
-    body: 'Audit evidence, change visibility and control ownership are being mapped to common trust service expectations.',
-    status: 'Planned',
-    title: 'SOC 2',
-  },
-  {
-    body: 'Policy evaluation, risk classification and governance traceability support control-oriented AI operations.',
-    status: 'In Progress',
-    title: 'NIST',
-  },
-  {
-    body: 'Healthcare-specific control alignment is a future roadmap item and does not imply current readiness or certification.',
-    status: 'Planned',
-    title: 'HIPAA (Future)',
-  },
-] as const
-
 const trustFaqs = [
   {
     answer:
@@ -637,32 +599,32 @@ const trustFaqs = [
   },
   {
     answer:
-      'Human approval occurs after policy evaluation, risk classification and impact explanation, and before execution authority is released.',
+      'In the proposed lifecycle, approval follows policy evaluation, risk classification and impact review.',
     question: 'Where does human approval occur?',
   },
   {
     answer:
-      'Policies evaluate proposed actions before execution. When a proposed action does not satisfy policy, execution is blocked or routed according to governance rules.',
+      'The public demos show predefined policy results and local review gates.',
     question: 'How are policies enforced?',
   },
   {
     answer:
-      'The governance model is designed around organisation-defined policies, roles and approval boundaries so controls can reflect local operating requirements.',
+      'Organisation-specific policy is a design objective. The public examples use predefined rules.',
     question: 'Can organisations customise governance?',
   },
   {
     answer:
-      'The audit model is designed to structure requests, policy decisions, approvals and execution outcomes as reviewable evidence. Export behaviour is part of the documentation roadmap.',
+      'The public case demos display temporary records and provide no audit-record export.',
     question: 'Can audit evidence be exported?',
   },
   {
     answer:
-      'The architecture is designed with enterprise identity integration in mind. Specific identity-provider support should be confirmed during implementation planning.',
+      'Enterprise identity integration is an architectural consideration. The public website has no identity-provider integration.',
     question: 'Can E.T Agent integrate with enterprise identity systems?',
   },
   {
     answer:
-      'Execution does not proceed. The blocked decision is surfaced with enough context for review, remediation or policy adjustment by authorised people.',
+      'A blocked demo case displays its reason and cannot trigger an external action.',
     question: 'What happens when policy blocks execution?',
   },
 ]
@@ -676,32 +638,35 @@ const documentationHub = [
   { status: 'Planned', title: 'Compliance Roadmap' },
 ] as const
 
+const architectureReviewEmail = 'mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review'
+
 const enterpriseContactRoutes = [
   {
-    body: 'Discuss governance boundaries, execution controls and enterprise architecture review.',
-    title: 'Architecture Enquiries',
+    title: 'Architecture enquiries',
+    label: 'Email about an architecture review',
+    href: architectureReviewEmail,
   },
   {
-    body: 'Review the governed request, approval and audit workflow with the enterprise team.',
-    title: 'Request a Demonstration',
+    title: 'Self-guided demonstration',
+    label: 'Open the governance walkthrough',
+    href: '/governance-demo',
   },
   {
-    body: 'Access architecture, governance, security and audit materials for technical evaluation.',
-    title: 'Documentation',
+    title: 'Evaluation materials',
+    label: 'View document availability',
+    href: '/trust#documentation-hub',
   },
   {
-    body: 'Use the primary business contact channel for enterprise evaluation and procurement.',
-    title: 'Business Email',
+    title: 'Business email',
+    label: 'ermias@etagent.io',
+    href: 'mailto:ermias@etagent.io',
   },
   {
-    body: 'Review the public repository and implementation history for the website surface.',
-    title: 'GitHub',
+    title: 'Website source',
+    label: 'View the repository on GitHub',
+    href: 'https://github.com/ermyg1/etagent-website',
   },
-  {
-    body: 'Follow the company presence for product and enterprise updates.',
-    title: 'LinkedIn',
-  },
-] as const
+]
 
 const trustLocalNavigation = [
   { id: 'trust-overview', title: 'Overview' },
@@ -712,7 +677,7 @@ const trustLocalNavigation = [
   { id: 'current-model-data-flow', title: 'Model & Data Flow' },
   { id: 'compliance-alignment', title: 'Compliance' },
   { id: 'enterprise-faq', title: 'FAQs' },
-  { id: 'documentation-hub', title: 'Documentation' },
+  { id: 'documentation-hub', title: 'Document availability' },
 ]
 
 const homepageSectionNavigation = [
@@ -724,7 +689,7 @@ const homepageSectionNavigation = [
   { id: 'enterprise-trust', title: 'Trust' },
   { id: 'interactive-governance', title: 'Interactive Governance' },
   { id: 'enterprise-use-cases', title: 'Use Cases' },
-  { id: 'homepage-documentation', title: 'Documentation' },
+  { id: 'homepage-documentation', title: 'Document availability' },
   { id: 'contact', title: 'Contact' },
 ]
 
@@ -918,16 +883,19 @@ function NotFoundPage() {
             </p>
           </Stack>
           <div className="not-found-page__actions" aria-label="404 navigation">
-            <Button onClick={() => window.location.assign('/')} size="lg">
-              Return Home
-            </Button>
-            <Button
-              onClick={() => window.location.assign('/trust#documentation-hub')}
-              size="lg"
-              variant="outline"
+            <a
+              className="ui-button ui-button--primary ui-button--lg"
+              href="/"
             >
-              Return to Documentation
-            </Button>
+              Return Home
+            </a>
+            <a
+              className="ui-button ui-button--outline ui-button--lg"
+              href="/trust#documentation-hub"
+              onClick={followSectionLink}
+            >
+              Check document availability
+            </a>
           </div>
         </Stack>
       </Section>
@@ -936,10 +904,6 @@ function NotFoundPage() {
 }
 
 function TrustCentrePage() {
-  const focusSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.focus()
-  }
-
   return (
     <PageLayout>
       <Section
@@ -955,25 +919,27 @@ function TrustCentrePage() {
             <Badge variant="primary">TRUST CENTRE</Badge>
             <Stack space="md">
               <h1 className="type-display" id="trust-hero-title">
-                Enterprise AI Built for Trust
+                Governance and trust design
               </h1>
               <p className="type-body-large">
-                E.T Agent is engineered around governance, transparency and
-                human accountability, helping organisations adopt AI without
-                sacrificing control.
+                Explore the proposed governance architecture and the limits of the public demonstrations.
               </p>
             </Stack>
             <div className="trust-hero__actions" aria-label="Trust Centre actions">
-              <Button onClick={() => focusSection('governance-model-trust')} size="lg">
+              <a
+                className="ui-button ui-button--primary ui-button--lg"
+                href="#governance-model-trust"
+                onClick={followSectionLink}
+              >
                 Explore Governance
-              </Button>
-              <Button
-                onClick={() => focusSection('security-overview')}
-                size="lg"
-                variant="outline"
+              </a>
+              <a
+                className="ui-button ui-button--outline ui-button--lg"
+                href="#security-overview"
+                onClick={followSectionLink}
               >
                 Explore Architecture
-              </Button>
+              </a>
             </div>
           </Stack>
 
@@ -1009,7 +975,7 @@ function TrustCentrePage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Trust Principles</Badge>
+          <Badge variant="secondary">Trust design principles</Badge>
           <h2 className="type-heading-2" id="trust-principles-title">
             Principles that make governed AI reviewable.
           </h2>
@@ -1041,9 +1007,9 @@ function TrustCentrePage() {
         width="wide"
       >
         <Stack className="trust-section-header-centered" space="md">
-          <Badge variant="secondary">How Trust Is Built</Badge>
+          <Badge variant="secondary">Proposed workflow</Badge>
           <h2 className="type-heading-2" id="trust-built-title">
-            Governance creates the path from recommendation to evidence.
+            From recommendation to reviewable evidence.
           </h2>
         </Stack>
         <ol className="trust-workflow">
@@ -1070,7 +1036,7 @@ function TrustCentrePage() {
         <Stack className="product-section-header" space="md">
           <Badge variant="secondary">Security Overview</Badge>
           <h2 className="type-heading-2" id="security-overview-title">
-            Security responsibilities described without unsupported claims.
+            Security design objectives
           </h2>
         </Stack>
         <div className="product-card-grid product-card-grid--three">
@@ -1083,7 +1049,6 @@ function TrustCentrePage() {
             >
               <div className="trust-doc-card__heading">
                 <Icon className="product-info-card__icon" icon={item.icon} size="lg" />
-                {'status' in item ? <StatusBadge state={item.status} /> : null}
               </div>
               <h3
                 className="product-info-card__title type-heading-4"
@@ -1108,17 +1073,13 @@ function TrustCentrePage() {
           <Stack className="trust-governance__content" space="md">
             <Badge variant="secondary">Governance Model</Badge>
             <h2 className="type-heading-2" id="governance-model-trust-title">
-              Authority is separated from intelligence.
+              The architecture separates intelligence from authority.
             </h2>
             <p className="type-body-large">
-              E.T Agent treats governance as an operating model. AI can analyse
-              and recommend, but execution authority remains constrained by
-              policy, human approval, verification and evidence generation.
+              The design calls for policy review, human approval and outcome verification.
             </p>
             <p className="type-body">
-              This separation helps organisations evaluate proposed work before
-              capability is released, and preserves a structured record of the
-              decision path after approved execution.
+              The public examples illustrate the decision path with fictional requests and sample evidence.
             </p>
           </Stack>
           <ol className="trust-stack" aria-label="Governance stack">
@@ -1144,12 +1105,13 @@ function TrustCentrePage() {
         <Stack className="trust-section-header-centered" space="md">
           <Badge variant="secondary">AI Boundaries</Badge>
           <h2 className="type-heading-2" id="ai-boundaries-title">
-            Clear boundaries preserve accountable control.
+            Intelligence and authority in the proposed design
           </h2>
+          <p className="type-body">The public demonstrations display pre-authored examples.</p>
         </Stack>
         <div className="trust-boundaries__grid">
           <Card className="trust-boundary-card trust-boundary-card--can" variant="bordered">
-            <h3 className="type-heading-3">AI CAN</h3>
+            <h3 className="type-heading-3">Intended advisory roles</h3>
             <ul className="trust-check-list">
               {aiCanItems.map((item) => (
                 <li key={item}>
@@ -1163,7 +1125,7 @@ function TrustCentrePage() {
             className="trust-boundary-card trust-boundary-card--cannot"
             variant="bordered"
           >
-            <h3 className="type-heading-3">AI CANNOT</h3>
+            <h3 className="type-heading-3">Authority excluded by design</h3>
             <ul className="trust-check-list">
               {aiCannotItems.map((item) => (
                 <li key={item}>
@@ -1240,8 +1202,7 @@ function TrustCentrePage() {
               </h3>
               <p className="type-body">
                 The public site is a static React/Vite website deployed to Hostinger. Google Fonts
-                causes ordinary browser requests for font resources. GitHub and LinkedIn links
-                navigate externally when selected.
+                causes ordinary browser requests for font resources. The repository link opens GitHub.
               </p>
               <p className="type-body">
                 Enterprise contact links use mailto and hand control to the visitor's browser or
@@ -1297,36 +1258,15 @@ function TrustCentrePage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Compliance Alignment</Badge>
+          <Badge variant="secondary">Compliance information</Badge>
           <h2 className="type-heading-2" id="compliance-alignment-title">
-            Designed with Enterprise Control Frameworks in Mind
+            What the public demonstrations cover
           </h2>
           <p className="type-body-large">
-            These references describe engineering alignment only. They do not
-            claim certification, attestation or regulatory approval.
+            The demonstrations illustrate governance concepts. This website provides no certification,
+            attestation or framework-mapping evidence.
           </p>
         </Stack>
-        <div className="trust-compliance__grid">
-          {complianceAlignment.map((item) => (
-            <Card
-              aria-labelledby={createId('compliance', item.title)}
-              className="trust-doc-card"
-              key={item.title}
-              variant="bordered"
-            >
-              <div className="trust-doc-card__status">
-                <StatusBadge state={item.status} />
-              </div>
-              <h3
-                className="product-info-card__title type-heading-4"
-                id={createId('compliance', item.title)}
-              >
-                {item.title}
-              </h3>
-              <p className="type-body">{item.body}</p>
-            </Card>
-          ))}
-        </div>
       </Section>
 
       <Section
@@ -1362,12 +1302,12 @@ function TrustCentrePage() {
         <Stack className="product-section-header" space="md">
           <Badge variant="secondary">Documentation Hub</Badge>
           <h2 className="type-heading-2" id="documentation-hub-title">
-            Enterprise documentation areas.
+            Availability of enterprise evaluation documents
           </h2>
           <p className="type-body-large">
-            Public documentation is being prepared. Email{' '}
-            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a> to discuss
-            which materials can be shared for an evaluation.
+            The documents listed below are unpublished. Email{' '}
+            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a>
+            to ask about materials for an evaluation.
           </p>
         </Stack>
         <div className="trust-documentation__grid">
@@ -1399,16 +1339,19 @@ function TrustCentrePage() {
             </h2>
           </Stack>
           <div className="product-cta__actions" aria-label="Trust Centre next steps">
-            <Button onClick={() => window.location.assign('/product')} size="lg">
-              View Product Architecture
-            </Button>
-            <Button
-              onClick={() => window.location.assign('/#contact')}
-              size="lg"
-              variant="outline"
+            <a
+              className="ui-button ui-button--primary ui-button--lg"
+              href="/product"
             >
-              Contact Enterprise Team
-            </Button>
+              View Product Architecture
+            </a>
+            <a
+              className="ui-button ui-button--outline ui-button--lg"
+              href="/#contact"
+              onClick={followSectionLink}
+            >
+              Enterprise contact
+            </a>
           </div>
         </Card>
       </Section>
@@ -1417,36 +1360,34 @@ function TrustCentrePage() {
 }
 
 function ProductPage() {
-  const focusSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.focus()
-  }
-
   return (
     <PageLayout>
       <Section className="product-hero" id="product" spacing="spacious" width="wide">
         <Stack className="product-hero__content" space="lg">
-          <Badge variant="primary">E.T Agent Platform</Badge>
+          <Badge variant="primary">E.T Agent platform concept</Badge>
           <Stack space="md">
-            <h1 className="type-display">The Governed AI Execution Platform</h1>
+            <h1 className="type-display">Architecture for governed AI execution</h1>
             <p className="type-body-large">
-              E.T Agent combines intelligent planning, policy-aware governance and
-              human-authorised execution into a single enterprise platform. This page describes
-              E.T Agent's intended governed platform architecture. The current public release is a
-              prototype using browser-local demonstrations, not a live AI or operational execution
-              service.
+              The proposed platform brings planning, policy review and human authority into one
+              architecture. The public prototype illustrates these responsibilities with browser-local
+              examples. It has no live AI or operational execution service.
             </p>
           </Stack>
           <div className="product-hero__actions" aria-label="Product calls to action">
-            <Button onClick={() => focusSection('platform-overview')} size="lg">
+            <a
+              className="ui-button ui-button--primary ui-button--lg"
+              href="#platform-overview"
+              onClick={followSectionLink}
+            >
               Explore Platform Architecture
-            </Button>
-            <Button
-              onClick={() => focusSection('platform-principles')}
-              size="lg"
-              variant="outline"
+            </a>
+            <a
+              className="ui-button ui-button--outline ui-button--lg"
+              href="#platform-principles"
+              onClick={followSectionLink}
             >
               Explore Governance
-            </Button>
+            </a>
           </div>
         </Stack>
       </Section>
@@ -1462,12 +1403,11 @@ function ProductPage() {
           <Stack className="product-overview__header" space="md">
             <Badge variant="secondary">Platform Overview</Badge>
             <h2 className="type-heading-2" id="platform-overview-title">
-              Multiple governed workspaces operating through a Governance Core.
+              Proposed workspaces around a Governance Core.
             </h2>
             <p className="type-body-large">
-              The E.T Agent platform organises intelligence, workflow, audit,
-              administration and integrations around a shared governance layer so
-              enterprise action remains policy-aware and human-authorised.
+              The architecture groups intelligence, workflow, audit, administration and future
+              integrations around shared governance responsibilities.
             </p>
           </Stack>
 
@@ -1503,7 +1443,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Platform Principles</Badge>
+          <Badge variant="secondary">Platform design principles</Badge>
           <h2 className="type-heading-2" id="platform-principles-title">
             Principles that keep intelligence governed.
           </h2>
@@ -1535,9 +1475,9 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Platform Workspaces</Badge>
+          <Badge variant="secondary">Platform concept</Badge>
           <h2 className="type-heading-2" id="platform-workspaces-title">
-            Responsibilities organised across governed workspaces.
+            Proposed workspace responsibilities
           </h2>
         </Stack>
         <div className="product-card-grid product-card-grid--workspaces">
@@ -1573,7 +1513,7 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Execution Lifecycle</Badge>
+          <Badge variant="secondary">Proposed governance architecture</Badge>
           <h2 className="type-heading-2" id="execution-lifecycle-title">
             From request to audit artefact.
           </h2>
@@ -1629,21 +1569,18 @@ function ProductPage() {
           <Stack className="product-demo-bridge__content" space="md">
             <Badge variant="secondary">Interactive Walkthrough</Badge>
             <h2 className="type-heading-2" id="product-demo-bridge-title">
-              Experience a governed workflow before execution.
+              Explore a fictional governance walkthrough.
             </h2>
             <p className="type-body-large">
-              Walk through a deterministic example that shows how a request is
-              analysed, reviewed against governance, approved by a human and
-              preserved as audit evidence.
+              Select a stage to inspect a pre-authored request, policy result, approval example and sample evidence.
             </p>
           </Stack>
-          <Button
-            onClick={() => window.location.assign('/governance-demo')}
-            size="lg"
-            variant="outline"
+          <a
+            className="ui-button ui-button--outline ui-button--lg"
+            href="/governance-demo"
           >
             Open Interactive Governance
-          </Button>
+          </a>
         </Card>
       </Section>
 
@@ -1653,9 +1590,9 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header product-section-header--center" space="md">
-          <Badge variant="secondary">Built for Different Organisations</Badge>
+          <Badge variant="secondary">Intended audiences</Badge>
           <h2 className="type-heading-2" id="organisations-title">
-            Equal governance patterns for different scales of work.
+            Governance needs at different scales of work.
           </h2>
         </Stack>
         <div className="product-card-grid product-card-grid--three">
@@ -1689,18 +1626,16 @@ function ProductPage() {
         width="wide"
       >
         <Stack className="product-section-header" space="md">
-          <Badge variant="secondary">Platform Evolution</Badge>
+          <Badge variant="secondary">Website</Badge>
           <h2 className="type-heading-2" id="platform-evolution-title">
-            Website surfaces aligned for enterprise evaluation.
+            Published website pages
           </h2>
         </Stack>
         <ol className="product-evolution__list">
-          {platformEvolution.map((item) => (
-            <li className="product-evolution__item" key={item.title}>
-              <span className="product-evolution__title">{item.title}</span>
-              <Badge variant={item.status === 'Complete' ? 'success' : 'neutral'}>
-                {item.status}
-              </Badge>
+          {publishedPages.map((title) => (
+            <li className="product-evolution__item" key={title}>
+              <span className="product-evolution__title">{title}</span>
+              <Badge variant="success">Published</Badge>
             </li>
           ))}
         </ol>
@@ -1716,27 +1651,30 @@ function ProductPage() {
           <Stack className="product-cta__content" space="md">
             <Badge variant="secondary">Next Steps</Badge>
             <h2 className="type-heading-2" id="product-cta-title">
-              Bring governed AI execution into enterprise review.
+              Discuss the proposed governance architecture.
             </h2>
           </Stack>
           <div className="product-cta__actions" aria-label="Product next steps">
-            <Button onClick={() => window.location.assign('/#contact')} size="lg">
+            <a
+              className="ui-button ui-button--primary ui-button--lg"
+              href="/#contact"
+              onClick={followSectionLink}
+            >
               Request Architecture Review
-            </Button>
-            <Button
-              onClick={() => window.location.assign('/trust')}
-              size="lg"
-              variant="outline"
+            </a>
+            <a
+              className="ui-button ui-button--outline ui-button--lg"
+              href="/trust"
             >
               Explore Trust Centre
-            </Button>
-            <Button
-              onClick={() => window.location.assign('/trust#documentation-hub')}
-              size="lg"
-              variant="ghost"
+            </a>
+            <a
+              className="ui-button ui-button--ghost ui-button--lg"
+              href="/trust#documentation-hub"
+              onClick={followSectionLink}
             >
-              View Documentation
-            </Button>
+              View document availability
+            </a>
           </div>
         </Card>
       </Section>
@@ -1816,7 +1754,7 @@ function App() {
             <Badge variant="primary">Governance-first enterprise AI</Badge>
             <Stack space="md">
               <h1 className="type-display">
-                Enterprise AI, controlled by policy and approved by humans.
+                A governance-first design for enterprise AI.
               </h1>
               <p className="type-body-large">
                 AI can reason at speed, but enterprise action requires governance,
@@ -1824,8 +1762,8 @@ function App() {
               </p>
             </Stack>
             <p className="homepage-hero__positioning type-body">
-              E.T Agent separates intelligence from authority so teams can evaluate
-              recommendations, enforce policy and execute only after human approval.
+              In the E.T Agent architecture, AI may propose work. Policy and accountable people
+              determine whether a material action should proceed.
             </p>
             <p className="type-body">
               Current stage: prototype and synthetic demonstrations. Explore
@@ -1834,9 +1772,13 @@ function App() {
               inference provider is invoked in the current public demonstrations.
             </p>
             <div className="homepage-hero__actions" aria-label="Hero calls to action">
-              <Button onClick={() => scrollToSection('contact')} size="lg">
+              <a
+                className="ui-button ui-button--primary ui-button--lg"
+                href="#contact"
+                onClick={followSectionLink}
+              >
                 Request Architecture Review
-              </Button>
+              </a>
               <a
                 className="ui-button ui-button--outline ui-button--lg"
                 href="/demo/command-centre"
@@ -1854,9 +1796,9 @@ function App() {
             variant="bordered"
           >
             <div className="workflow-preview__header">
-              <Badge variant="secondary">Controlled execution preview</Badge>
+              <Badge variant="secondary">Governance workflow preview</Badge>
               <h2 className="type-heading-3" id="workflow-preview-title">
-                Request to audit log
+                From request to sample decision record
               </h2>
             </div>
             <ol className="workflow-preview__list">
@@ -1870,8 +1812,7 @@ function App() {
               ))}
             </ol>
             <p className="workflow-preview__note type-body">
-              Execution advances only after policy validation and authorized human
-              approval are captured.
+              The diagram places policy review and human approval before the simulated outcome.
             </p>
           </Card>
         </div>
@@ -2027,12 +1968,11 @@ function App() {
         <Stack className="homepage-introducing__header" space="md">
           <Badge variant="secondary">INTRODUCING E.T AGENT</Badge>
           <h2 className="type-heading-2" id="introducing-et-agent-title">
-            A governance-first platform for enterprise AI execution.
+            A governance-first architecture for enterprise AI.
           </h2>
           <p className="type-body-large">
-            E.T Agent lets AI analyse information, propose plans and support
-            decisions while policy, human approval and auditability remain in
-            control of every material action.
+            The architecture gives AI a planning role and reserves material decisions for
+            policy review and human approval.
           </p>
         </Stack>
 
@@ -2065,8 +2005,7 @@ function App() {
         </div>
 
         <p className="homepage-introducing__statement type-heading-3">
-          "E.T Agent doesn't replace enterprise governance. It operationalises
-          it."
+          Explore these principles in the synthetic demonstrations.
         </p>
       </Section>
 
@@ -2079,14 +2018,13 @@ function App() {
         width="wide"
       >
         <Stack className="homepage-workflow__header" space="md">
-          <Badge variant="secondary">HOW E.T AGENT WORKS</Badge>
+          <Badge variant="secondary">Proposed lifecycle</Badge>
           <h2 className="type-heading-2" id="how-et-agent-works-title">
-            Governed execution from request to audit.
+            From request to review
           </h2>
           <p className="type-body-large">
-            Every request follows a governed workflow before any action can be
-            taken. Intelligence proposes. Governance decides. Execution only
-            occurs after policy evaluation and explicit human approval.
+            The architecture places policy evaluation, impact review and human approval before
+            an eligible action. The demos illustrate the sequence with fictional cases.
           </p>
         </Stack>
 
@@ -2132,9 +2070,8 @@ function App() {
             Governance Before Execution
           </h3>
           <p className="type-body-large">
-            Unlike autonomous AI agents, E.T Agent separates intelligence from
-            execution. Every action is evaluated against policy, reviewed for
-            impact, and requires explicit human approval before execution.
+            The governance design requires reviewers to consider the expected impact and
+            applicable policy before authorising a material action.
           </p>
         </Card>
       </Section>
@@ -2147,40 +2084,39 @@ function App() {
         width="wide"
       >
         <Stack className="homepage-comparison__header" space="md">
-          <Badge variant="secondary">COMPARISON</Badge>
+          <Badge variant="secondary">Governance questions</Badge>
           <h2 className="type-heading-2" id="governance-by-design-title">
             Governance by Design
           </h2>
           <p className="type-body-large">
-            Compare a conventional autonomous AI workflow with E.T Agent's
-            governance-first execution model.
+            Questions to ask when reviewing an AI workflow.
           </p>
         </Stack>
 
         <div className="homepage-comparison__columns" aria-hidden="true">
-          <p className="type-caption">Conventional AI</p>
-          <p className="type-caption">E.T Agent</p>
+          <p className="type-caption">Evaluation question</p>
+          <p className="type-caption">E.T Agent approach</p>
         </div>
 
         <div className="homepage-comparison__rows">
-          {governanceComparisonRows.map((row, index) => (
+          {governanceComparisonRows.map((row) => (
             <Card
-              aria-label={`Governance comparison row ${index + 1}`}
+              aria-label={row.question}
               className="homepage-comparison-row"
-              key={`${row.conventional}-${row.etAgent}`}
+              key={row.question}
               variant="bordered"
             >
               <div className="homepage-comparison-row__cell">
                 <p className="homepage-comparison-row__label type-caption">
-                  Conventional AI
+                  Evaluation question
                 </p>
-                <p className="type-body-large">{row.conventional}</p>
+                <p className="type-body-large">{row.question}</p>
               </div>
               <div className="homepage-comparison-row__cell">
                 <p className="homepage-comparison-row__label type-caption">
-                  E.T Agent
+                  E.T Agent approach
                 </p>
-                <p className="type-body-large">{row.etAgent}</p>
+                <p className="type-body-large">{row.answer}</p>
               </div>
             </Card>
           ))}
@@ -2214,17 +2150,12 @@ function App() {
         width="wide"
       >
         <Stack className="homepage-capabilities__header" space="md">
-          <Badge variant="secondary">Core enterprise capabilities</Badge>
+          <Badge variant="secondary">Enterprise governance principles</Badge>
           <h2 className="type-heading-2" id="core-enterprise-capabilities-title">
-            How E.T Agent operationalises governed AI.
+            How the proposed architecture assigns authority
           </h2>
           <p className="type-body-large">
-            Governance-first capabilities help organisations adopt AI without
-            surrendering policy control, human approval or audit readiness.
-          </p>
-          <p className="homepage-capabilities__intro type-body">
-            Each capability supports AI adoption within clear operational,
-            governance and accountability boundaries.
+            These principles guide the design. The public demonstrations illustrate selected steps with fictional data.
           </p>
         </Stack>
 
@@ -2275,11 +2206,11 @@ function App() {
         <Stack className="enterprise-trust__header" space="md">
           <Badge variant="secondary">Enterprise trust</Badge>
           <h2 className="type-heading-2" id="enterprise-trust-title">
-            Trust is evidenced before execution.
+            What reviewers should see before approval
           </h2>
           <p className="type-body-large">
-            Organisations retain oversight, enforce policy before power is
-            released and maintain an audit-ready trail for every approved action.
+            The design calls for visible policy checks, an accountable reviewer and a reviewable
+            outcome. The demos illustrate these with synthetic evidence.
           </p>
         </Stack>
 
@@ -2324,20 +2255,19 @@ function App() {
           <Stack className="product-demo-bridge__content" space="md">
             <Badge variant="secondary">Interactive Governance</Badge>
             <h2 className="type-heading-2" id="interactive-governance-title">
-              Explore the governed workflow before execution.
+              Explore the governance walkthrough.
             </h2>
             <p className="type-body-large">
-              Follow a deterministic request through policy evaluation, impact
-              review, human approval, simulated execution and audit evidence.
+              Step through a fictional request, a sample policy result, an illustrative approval
+              and a simulated outcome.
             </p>
           </Stack>
-          <Button
-            onClick={() => window.location.assign('/governance-demo')}
-            size="lg"
-            variant="outline"
+          <a
+            className="ui-button ui-button--outline ui-button--lg"
+            href="/governance-demo"
           >
             Explore Governance
-          </Button>
+          </a>
         </Card>
       </Section>
 
@@ -2351,7 +2281,7 @@ function App() {
         <Stack className="product-section-header product-section-header--center" space="md">
           <Badge variant="secondary">Enterprise use cases</Badge>
           <h2 className="type-heading-2" id="enterprise-use-cases-title">
-            Governed workflows for teams, operators and enterprise control.
+            Example governance needs for individuals, teams and enterprises.
           </h2>
         </Stack>
         <div className="product-card-grid product-card-grid--three">
@@ -2388,18 +2318,16 @@ function App() {
         width="wide"
       >
         <Stack className="homepage-enterprise__header" space="md">
-          <Badge variant="secondary">Built for enterprise</Badge>
+          <Badge variant="secondary">Enterprise design</Badge>
           <h2 className="type-heading-2" id="built-for-enterprise-title">
-            Built for Enterprise
+            Enterprise design principles
           </h2>
           <p className="type-body-large">
             Designed with the operational, security and governance expectations
             of modern organisations in mind.
           </p>
           <p className="homepage-enterprise__intro type-body">
-            E.T Agent is organised around governance, operational accountability
-            and architectures that support responsible deployment from the
-            beginning.
+            The architecture sets out how to assign authority and explain decisions.
           </p>
         </Stack>
 
@@ -2448,12 +2376,12 @@ function App() {
         <Stack className="product-section-header" space="md">
           <Badge variant="secondary">Documentation</Badge>
           <h2 className="type-heading-2" id="homepage-documentation-title">
-            Enterprise evaluation starts with clear documentation.
+            Availability of enterprise evaluation documents
           </h2>
           <p className="type-body-large">
-            Public documentation is being prepared. Email{' '}
-            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a> to discuss
-            which materials can be shared for an evaluation.
+            The documents listed below are unpublished. Email{' '}
+            <a href="mailto:ermias@etagent.io">ermias@etagent.io</a>
+            to ask about materials for an evaluation.
           </p>
         </Stack>
         <div className="trust-documentation__grid">
@@ -2483,40 +2411,33 @@ function App() {
           <Stack className="product-cta__content" space="md">
             <Badge variant="secondary">Enterprise contact</Badge>
             <h2 className="type-heading-2" id="contact-title">
-              Request an architecture review or product demonstration.
+              Contact E.T Agent about an architecture review.
             </h2>
             <p className="type-body-large">
-              Enterprise evaluation routes for architecture enquiries, governed
-              workflow demonstrations, documentation access and business contact.
+              Email an enquiry, explore the self-guided demonstration or check which evaluation documents are public.
             </p>
           </Stack>
           <div className="enterprise-contact-grid" aria-label="Enterprise contact routes">
             {enterpriseContactRoutes.map((route) => (
               <div className="enterprise-contact-card" key={route.title}>
                 <h3 className="type-heading-4">{route.title}</h3>
-                <p className="type-body">{route.body}</p>
-                {route.title === 'Business Email' && (
-                  <p className="type-body">
-                    <a href="mailto:ermias@etagent.io">ermias@etagent.io</a>
-                  </p>
-                )}
+                <p className="type-body"><a href={route.href}>{route.label}</a></p>
               </div>
             ))}
           </div>
           <div className="product-cta__actions" aria-label="Homepage contact actions">
             <a
               className="ui-button ui-button--primary ui-button--lg"
-              href="mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review"
+              href={architectureReviewEmail}
             >
               <span>Request Architecture Review</span>
             </a>
-            <Button
-              onClick={() => window.location.assign('/trust')}
-              size="lg"
-              variant="outline"
+            <a
+              className="ui-button ui-button--outline ui-button--lg"
+              href="/trust"
             >
               Review Trust Centre
-            </Button>
+            </a>
           </div>
         </Card>
       </Section>

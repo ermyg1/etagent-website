@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { scrollToSection } from '../utils/scroll'
+import { followSectionLink } from '../utils/scroll'
 
 export type SectionNavigationItem = {
   id: string
@@ -65,10 +65,7 @@ export function SectionNavigation({
             aria-current={currentActiveId === section.id ? 'true' : undefined}
             href={`#${section.id}`}
             key={section.id}
-            onClick={(event) => {
-              event.preventDefault()
-              scrollToSection(section.id)
-            }}
+            onClick={followSectionLink}
           >
             {section.title}
           </a>

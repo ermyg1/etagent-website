@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "postlint": "npm run test:claims",
+    "test:claims": "node --test tests/claims.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

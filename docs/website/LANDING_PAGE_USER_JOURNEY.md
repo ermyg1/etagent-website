@@ -144,7 +144,7 @@ Primary CTA:
 
 - `Request architecture review`
 
-Use this in the Hero and Final CTA. It signals serious enterprise evaluation. The Hero action scrolls to the existing contact section. The Final CTA is an email link to `ermias@etagent.io` with the subject `E.T Agent architecture review`; the Business Email card also displays the selectable, linked address.
+The hero links to the homepage contact section. The final CTA opens an email draft to `ermias@etagent.io` with the subject `E.T Agent architecture review`. The Business email card also displays the selectable, linked address.
 
 Approved Hero secondary CTA:
 
@@ -152,7 +152,7 @@ Approved Hero secondary CTA:
 
 The primary navigation includes `Command Centre` immediately after `Use Cases`. The existing governance-model section and navigation link remain available.
 
-Homepage and Trust Centre documentation groups state that public documentation is being prepared. Each card reads `Public document not published`, without a navigation arrow. Visitors can email `ermias@etagent.io` to discuss which materials can be shared for an evaluation; these public availability labels do not change internal document completion states.
+The homepage and Trust Centre each list six unpublished documents and provide an email link for enquiries. Contact cards also link to the self-guided walkthrough, document availability and the website repository. A personal social profile requires approval before use as a founder contact.
 
 Avoid:
 

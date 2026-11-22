@@ -10,12 +10,9 @@ export function GovernancePageHero() {
           Governed AI decision flow
         </h1>
         <p className="type-body-large">
-          Visitors can explore how governed AI decisions progress through
-          policy, human approval and audit before execution authority is
-          released. This is an illustrative governance walkthrough. The displayed
-          AI analysis, policy results and evidence are represented fixtures; no AI
-          model or inference provider, live integration, operational execution or
-          production record is created.
+          Explore eight pre-authored stages of a fictional request. The AI analysis, policy results,
+          approval and evidence are examples. This walkthrough invokes no AI model, connects to no
+          live system and creates no approval or production record.
         </p>
       </Stack>
     </Stack>

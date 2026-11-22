@@ -1,5 +1,4 @@
 import { Badge } from '../../../components/Badge'
-import { Button } from '../../../components/Button'
 import { Card } from '../../../components/Card'
 import { Stack } from '../../../components/layout'
 
@@ -12,9 +11,9 @@ export function FooterCallToAction() {
           Continue the enterprise trust evaluation.
         </h2>
       </Stack>
-      <Button onClick={() => window.location.assign('/trust')} size="lg" variant="outline">
+      <a className="ui-button ui-button--outline ui-button--lg" href="/trust">
         Review Trust Centre
-      </Button>
+      </a>
     </Card>
   )
 }

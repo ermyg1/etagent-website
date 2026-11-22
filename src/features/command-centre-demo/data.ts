@@ -240,10 +240,10 @@ export function evaluateGovernanceReplay(input: GovernanceReplayInput): Governan
 export const pipeline = [
   ['Request', 'Defined fictional request received'],
   ['Evidence', 'Synthetic sources organised'],
-  ['Intelligence', 'Assessment prepared'],
-  ['Policy', 'Named controls applied'],
+  ['Intelligence', 'Pre-authored assessment'],
+  ['Policy', 'Example control results'],
   ['Impact Summary', 'Effects and gaps disclosed'],
   ['Human Decision', 'Authority remains with a reviewer'],
   ['Simulated Outcome', 'Browser-local result only'],
-  ['Audit Record', 'Temporary factual record created'],
+  ['Audit Record', 'Temporary demo decision record'],
 ] as const
