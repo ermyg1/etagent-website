@@ -73,17 +73,54 @@ jobs:
             exit 1
           }
           endpoint="[$HOSTINGER_HOST]:$HOSTINGER_PORT"
-          if ! public_key=$(ssh-keyscan -p "$HOSTINGER_PORT" -t ed25519 "$HOSTINGER_HOST" |
-            LC_ALL=C awk -v endpoint="$endpoint" '
-              /^#/ || /^[[:space:]]*$/ { next }
-              {
-                if (++records > 1 || NF != 3 || $1 != endpoint || $2 != "ssh-ed25519" ||
-                    length($3) != 68 || $3 ~ /[^A-Za-z0-9+\/]/) exit 1
-                print $2, $3
-              }
-              END { if (records != 1) exit 1 }
-            '); then
-            echo "Expected one ED25519 host key for the deployment endpoint" >&2
+          scan_dir=$(mktemp -d)
+          trap 'rm -rf -- "$scan_dir"' EXIT
+          if ! public_key=$(
+            scan_started=$SECONDS
+            LC_ALL=C ssh-keyscan -p "$HOSTINGER_PORT" -t ed25519 "$HOSTINGER_HOST" 2>"$scan_dir/stderr" |
+              LC_ALL=C awk -v endpoint="$endpoint" -v summary="$scan_dir/summary" '
+                /^#/ || /^[[:space:]]*$/ { next }
+                {
+                  ++records
+                  if (failure) next
+                  if (records > 1) failure = "record_count"
+                  else if (NF != 3) failure = "field_count"
+                  else if ($1 != endpoint) failure = "endpoint_match"
+                  else if ($2 != "ssh-ed25519") failure = "algorithm_match"
+                  else if (length($3) != 68) failure = "key_length"
+                  else if ($3 ~ /[^A-Za-z0-9+\/]/) failure = "character_set"
+                  else key = $2 " " $3
+                }
+                END {
+                  print records + 0, (failure ? failure : "none") > summary
+                  if (records != 1 || failure) exit 1
+                  print key
+                }
+              '
+            stages=("${PIPESTATUS[@]}")
+            if (( stages[0] != 0 || stages[1] != 0 )); then
+              elapsed=$((SECONDS - scan_started))
+              records=unknown
+              failed_check=unknown
+              if [[ -s "$scan_dir/summary" ]]; then
+                read -r records failed_check < "$scan_dir/summary"
+              fi
+              printf 'Host-key scan failed: ssh-keyscan=%s awk=%s records=%s failed_check=%s\n' \
+                "${stages[0]}" "${stages[1]}" "$records" "$failed_check" >&2
+              if [[ "$records" == 0 ]]; then
+                category=unknown
+                if grep -Eiq 'timed out|timeout' "$scan_dir/stderr"; then
+                  category=timeout
+                elif grep -Fiq 'connection refused' "$scan_dir/stderr"; then
+                  category=refusal
+                elif grep -Eiq 'unable to negotiate|no matching .* found' "$scan_dir/stderr"; then
+                  category=negotiation_failure
+                fi
+                printf 'Empty host-key scan: elapsed_seconds=%s scanner_category=%s\n' "$elapsed" "$category" >&2
+              fi
+              exit 1
+            fi
+          ); then
             exit 1
           fi
           fingerprint=$(printf '%s\n' "$public_key" | ssh-keygen -E sha256 -lf - | awk '{print $2}')
