@@ -21,5 +21,6 @@ jobs:
       - run: npm run test:claims
       - run: npm run lint
       - run: npm run build
+      - run: npm run test:governance
       - run: python3 -m unittest discover -s tests -p test_release.py
       - run: python3 scripts/release.py generate "$GITHUB_SHA"
