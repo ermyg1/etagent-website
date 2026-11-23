@@ -295,7 +295,12 @@ export function FraudReimbursementDemoPage() {
     circumstances: <CustomerCircumstances />,
     impact: <ImpactSummary />,
     recommendation: <AdvisoryRecommendation />,
-    review: (
+    review: record ? (
+      <div className="bank-notice">
+        <p>The temporary demonstration decision has already been recorded.</p>
+        <button type="button" onClick={() => navigate('record')}>View decision record</button>
+      </div>
+    ) : (
       <HumanReview
         draft={reviewDraft}
         onAmendmentChange={(amendment) =>

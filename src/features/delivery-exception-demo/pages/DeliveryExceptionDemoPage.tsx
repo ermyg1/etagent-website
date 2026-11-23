@@ -175,7 +175,13 @@ export function DeliveryExceptionDemoPage() {
     policy: <PolicyAssessment onNavigate={navigate} />,
     impact: <ImpactSummary onNavigate={navigate} />,
     recommendation: <Recommendation onNavigate={navigate} />,
-    review: <HumanReview onNavigate={navigate} onRecordDecision={setRecord} />,
+    review: (
+      <HumanReview
+        onNavigate={navigate}
+        onRecordDecision={(decision) => setRecord((existing) => existing ?? decision)}
+        recorded={record !== null}
+      />
+    ),
     record: <DecisionRecord onNavigate={navigate} record={record} />,
     governance: <GovernanceControls />,
   }
