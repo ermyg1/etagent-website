@@ -5,8 +5,8 @@ platform.
 
 ## Development Status
 
-Phase W1 Foundation. The application currently renders a minimal placeholder
-while the approved website implementation remains under development.
+The public website presents the proposed governance architecture and includes
+browser-local synthetic demonstrations.
 
 ## Technology Stack
 

@@ -14,8 +14,7 @@ export function GovernanceWorkspace() {
           Interactive Governance Walkthrough
         </h2>
         <p className="type-body-large">
-          Follow a deterministic governed workflow from request to outcome and
-          see how E.T Agent separates AI assistance from authority to act.
+          Select a stage to inspect the example request, policy review, approval and simulated outcome.
         </p>
       </Stack>
 

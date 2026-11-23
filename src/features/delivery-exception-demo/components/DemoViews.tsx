@@ -35,6 +35,7 @@ export type DecisionRecordData = {
   decision: (typeof decisionOptions)[number]
   rationale: string
   recordedAt: string
+  confirmations: readonly string[]
   recommendationResponse: 'Accepted' | 'Amended' | 'Rejected'
 }
 
@@ -510,10 +511,11 @@ export function Recommendation({ onNavigate }: ViewProps) {
 }
 
 type HumanReviewProps = ViewProps & {
+  recorded: boolean
   onRecordDecision: (record: DecisionRecordData) => void
 }
 
-export function HumanReview({ onNavigate, onRecordDecision }: HumanReviewProps) {
+export function HumanReview({ onNavigate, onRecordDecision, recorded }: HumanReviewProps) {
   const [decision, setDecision] = useState<(typeof decisionOptions)[number] | ''>('')
   const [rationale, setRationale] = useState('')
   const [checked, setChecked] = useState<boolean[]>(confirmations.map(() => false))
@@ -521,6 +523,18 @@ export function HumanReview({ onNavigate, onRecordDecision }: HumanReviewProps) 
     useState<DecisionRecordData['recommendationResponse']>('Accepted')
   const canSubmit =
     decision !== '' && rationale.trim().length > 0 && checked.every(Boolean)
+
+  if (recorded) {
+    return (
+      <ViewShell
+        eyebrow="Authorised human boundary"
+        introduction="The temporary demonstration decision has already been recorded."
+        title="Human Review"
+      >
+        <Button onClick={() => onNavigate('record')}>View decision record</Button>
+      </ViewShell>
+    )
+  }
 
   const submitDecision = (event: FormEvent) => {
     event.preventDefault()
@@ -530,6 +544,7 @@ export function HumanReview({ onNavigate, onRecordDecision }: HumanReviewProps) 
       decision,
       rationale: rationale.trim(),
       recommendationResponse,
+      confirmations: confirmations.filter((_, index) => checked[index]),
       recordedAt: new Date().toLocaleString('en-GB', {
         dateStyle: 'long',
         timeStyle: 'medium',
@@ -675,6 +690,10 @@ export function DecisionRecord({
           <div className="delivery-demo-detail-list__wide">
             <dt>Rationale</dt>
             <dd>{record.rationale}</dd>
+          </div>
+          <div className="delivery-demo-detail-list__wide">
+            <dt>Reviewer confirmations</dt>
+            <dd><ul>{record.confirmations.map((item) => <li key={item}>{item}</li>)}</ul></dd>
           </div>
         </dl>
       </Card>

@@ -22,7 +22,7 @@ export function WalkthroughEvidencePanel({
           className="type-heading-4"
           id={`walkthrough-evidence-${stage.id}`}
         >
-          Visible governance evidence
+          Example evidence fields
         </h3>
         <p className="type-body">{stage.outcome}</p>
       </Stack>

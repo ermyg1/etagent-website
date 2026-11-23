@@ -93,7 +93,7 @@ function PlanSnapshot({ plan, current, governance, headingRef }: {
   ]
   return (
     <article className={`cc-plan ${current ? 'cc-plan--current' : 'cc-plan--historical'}`}>
-      <header><div><p className="cc-kicker">{current ? 'Current authoritative plan' : 'Historical immutable plan'}</p><h3 ref={headingRef} tabIndex={headingRef ? -1 : undefined}>Plan v{plan.version}</h3></div><span className="cc-state">{current ? 'AUTHORITATIVE' : 'HISTORICAL'}</span></header>
+      <header><div><p className="cc-kicker">{current ? 'Current authoritative plan' : 'Previous demo plan'}</p><h3 ref={headingRef} tabIndex={headingRef ? -1 : undefined}>Plan v{plan.version}</h3></div><span className="cc-state">{current ? 'AUTHORITATIVE' : 'HISTORICAL'}</span></header>
       <p className="cc-plan-reference-note">The plan reference is a deterministic demonstration identifier, not a cryptographic digest.</p>
       <dl className="cc-detail-list">{details.map(([term, value]) => <div key={term}><dt>{term}</dt><dd>{value}</dd></div>)}</dl>
       {!current && <p className="cc-history-note"><LockKeyhole aria-hidden="true" /> Plan v1 remains preserved as reviewed and was not edited.</p>}
@@ -142,12 +142,12 @@ export function CommandCentreDemoPage() {
     if (pendingTarget === 'impact-refresh' && v2GovernanceStage === 'policy-established') {
       pendingGovernanceFocusRef.current = null
       impactRefreshButtonRef.current?.focus()
-      setGovernanceAnnouncement('Plan v2 policy evaluation refreshed. Impact assessment refresh is now available.')
+      setGovernanceAnnouncement('Plan v2 example policy result reviewed. The example impact assessment is available.')
     }
     if (pendingTarget === 'replay' && v2GovernanceStage === 'impact-established') {
       pendingGovernanceFocusRef.current = null
       replayButtonRef.current?.focus()
-      setGovernanceAnnouncement('Plan v2 impact assessment refreshed. Deterministic governance replay is now available.')
+      setGovernanceAnnouncement('Plan v2 example impact assessment reviewed. Synthetic checkpoint replay is now available.')
     }
   }, [v2GovernanceStage])
 
@@ -323,7 +323,7 @@ export function CommandCentreDemoPage() {
     <PageLayout><div className="command-centre-demo">
       <header className="cc-hero">
         <p className="cc-kicker">E.T Agent · Governed workspace</p><h1>Command Centre</h1>
-        <p className="cc-hero__intro">Review synthetic intelligence, governed work, human decisions and factual audit evidence from one bounded enterprise interface.</p>
+        <p className="cc-hero__intro">Review pre-authored assessments, make a human decision and inspect temporary decision records in a fictional workspace.</p>
         <ul className="cc-statuses" aria-label="Demonstration status">{['Synthetic demo', 'PLAN_ONLY or SIMULATED', 'No live integrations', 'Human approval required'].map((status) => <li key={status}>{status}</li>)}</ul>
         <div className="cc-disclosure" role="note"><ShieldCheck aria-hidden="true" /><p>This demonstration uses fictional records and temporary browser-local state. Outcomes are simulated. E.T Agent does not access external accounts, call live integrations or perform operational actions. No AI model or inference provider is invoked. The intelligence, policy and impact outputs shown here are represented fixtures for this synthetic workflow.</p></div>
         <p className="cc-reset-note">Refreshing or resetting clears temporary demo state.</p>
@@ -345,7 +345,7 @@ export function CommandCentreDemoPage() {
             <div className="cc-section-heading"><p>Prepared assessment</p><h2 id="intelligence-title">Intelligence</h2></div>
             <article className="cc-panel">
               <div className="cc-panel__header"><div><p className="cc-kicker">SYN-CMD-001 · Synthetic</p><h3>Public-presence intelligence brief</h3></div><Globe2 aria-hidden="true" /></div>
-              <p><strong>Fictional subject overview:</strong> Mara Vale is a fictional independent creator represented as publishing practical design education and studio-process content. This is a system-prepared assessment, not a verified fact or suitability decision.</p>
+              <p><strong>Fictional subject overview:</strong> Mara Vale is a fictional independent creator represented as publishing practical design education and studio-process content. The pre-authored assessment illustrates a possible interpretation of the fictional signals.</p>
               <div className="cc-signal-grid">{intelligenceSignals.map((signal) => <article className="cc-signal-card" key={signal.platform}>
                 <header><FileSearch aria-hidden="true" /><h4>{signal.platform}</h4><span>Synthetic</span></header><dl>
                   <div><dt>Source type</dt><dd>{signal.source}</dd></div><div><dt>Evidence classification</dt><dd>{signal.classification}</dd></div>
@@ -353,7 +353,7 @@ export function CommandCentreDemoPage() {
                   <div><dt>Audience relevance</dt><dd>{signal.audience}</dd></div><div><dt>Engagement indicators</dt><dd>{signal.engagement}</dd></div>
                   <div><dt>Public business contact</dt><dd>{signal.contact}</dd></div>
                 </dl></article>)}</div>
-              <div className="cc-intelligence-boundaries"><div><h4>Synthetic evidence</h4><p>Fictional represented channels and signals only.</p></div><div><h4>System-prepared assessment</h4><p>Potential thematic alignment; not a verified claim.</p></div><div><h4>Unresolved evidence gaps</h4><ul>{initialWorkItems[0].evidenceGaps.map((gap) => <li key={gap}>{gap}</li>)}</ul></div><div><h4>Human-owned judgement</h4><p>Suitability, reputational context and any future engagement decision.</p></div></div>
+              <div className="cc-intelligence-boundaries"><div><h4>Synthetic evidence</h4><p>Fictional represented channels and signals only.</p></div><div><h4>Pre-authored assessment</h4><p>Potential thematic alignment; not a verified claim.</p></div><div><h4>Unresolved evidence gaps</h4><ul>{initialWorkItems[0].evidenceGaps.map((gap) => <li key={gap}>{gap}</li>)}</ul></div><div><h4>Human-owned judgement</h4><p>Suitability, reputational context and any future engagement decision.</p></div></div>
               <p className="cc-notice"><AlertTriangle aria-hidden="true" /> Limitations: no private contact discovery, data brokerage, identity or sensitive-trait inference, facial recognition, location tracking, private messages, credentials, automated outreach, scraping or mass contact collection.</p>
             </article>
           </section>
@@ -377,7 +377,7 @@ export function CommandCentreDemoPage() {
             {currentPlanVersion === 1 && v1Approval?.status === 'VALID — CURRENT PLAN' && <article className="cc-change-control">
               <div className="cc-panel__header"><div><p className="cc-kicker">Controlled plan revision</p><h3>Material communication-scope change</h3></div><FileWarning aria-hidden="true" /></div>
               <p>Propose adding a fictional external-agency reviewer to the simulated brief’s communication scope.</p><dl className="cc-change-comparison"><div><dt>Approved Plan v1</dt><dd>{planV1.communicationScope}</dd></div><div><dt>Proposed Plan v2</dt><dd>{planV2.communicationScope}</dd></div></dl>
-              <p>Submitting this predefined change creates Plan v2. Plan v1 stays immutable, and its approval cannot authorise the new plan.</p><button onClick={proposeMaterialChange} type="button">Propose material plan change</button>
+              <p>Submitting this predefined change creates Plan v2. Plan v1 remains visible for this demo session. Its approval does not apply to Plan v2.</p><button onClick={proposeMaterialChange} type="button">Propose material plan change</button>
             </article>}
 
             {currentPlanVersion === 2 && <article className="cc-governance-refresh">
@@ -389,9 +389,9 @@ export function CommandCentreDemoPage() {
                 <li><strong>Execution authority</strong><span>{currentApproval ? 'SIMULATED OUTCOME ONLY' : 'NONE'}</span></li>
                 <li><strong>Simulated outcome</strong><span>{currentApproval ? 'AVAILABLE — BROWSER-LOCAL ONLY' : currentDecisionRecord ? 'BLOCKED — NO APPROVAL' : 'BLOCKED PENDING GOVERNANCE'}</span></li>
               </ol>
-              {v2GovernanceStage === 'refresh-required' && <button onClick={refreshPolicyEvaluation} type="button">Refresh policy evaluation for Plan v2</button>}
-              {v2GovernanceStage === 'policy-established' && <button onClick={refreshImpactAssessment} ref={impactRefreshButtonRef} type="button">Refresh impact assessment for Plan v2</button>}
-              {v2GovernanceStage === 'impact-established' && !currentDecisionRecord && <p className="cc-complete"><CheckCircle2 aria-hidden="true" /> Plan v2 policy and impact evaluation are established. A fresh human decision is now required.</p>}
+              {v2GovernanceStage === 'refresh-required' && <button onClick={refreshPolicyEvaluation} type="button">Review Plan v2 example policy result</button>}
+              {v2GovernanceStage === 'policy-established' && <button onClick={refreshImpactAssessment} ref={impactRefreshButtonRef} type="button">Review Plan v2 example impact assessment</button>}
+              {v2GovernanceStage === 'impact-established' && !currentDecisionRecord && <p className="cc-complete"><CheckCircle2 aria-hidden="true" /> Both example results have been reviewed. A fresh human decision is now required.</p>}
               <p aria-atomic="true" role="status" style={visuallyHidden}>{governanceAnnouncement}</p>
             </article>}
 
@@ -447,7 +447,7 @@ export function CommandCentreDemoPage() {
           </section>
 
           <section aria-labelledby="audit-title" id="audit-record">
-            <div className="cc-section-heading"><p>Inspection-ready evidence</p><h2 id="audit-title" ref={recordHeadingRef} tabIndex={-1}>Decision Record</h2></div>
+            <div className="cc-section-heading"><p>Temporary demo records</p><h2 id="audit-title" ref={recordHeadingRef} tabIndex={-1}>Decision Record</h2></div>
             {invalidationRecord && <article className="cc-record cc-invalidation-record"><div className="cc-panel__header"><div><p className="cc-kicker">Approval invalidation · Temporary</p><h3>{invalidationRecord.id}</h3></div><FileWarning aria-hidden="true" /></div><dl className="cc-detail-list">{[
               ['Event reference ID', invalidationRecord.id], ['Fictional timestamp', invalidationRecord.timestamp], ['Previous plan ID', invalidationRecord.previousPlanId],
               ['Previous plan version', `v${invalidationRecord.previousPlanVersion}`], ['Previous plan reference', invalidationRecord.previousPlanReference],

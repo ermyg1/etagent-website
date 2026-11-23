@@ -1,8 +1,7 @@
 import { Menu, X } from 'lucide-react'
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { Button } from './Button'
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
 import { Logo } from './Logo'
-import { scrollToSection } from '../utils/scroll'
+import { followSectionLink } from '../utils/scroll'
 
 const navItems = [
   { href: '/#home', label: 'Home' },
@@ -142,15 +141,9 @@ export function Navigation() {
 
     return currentPath === href
   }
-  const navigateToContact = () => {
+  const navigateToContact = (event: MouseEvent<HTMLAnchorElement>) => {
     closeMenu()
-
-    if (window.location.pathname === '/') {
-      scrollToSection('contact')
-      return
-    }
-
-    window.location.assign(contactTarget)
+    followSectionLink(event)
   }
 
   return (
@@ -174,13 +167,13 @@ export function Navigation() {
               {item.label}
             </a>
           ))}
-          <button className="site-nav__contact" onClick={navigateToContact} type="button">
-            Contact Enterprise Team
-          </button>
+          <a className="site-nav__contact" href={contactTarget} onClick={navigateToContact}>
+            Enterprise contact
+          </a>
         </nav>
-        <Button onClick={navigateToContact} size="sm" variant="outline">
-          Contact Enterprise Team
-        </Button>
+        <a className="ui-button ui-button--outline ui-button--sm" href={contactTarget} onClick={navigateToContact}>
+          Enterprise contact
+        </a>
         <button
           aria-controls="primary-navigation"
           aria-expanded={isOpen}

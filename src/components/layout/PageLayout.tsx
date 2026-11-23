@@ -1,6 +1,6 @@
-import type { MouseEvent, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Navigation } from '../Navigation'
-import { scrollToSection } from '../../utils/scroll'
+import { followSectionLink } from '../../utils/scroll'
 
 type PageLayoutProps = {
   children: ReactNode
@@ -12,14 +12,13 @@ const footerGroups = [
     links: [
       { href: '/governance-demo', label: 'Interactive Governance' },
       { href: '/trust', label: 'Trust Centre' },
-      { href: '/trust#documentation-hub', label: 'Documentation' },
+      { href: '/trust#documentation-hub', label: 'Document availability' },
     ],
     title: 'Product',
   },
   {
     links: [
       { href: 'https://github.com/ermyg1/etagent-website', label: 'GitHub' },
-      { href: 'https://www.linkedin.com/in/ermiyas-t/', label: 'LinkedIn' },
       { href: '/#contact', label: 'Contact' },
     ],
     title: 'Company',
@@ -35,14 +34,6 @@ const footerGroups = [
 
 function DefaultFooter() {
   const currentYear = new Date().getFullYear()
-  const navigateToContact = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (window.location.pathname !== '/') {
-      return
-    }
-
-    event.preventDefault()
-    scrollToSection('contact')
-  }
 
   return (
     <div className="site-footer">
@@ -56,9 +47,7 @@ function DefaultFooter() {
             All rights reserved.
           </p>
           <p className="site-footer__positioning">
-            E.T Agent™ is a governance-first AI platform designed for
-            organisations that require intelligent automation with
-            human-approved execution.
+            Explore E.T Agent’s proposed governance architecture and synthetic enterprise workflows.
           </p>
         </div>
         <nav aria-label="Footer navigation" className="site-footer__groups">
@@ -70,7 +59,7 @@ function DefaultFooter() {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      onClick={link.label === 'Contact' ? navigateToContact : undefined}
+                      onClick={link.href.includes('#') ? followSectionLink : undefined}
                     >
                       {link.label}
                     </a>

@@ -246,7 +246,7 @@ export const ruleAssessments: RuleAssessment[] = [
   {
     id: 'R9',
     title: 'Human authority',
-    text: 'AI-generated findings and recommendations are advisory. Final operational and financial decisions must be made by an authorised human.',
+    text: 'Any AI-generated recommendation would be advisory. This example uses a pre-authored recommendation. Final operational and financial decisions must be made by an authorised human.',
     assessment: 'Applies',
     tone: 'warning',
     evidence: 'Declared company governance rule',

@@ -91,7 +91,7 @@ Approved public demonstration presentation:
 - Below the positioning text: `Current stage: prototype and synthetic demonstrations. Explore fictional workflows with simulated outcomes. No live business systems are connected and no external actions are performed.`
 - Primary CTA: `Request Architecture Review`, scrolling to the existing contact section.
 - Secondary CTA: `Explore the Command Centre`, a semantic link to `/demo/command-centre` using existing outline-button styling.
-- Compact workflow labels: `Simulated Execution` and `Demonstration Audit Record`. These describe the public demonstration; the core architectural workflow and auditability principles below remain unchanged.
+- Compact workflow labels: `Simulated Execution` and `Demonstration Audit Record`. Public diagrams describe examples. References below to permanent records and immutable audit logs describe the intended core architecture. The comparison section pairs evaluation questions with design principles or scoped examples.
 
 ### Enterprise Trust Banner
 
@@ -346,7 +346,7 @@ CTA copy:
 
 The approved homepage contact implementation uses a semantic primary email link to `mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review`, with the existing button styling. The Business Email card displays `ermias@etagent.io` as a selectable mailto link. The existing `Review Trust Centre` secondary action is retained.
 
-The existing homepage and Trust Centre documentation groups display `Public document not published` on each card and omit navigation arrows. Each group explains: `Public documentation is being prepared. Email ermias@etagent.io to discuss which materials can be shared for an evaluation.` The address is a mailto link; internal document completion states are unchanged.
+Both documentation groups display six static cards marked `Public document not published`. Links to these groups describe document availability. Visitors can email the existing business address about evaluation materials. Internal document completion states are separate.
 
 ## 5. Component Mapping
 

@@ -616,8 +616,7 @@
 .product-info-card:hover,
 .product-workspace-card:hover,
 .trust-doc-card:hover,
-.trust-boundary-card:hover,
-.trust-doc-link:hover {
+.trust-boundary-card:hover {
   border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border-strong));
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
@@ -1761,6 +1760,12 @@
   color: var(--color-text-muted);
 }
 
+.enterprise-contact-card a,
+.trust-documentation .type-body-large a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
 .product-overview,
 .product-principles,
 .product-workspaces,
@@ -2660,13 +2665,6 @@
     var(--color-surface);
 }
 
-.trust-doc-link:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 28%, var(--color-border-strong));
-  background: var(--color-surface-hover);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
 .trust-doc-link__icon {
   width: 42px;
   height: 42px;
@@ -2680,29 +2678,6 @@
   display: grid;
   justify-items: end;
   gap: var(--space-md);
-}
-
-.trust-doc-link__arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  background: var(--color-background-raised);
-  font-weight: 700;
-  transition:
-    border-color var(--motion-fast) var(--motion-ease),
-    color var(--motion-fast) var(--motion-ease),
-    transform var(--motion-fast) var(--motion-ease);
-}
-
-.trust-doc-link:hover .trust-doc-link__arrow {
-  border-color: color-mix(in srgb, var(--color-secondary) 48%, var(--color-border));
-  color: var(--color-text-strong);
-  transform: translateX(2px);
 }
 
 .choice-control,

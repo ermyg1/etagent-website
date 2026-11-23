@@ -1,4 +1,3 @@
-import { Badge } from '../../../components/Badge'
 import { Card } from '../../../components/Card'
 import { Icon } from '../../../components/Icon'
 import type { GovernanceDemoView } from './GovernanceViewToggle'
@@ -40,7 +39,6 @@ export function DocumentationPanel({ activeView }: DocumentationPanelProps) {
                     icon={card.icon}
                     size="lg"
                   />
-                  <Badge variant="neutral">Placeholder</Badge>
                   <h3
                     className="governance-demo-doc-card__title type-heading-4"
                     id={`${documentation.panelId}-${card.id}`}
