@@ -251,6 +251,8 @@ jobs:
               echo "- Public manifest: https://etagent.io/release-manifest.json"
             elif [[ "$UPLOAD" == success ]]; then
               echo "- Production was uploaded and remains unverified."
+            elif [[ "$UPLOAD" == failure ]]; then
+              echo "- The production site may be partially updated. Its state is unverified."
             fi
-            echo "- A post-upload verification failure does not automatically roll back production."
+            echo "- Neither an upload failure nor a post-upload verification failure triggers an automatic rollback."
           } >> "$GITHUB_STEP_SUMMARY"
