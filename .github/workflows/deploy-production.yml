@@ -18,6 +18,7 @@ permissions:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     name: Deploy to Hostinger
     runs-on: ubuntu-latest
     environment: Production
@@ -46,6 +47,13 @@ jobs:
       - name: Build production assets
         if: ${{ toJSON(inputs.verification_only) == 'false' }}
         run: npm run build
+
+      - name: Test and generate release manifest
+        if: ${{ toJSON(inputs.verification_only) == 'false' }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python3 -m unittest discover -s tests -p test_release.py
+          python3 scripts/release.py generate "$GITHUB_SHA"
 
       - name: Prepare SSH
         id: prepare_ssh
@@ -184,6 +192,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy production build
+        id: upload
         if: ${{ toJSON(inputs.verification_only) == 'false' }}
         shell: bash
         env:
@@ -201,6 +210,7 @@ jobs:
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST:$HOSTINGER_TARGET_PATH/" 2>/dev/null
 
       - name: Verify deployment
+        id: remote_index
         if: ${{ toJSON(inputs.verification_only) == 'false' }}
         shell: bash
         env:
@@ -216,16 +226,33 @@ jobs:
             "$HOSTINGER_USERNAME@$HOSTINGER_HOST" \
             "test -f '$target/index.html'" >/dev/null 2>&1
 
-      - name: Deployment summary
+      - name: Verify public release
+        id: public_release
         if: ${{ toJSON(inputs.verification_only) == 'false' }}
-        shell: bash
-        run: |
-          set -euo pipefail
+        timeout-minutes: 4
+        run: python3 scripts/release.py verify "$GITHUB_SHA"
 
+      - name: Deployment summary
+        if: ${{ always() && toJSON(inputs.verification_only) == 'false' }}
+        shell: bash
+        env:
+          UPLOAD: ${{ steps.upload.outcome }}
+          REMOTE_INDEX: ${{ steps.remote_index.outcome }}
+          PUBLIC_RELEASE: ${{ steps.public_release.outcome }}
+        run: |
           {
             echo "## Production Deployment"
-            echo ""
-            echo "- Environment: Production"
-            echo "- Build output: dist/"
-            echo "- Status: completed successfully"
+            echo "- Requested commit: $GITHUB_SHA"
+            echo "- Upload: $UPLOAD"
+            echo "- Remote index check: $REMOTE_INDEX"
+            echo "- Public release verification: $PUBLIC_RELEASE"
+            if [[ "$PUBLIC_RELEASE" == success ]]; then
+              echo "- Verified commit: $GITHUB_SHA"
+              echo "- Public manifest: https://etagent.io/release-manifest.json"
+            elif [[ "$UPLOAD" == success ]]; then
+              echo "- Production was uploaded and remains unverified."
+            elif [[ "$UPLOAD" == failure ]]; then
+              echo "- The production site may be partially updated. Its state is unverified."
+            fi
+            echo "- Neither an upload failure nor a post-upload verification failure triggers an automatic rollback."
           } >> "$GITHUB_STEP_SUMMARY"
