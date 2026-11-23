@@ -78,3 +78,25 @@ test('Trust describes assurance scope without advertising framework progress', (
   assert.match(section.replace(/\s+/g, ' '), /no certification, attestation or framework-mapping evidence/i)
   assert.doesNotMatch(section, /<StatusBadge\b|\bcomplianceAlignment\.map\b|\b(?:In Progress|Planned|Certified)\b/i)
 })
+
+// Public wording only. A match flags a known claim for review, not a runtime property.
+test('public components and fixtures avoid direct claims of delivered capabilities', () => {
+  const prohibited = [
+    /\b(?:we|the platform|E\.T Agent) (?:automatically )?enforce(?:s)? (?:all |every |live |production )?(?:polic(?:y|ies)|rules)\b/i,
+    /\b(?:we are|the platform is|E\.T Agent is) (?:fully )?(?:(?:ISO[ -]?27001|SOC 2(?: Type II)?) (?:compliant|certified)|certified (?:to|under)\b)/i,
+    /\b(?:we|the platform|E\.T Agent) (?:permanently (?:stores?|saves?)|persists?) (?:all |every |immutable )?(?:audit|decision) records?\b/i,
+    /\b(?:we|the platform|E\.T Agent) (?:autonomously executes?|executes? autonomously|executes? (?:actions|payments) without human approval)\b/i,
+  ]
+  for (const [index, example] of [
+    'The platform enforces production policies.',
+    'We are SOC 2 Type II certified.',
+    'E.T Agent permanently stores audit records.',
+    'The platform autonomously executes payments.',
+  ].entries()) assert.match(example, prohibited[index])
+
+  for (const path of ts.sys.readDirectory('src', ['.ts', '.tsx'])) {
+    for (const line of copyStrings(source(path))) {
+      assert.ok(!isUnsupported(line) && !prohibited.some(rule => rule.test(line)), path + ': ' + line)
+    }
+  }
+})
