@@ -34,6 +34,7 @@ import { InteractiveGovernanceDemoPage } from './features/governance-demo'
 import { DeliveryExceptionDemoPage } from './features/delivery-exception-demo'
 import { FraudReimbursementDemoPage } from './features/fraud-reimbursement-demo'
 import { CommandCentreDemoPage } from './features/command-centre-demo'
+import { initialWorkItems } from './features/command-centre-demo/data'
 import { UseCasesPage } from './features/use-cases'
 import { followSectionLink } from './utils/scroll'
 
@@ -106,14 +107,15 @@ const notFoundMetadata: PageMetadata = {
   description: 'This page is unavailable. Return to the homepage or check document availability.',
 }
 
+const previewCase = initialWorkItems[0]
 const workflowPreview = [
-  'Request',
-  'Intelligence',
-  'Illustrated policy check',
-  'Impact Summary',
-  'Human Approval',
-  'Simulated Execution',
-  'Demonstration Audit Record',
+  { label: 'Request', detail: previewCase.request },
+  { label: 'Intelligence', detail: previewCase.recommendation },
+  { label: 'Illustrated policy check', detail: 'Audience and campaign performance claims remain unverified.', gate: true },
+  { label: 'Impact Summary', detail: 'Review the risk of mischaracterising the fictional creator.' },
+  { label: 'Human Approval', detail: previewCase.requiredDecision, gate: true },
+  { label: 'Simulated Execution' },
+  { label: 'Demonstration Audit Record' },
 ]
 
 const enterpriseTrustPrinciples = [
@@ -1796,23 +1798,30 @@ function App() {
             variant="bordered"
           >
             <div className="workflow-preview__header">
-              <Badge variant="secondary">Governance workflow preview</Badge>
+              <Badge variant="secondary">Synthetic workflow illustration</Badge>
               <h2 className="type-heading-3" id="workflow-preview-title">
-                From request to sample decision record
+                Partnership brief for human review
               </h2>
             </div>
-            <ol className="workflow-preview__list">
+            <div className="workflow-preview__case">
+              <span>{previewCase.id} · {previewCase.subject}</span>
+              <Badge variant="warning">{previewCase.status}</Badge>
+            </div>
+            <ol className="workflow-preview__list" role="list">
               {workflowPreview.map((step, index) => (
-                <li className="workflow-preview__item" key={step}>
-                  <span className="workflow-preview__index">
+                <li className="workflow-preview__item" data-gate={step.gate} key={step.label}>
+                  <span aria-hidden="true" className="workflow-preview__index">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <span className="workflow-preview__label">{step}</span>
+                  <div>
+                    <span className="workflow-preview__label">{step.label}</span>
+                    {step.detail && <p className="workflow-preview__detail">{step.detail}</p>}
+                  </div>
                 </li>
               ))}
             </ol>
             <p className="workflow-preview__note type-body">
-              The diagram places policy review and human approval before the simulated outcome.
+              The request is waiting for an authorised reviewer. No operational action has been taken. Even after approval, the demo only simulates preparing the brief.
             </p>
           </Card>
         </div>

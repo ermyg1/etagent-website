@@ -91,6 +91,47 @@ test('public routes render their own page and internal navigation resolves to re
   await visible(page.getByRole('heading', { level: 1, name: 'Page Not Found' }))
 })
 
+for (const width of [375, 768, 1440]) {
+  test(`synthetic homepage preview and Command Centre journey at ${width}px`, async () => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/#governance-model')
+    const hero = page.locator('#home')
+    const preview = hero.getByRole('region', { name: 'Partnership brief for human review' })
+    await visible(preview.getByText('Synthetic workflow illustration', { exact: true }))
+    await visible(preview.getByText('SYN-CMD-001 · Mara Vale — fictional individual creator'))
+    await visible(preview.getByText('Awaiting human decision', { exact: true }))
+    const steps = preview.getByRole('listitem')
+    assert.equal(await steps.count(), 7)
+    const checkpoints = [
+      /Request.*Assess synthetic public-presence signals/s,
+      /Intelligence.*Prepare a partnership brief for human review/s,
+      /Illustrated policy check.*claims remain unverified/s,
+      /Impact Summary.*risk of mischaracterising/s,
+      /Human Approval.*Authorise preparation of a simulated draft outreach brief only/s,
+      /Simulated Execution/,
+      /Demonstration Audit Record/,
+    ]
+    for (const [index, checkpoint] of checkpoints.entries()) {
+      assert.match(await steps.nth(index).innerText(), checkpoint)
+    }
+    await visible(preview.getByText(/No operational action has been taken/))
+    await visible(hero.getByText(/prototype and synthetic demonstrations/))
+    assert.ok(await preview.evaluate(element =>
+      element.id === location.hash.slice(1) && element.scrollWidth <= element.clientWidth &&
+      document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+    const links = hero.getByRole('link')
+    assert.deepEqual(await links.allTextContents(), ['Request Architecture Review', 'Explore the Command Centre'])
+    assert.equal(await links.first().getAttribute('href'), '#contact')
+    await links.first().focus()
+    await page.keyboard.press('Tab')
+    assert.ok(await links.last().evaluate(element =>
+      element === document.activeElement && getComputedStyle(element).outlineStyle !== 'none'))
+    await page.keyboard.press('Enter')
+    await visible(page.getByRole('heading', { level: 1, name: /Command Centre/i }))
+    assert.equal(new URL(page.url()).pathname, command)
+  })
+}
+
 test('product and Trust pages disclose the prototype and assurance limits', async () => {
   await page.goto('/product')
   await shown(/public prototype illustrates these responsibilities with browser-local examples/i)

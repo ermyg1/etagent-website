@@ -481,7 +481,18 @@
 }
 
 .workflow-preview__header {
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-sm);
+}
+
+.workflow-preview__case {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+  font-size: var(--type-small);
 }
 
 .workflow-preview__list {
@@ -501,6 +512,18 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--color-background-raised) 82%, transparent);
+}
+
+.workflow-preview__item[data-gate="true"] {
+  border-inline-start: 3px solid var(--color-primary);
+  background: var(--color-surface-elevated);
+}
+
+.workflow-preview__detail {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--type-small);
+  line-height: var(--line-body);
 }
 
 .workflow-preview__index {
