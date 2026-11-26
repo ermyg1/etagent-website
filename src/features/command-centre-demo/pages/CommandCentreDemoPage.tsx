@@ -466,6 +466,16 @@ export function CommandCentreDemoPage() {
             </article>) : <div className="cc-empty cc-empty--record"><ClipboardCheck aria-hidden="true" /><h3>No temporary Decision Record</h3><p>A record appears after a valid human decision for SYN-CMD-001.</p></div>}
             <button className="cc-reset" onClick={resetDemo} type="button"><RotateCcw aria-hidden="true" /> Reset synthetic demo</button><p className="cc-reset-note">This restarts the fictional browser-local demonstration. It does not edit or delete a record in a real system.</p>
           </section>
+
+          <aside aria-labelledby="evaluation-title" className="cc-panel">
+            <h2 className="type-heading-2" id="evaluation-title">Explore a governed workflow for your organisation</h2>
+            <p>This Command Centre is a synthetic, browser-local prototype. It does not connect to live operational systems, grant execution authority or create persistent audit records.</p>
+            <p>If you are evaluating governed AI workflows, contact us to discuss the proposed architecture and whether its approach could be applicable to a specific workflow in your organisation.</p>
+            <div className="cc-evaluation-actions">
+              <a className="ui-button ui-button--primary ui-button--md" href="mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review">Discuss an architecture review</a>
+              <a className="ui-button ui-button--outline ui-button--md" href="/trust">Explore the Trust Centre</a>
+            </div>
+          </aside>
         </div>
       </div>
     </div></PageLayout>

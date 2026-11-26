@@ -167,6 +167,38 @@ for (const width of [320, 375]) {
 }
 
 for (const width of [320, 375, 768, 1440]) {
+  test(`Command Centre evaluation invitation before any human decision at ${width}px`, async () => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto(command, { waitUntil: 'networkidle' })
+    const requests = []
+    page.on('request', request => requests.push(request.url()))
+    const title = 'Explore a governed workflow for your organisation'
+    const invitation = page.getByRole('complementary', { name: title, exact: true })
+    await visible(invitation.getByRole('heading', { level: 2, name: title }))
+    await shown('No temporary Decision Record')
+    assert.ok(await invitation.evaluate(el => el.previousElementSibling?.id === 'audit-record' &&
+      el.nextElementSibling === null && el.scrollWidth <= el.clientWidth &&
+      document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+    await visible(invitation.getByText('This Command Centre is a synthetic, browser-local prototype. It does not connect to live operational systems, grant execution authority or create persistent audit records.', { exact: true }))
+    assert.equal(await invitation.getByRole('link').count(), 2)
+    await button('Reset synthetic demo').focus()
+    for (const [name, href] of [
+      ['Discuss an architecture review', 'mailto:ermias@etagent.io?subject=E.T%20Agent%20architecture%20review'],
+      ['Explore the Trust Centre', '/trust'],
+    ]) {
+      const link = invitation.getByRole('link', { name, exact: true })
+      assert.equal(await link.getAttribute('href'), href)
+      await page.keyboard.press('Tab')
+      assert.ok(await link.evaluate(el => el === document.activeElement && el.matches(':focus-visible') &&
+        getComputedStyle(el).outlineStyle === 'solid' && parseFloat(getComputedStyle(el).outlineWidth) > 0 &&
+        el.offsetHeight >= 44 && el.offsetWidth >= 44), name)
+    }
+    assert.deepEqual(requests, [])
+    await page.keyboard.press('Enter')
+    await visible(page.getByRole('heading', { level: 1, name: /governance and trust design/i }))
+    assert.equal(page.url(), origin + '/trust')
+  })
+
   test(`synthetic homepage preview and Command Centre journey at ${width}px`, async () => {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/#governance-model')
