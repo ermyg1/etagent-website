@@ -100,3 +100,12 @@ test('public components and fixtures avoid direct claims of delivered capabiliti
     }
   }
 })
+
+test('homepage case preview labels advice, pending preparation and sample record fields', () => {
+  const preview = source('src/features/command-centre-demo/components/GovernanceCasePreview.tsx')
+  const lines = copyStrings(preview)
+  for (const phrase of [
+    'Pre-authored advisory recommendation.', 'Preparation is pending human review.',
+    'Sample record layout', 'Awaiting human decision', 'This workflow example is unavailable.',
+  ]) assert.ok(lines.includes(phrase), phrase)
+})

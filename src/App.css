@@ -504,11 +504,6 @@
 }
 
 .workflow-preview__item {
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  align-items: center;
-  min-height: 52px;
-  padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--color-background-raised) 82%, transparent);
@@ -519,8 +514,31 @@
   background: var(--color-surface-elevated);
 }
 
+.workflow-preview__control {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  padding: var(--space-sm) var(--space-md);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--color-text-strong);
+  text-align: start;
+}
+
+.workflow-preview__control:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
 .workflow-preview__detail {
   margin: 0;
+  padding: 0 var(--space-md) var(--space-sm);
+  overflow-wrap: anywhere;
   color: var(--color-text);
   font-size: var(--type-small);
   line-height: var(--line-body);
@@ -3141,6 +3159,7 @@
 
   .homepage-hero__actions .ui-button {
     width: 100%;
+    min-width: 0;
   }
 
   .trust-hero__actions {
@@ -3215,12 +3234,6 @@
 
   .workflow-preview {
     padding: var(--space-lg);
-  }
-
-  .workflow-preview__item {
-    grid-template-columns: 40px minmax(0, 1fr);
-    min-height: 48px;
-    padding-inline: var(--space-sm);
   }
 
   .enterprise-trust__header {
