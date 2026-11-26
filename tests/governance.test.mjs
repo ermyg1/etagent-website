@@ -91,7 +91,82 @@ test('public routes render their own page and internal navigation resolves to re
   await visible(page.getByRole('heading', { level: 1, name: 'Page Not Found' }))
 })
 
-for (const width of [375, 768, 1440]) {
+async function assertPreviewTargetVisible(target) {
+  const result = await target.evaluate(el => {
+    const rect = el.getBoundingClientRect()
+    const headerBottom = document.querySelector('.site-header').getBoundingClientRect().bottom
+    const x = rect.left + rect.width / 2
+    const style = getComputedStyle(el)
+    const extent = Math.max(0, parseFloat(style.outlineWidth) + parseFloat(style.outlineOffset))
+    const outlineGaps = [
+      rect.top - extent - headerBottom, innerHeight - rect.bottom - extent,
+      rect.left - extent, innerWidth - rect.right - extent,
+    ]
+    return {
+      top: rect.top, bottom: rect.bottom, headerBottom, height: innerHeight,
+      button: el.tagName === 'BUTTON', outlineGaps,
+      visibleFocus: el.matches(':focus-visible') && style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
+      unobscured: [rect.top + 2, rect.bottom - 2].every(y => el.contains(document.elementFromPoint(x, y))),
+    }
+  })
+  assert.ok(result.top >= result.headerBottom && result.bottom <= result.height && result.unobscured,
+    JSON.stringify(result))
+  if (result.button) {
+    assert.ok(result.visibleFocus && result.outlineGaps.every(gap => gap >= 12), JSON.stringify(result))
+  }
+}
+
+for (const width of [320, 375]) {
+  test(`preview anchor and keyboard focus clear the sticky header at ${width}px`, async () => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/#governance-model', { waitUntil: 'networkidle' })
+    const heading = page.locator('#workflow-preview-title')
+    await assertPreviewTargetVisible(heading)
+
+    await page.goto('/')
+    await page.locator('a[href="#governance-model"]').click()
+    assert.equal(new URL(page.url()).hash, '#governance-model')
+    await assertPreviewTargetVisible(heading)
+
+    const controls = page.locator('#governance-model button')
+    for (let i = 0; i < 13; i++) {
+      const index = i < 7 ? i : 12 - i
+      await page.keyboard.press(i < 7 ? 'Tab' : 'Shift+Tab')
+      const current = controls.nth(index)
+      assert.ok(await current.evaluate(el => el === document.activeElement))
+      await assertPreviewTargetVisible(current)
+      await page.keyboard.press(i % 2 ? 'Space' : 'Enter')
+      await assertPreviewTargetVisible(current)
+      assert.equal(await current.getAttribute('aria-expanded'), 'true')
+    }
+
+    // Both controls fit comfortably; focus and opening the earlier detail should leave scrollY alone.
+    await controls.nth(1).focus()
+    await controls.first().evaluate(el => window.scrollBy({
+      top: el.getBoundingClientRect().top - 200, behavior: 'instant',
+    }))
+    await page.keyboard.press('Enter')
+    const comfortableScroll = await page.evaluate(() => scrollY)
+    await page.keyboard.press('Shift+Tab')
+    await assertPreviewTargetVisible(controls.first())
+    await page.keyboard.press('Space')
+    assert.equal(await page.evaluate(() => scrollY), comfortableScroll)
+
+    // Start with Impact visible and the preceding policy button underneath the header.
+    await controls.nth(3).focus()
+    await controls.nth(2).evaluate(el => window.scrollBy({
+      top: el.getBoundingClientRect().top - 8, behavior: 'instant',
+    }))
+    await page.keyboard.press('Shift+Tab')
+    assert.ok(await controls.nth(2).evaluate(el => el === document.activeElement))
+    await assertPreviewTargetVisible(controls.nth(2))
+    await page.keyboard.press('Enter')
+    await assertPreviewTargetVisible(controls.nth(2))
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+  })
+}
+
+for (const width of [320, 375, 768, 1440]) {
   test(`synthetic homepage preview and Command Centre journey at ${width}px`, async () => {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/#governance-model')
@@ -99,21 +174,54 @@ for (const width of [375, 768, 1440]) {
     const preview = hero.getByRole('region', { name: 'Partnership brief for human review' })
     await visible(preview.getByText('Synthetic workflow illustration', { exact: true }))
     await visible(preview.getByText('SYN-CMD-001 · Mara Vale — fictional individual creator'))
-    await visible(preview.getByText('Awaiting human decision', { exact: true }))
-    const steps = preview.getByRole('listitem')
-    assert.equal(await steps.count(), 7)
+    const status = preview.locator('.workflow-preview__case')
     const checkpoints = [
-      /Request.*Assess synthetic public-presence signals/s,
-      /Intelligence.*Prepare a partnership brief for human review/s,
-      /Illustrated policy check.*claims remain unverified/s,
-      /Impact Summary.*risk of mischaracterising/s,
-      /Human Approval.*Authorise preparation of a simulated draft outreach brief only/s,
-      /Simulated Execution/,
-      /Demonstration Audit Record/,
+      ['Request', /Assess synthetic public-presence signals/],
+      ['Intelligence', /Pre-authored advisory recommendation.*Prepare a partnership brief for human review/s],
+      ['Illustrated policy check', /Audience demographics, campaign performance and contact currency are not verified.*EVID-01 · Evidence incomplete.*OUTR-01 · Requires human decision/s],
+      ['Impact Summary', /could mischaracterise the fictional subject.*External systems affected — None/s],
+      ['Human Approval', /Authorise preparation of a simulated draft outreach brief only/],
+      ['Simulated Execution', /pending human review.*No message will be sent.*no API will be triggered/s],
+      ['Demonstration Audit Record', /Sample record layout.*PLAN-REF-SYN-CMD-001-V1-COMMS-INTERNAL.*IMP-SYN-CMD-001-A/s],
     ]
-    for (const [index, checkpoint] of checkpoints.entries()) {
-      assert.match(await steps.nth(index).innerText(), checkpoint)
+    const controls = preview.getByRole('button')
+    assert.equal(await controls.count(), checkpoints.length)
+    assert.equal(await preview.getByRole('listitem').count(), checkpoints.length)
+    assert.deepEqual(await page.locator('main section[id]').evaluateAll(nodes =>
+      nodes.filter(node => !node.parentElement.closest('section')).map(node => node.id)), [
+      'home', 'problem', 'why-governance-matters', 'introducing-et-agent', 'how-et-agent-works',
+      'comparison', 'core-enterprise-capabilities', 'enterprise-trust', 'interactive-governance',
+      'enterprise-use-cases', 'built-for-enterprise', 'homepage-documentation', 'contact',
+    ])
+    assert.equal(await controls.first().getAttribute('aria-expanded'), 'true')
+    assert.equal(await preview.locator('form, input, textarea, select').count(), 0)
+    await controls.first().focus()
+    for (const [index, [label, detail]] of checkpoints.entries()) {
+      const control = button(label, preview)
+      if (index > 0) await page.keyboard.press('Tab')
+      await page.keyboard.press(index % 2 ? 'Space' : 'Enter')
+      assert.ok(await control.evaluate(el => document.activeElement === el &&
+        getComputedStyle(el).outlineStyle !== 'none' &&
+        el.offsetWidth >= 44 && el.offsetHeight >= 44))
+      assert.equal(await preview.getByRole('button', { expanded: true }).count(), 1)
+      assert.equal(await control.getAttribute('aria-expanded'), 'true')
+      const panel = page.locator('#' + await control.getAttribute('aria-controls'))
+      await visible(panel)
+      assert.match(await panel.innerText(), detail)
+      assert.equal(await preview.locator('.workflow-preview__detail:visible').count(), 1)
+      assert.equal(await preview.locator('.workflow-preview__detail[hidden]').count(), 6)
+      assert.ok(await panel.evaluate(el => el.scrollWidth <= el.clientWidth &&
+        document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+      await visible(status.getByText('Awaiting human decision', { exact: true }))
     }
+    for (const label of ['Human decision', 'Rationale', 'Simulated outcome']) {
+      assert.equal(await field(preview, label).innerText(), 'Awaiting human decision')
+    }
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Enter')
+    assert.equal(await button('Simulated Execution', preview).getAttribute('aria-expanded'), 'true')
+    await button('Request', preview).click()
+    assert.equal(await controls.first().getAttribute('aria-expanded'), 'true')
     await visible(preview.getByText(/No operational action has been taken/))
     await visible(hero.getByText(/prototype and synthetic demonstrations/))
     assert.ok(await preview.evaluate(element =>
@@ -128,7 +236,10 @@ for (const width of [375, 768, 1440]) {
       element === document.activeElement && getComputedStyle(element).outlineStyle !== 'none'))
     await page.keyboard.press('Enter')
     await visible(page.getByRole('heading', { level: 1, name: /Command Centre/i }))
-    assert.equal(new URL(page.url()).pathname, command)
+    assert.equal(page.url(), origin + command)
+    await visible(page.locator('#audit-record').getByText('No temporary Decision Record'))
+    assert.equal(await page.locator('input[name="decision"]:checked').count(), 0)
+    assert.equal(await page.getByLabel('Written rationale').inputValue(), '')
   })
 }
 
