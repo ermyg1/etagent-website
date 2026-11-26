@@ -3159,6 +3159,7 @@
 
   .homepage-hero__actions .ui-button {
     width: 100%;
+    min-width: 0;
   }
 
   .trust-hero__actions {
