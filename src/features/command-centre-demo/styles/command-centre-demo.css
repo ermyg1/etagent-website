@@ -45,6 +45,8 @@
 
 .cc-panel, .cc-record { padding: clamp(1.25rem, 3vw, 2.2rem); }
 .cc-panel > p { color: var(--color-text-muted); line-height: 1.7; }
+.cc-evaluation-actions { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+.cc-evaluation-actions .ui-button { min-width: 0; text-align: center; }
 .cc-panel__header, .cc-selected > header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-lg); margin-bottom: var(--space-lg); }
 .cc-panel__header h3, .cc-selected > header h3 { margin: 0; font-size: var(--type-heading-3); }
 .cc-panel__header > svg { flex: 0 0 auto; color: var(--color-secondary); }
